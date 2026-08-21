@@ -1,1 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Panel | Super Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</head>
+<body>
+
+    <!-- Custom Toast -->
+    <div id="customToast" class="custom-toast">
+        <span id="toastIcon"></span>
+        <div id="toastMessage" class="toast-text"></div>
+    </div>
+
+  <!-- 🔐 SUPER ADMIN LOGIN SECTION -->
+    <div id="loginSection" class="login-wrapper" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background: #0b0f19;">
+        <div class="glass-box login-box" style="width: 350px; padding: 40px; text-align: center;">
+            <h2 style="color: #fff; margin-bottom: 25px; letter-spacing: 1px;"><i class="ph-fill ph-shield-check" style="color: #00d084;"></i> SUPER ADMIN</h2>
+            
+            <div class="input-group" style="text-align: left; margin-bottom: 15px;">
+                <input type="email" id="saEmail" placeholder="Enter Admin Email" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 6px;">
+            </div>
+            
+            <div class="input-group" style="text-align: left; margin-bottom: 25px; position: relative;">
+                <input type="password" id="saPass" placeholder="Enter Password" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 6px; padding-right: 40px;">
+                <!-- 👁️ Eye Icon -->
+                <i class="ph ph-eye" id="toggleEye" onclick="togglePassword()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #8b94a7; cursor: pointer; font-size: 20px;"></i>
+            </div>
+            
+            <button type="button" onclick="superAdminLogin(event)" style="width: 100%; padding: 14px; font-size: 15px; font-weight: 600; border-radius: 8px; background: linear-gradient(135deg, #00d084, #009860); color: #0b0f19; border: none; cursor: pointer; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0, 208, 132, 0.2);">Access Panel</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div class="dashboard-container" id="dashboardSection" style="display: flex;">
+        
+        <!-- Sidebar -->
+        <div class="sidebar glass-box" id="sidebar">
+            <div class="sidebar-header">
+                <div class="menu-btn" onclick="toggleSidebar()"><i class="ph-bold ph-list"></i></div>
+                <h2 class="brand-title"><span class="nav-text">Master Panel</span></h2>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="active" id="nav-overview" title="Overview" onclick="switchTab('overview')">
+                    <i class="ph ph-squares-four"></i> <span class="nav-text">Overview</span>
+                </li>
+                <li id="nav-add" title="Add New Client" onclick="switchTab('add')">
+                    <i class="ph ph-storefront"></i> <span class="nav-text">Add Client</span>
+                </li>
+               <li id="nav-list" title="All Clients" onclick="switchTab('list')">
+                    <i class="ph ph-users"></i> <span class="nav-text">Client List</span>
+                </li>
+               <li id="nav-analytics" title="Analytics" onclick="switchTab('analytics')">
+                    <i class="ph ph-chart-line-up"></i> <span class="nav-text">Analytics</span>
+                </li>
+                <li class="logout-btn" title="Logout" onclick="logoutDashboard()">
+                    <i class="ph ph-sign-out"></i> <span class="nav-text">Logout</span>
+                </li>
+            </ul>
+        </div>
+
+       <!-- Main Content Area -->
+        <div class="main-content">
+            
+            <!-- Top Header -->
+            <div class="crm-header glass-box">
+                <div class="header-left">
+                    <h2 id="dynamicGreeting" style="margin:0; color:#fff; font-size: 16px;">Hello, Arun! 🚀</h2>
+                    <p id="currentDate" style="margin:0; font-size:11px; color:#a1a5b7;">Loading date...</p>
+                </div>
+                
+                <div class="header-search">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input type="text" onkeyup="filterTable(this.value)" placeholder="Search clients, IDs...">
+                </div>
+
+                <div class="header-right-icons">
+                    <button class="add-hotel-btn" onclick="switchTab('add')"><i class="ph ph-plus"></i> New Client</button>
+                    
+                    <!-- 🔔 NOTIFICATION BELL & DROPDOWN -->
+                    <div class="notification-wrapper">
+                        <button class="btn-icon" onclick="toggleNotif()"><i class="ph ph-bell"></i><span class="bell-dot"></span></button>
+                        <div class="notif-dropdown glass-box" id="notifDropdown">
+                            <h4>Recent Alerts</h4>
+                            <div class="notif-item">
+                                <i class="ph-fill ph-check-circle" style="color:#00d084;"></i>
+                                <div><p>Food Station onboarding complete</p><span>10 mins ago</span></div>
+                            </div>
+                            <div class="notif-item">
+                                <i class="ph-fill ph-warning-circle" style="color:#f5a623;"></i>
+                                <div><p>Demo Cafe trial expiring soon</p><span>2 hrs ago</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+         <!-- Bento Grid Widgets (Overview Tab) -->
+            <div class="crm-grid" id="overviewSection">
+                
+                <div class="crm-widget glass-box w-wide">
+                    <div class="w-title">Total Revenue (Estimated)</div>
+                    <h1 class="w-amount" id="dashRevenue">₹0</h1>
+                    <div class="w-sub">Based on Active Plans <span style="color:#00d084;">Auto-Synced</span></div>
+                    <div class="progress-bar-thin"><div class="fill" style="width: 100%;"></div></div>
+                </div>
+                
+                <div class="crm-widget glass-box w-square">
+                    <div class="w-title">Live Database Stats</div>
+                    <div class="task-circles" style="margin-top: 15px;">
+                        <div class="tc"><div class="circle wait" id="dashTotalClients">0</div><span style="font-size: 11px;">Total Clients</span></div>
+                        <div class="tc"><div class="circle done" id="dashActiveClients">0</div><span style="font-size: 11px;">Active Live</span></div>
+                    </div>
+                </div>
+                <div class="crm-widget glass-box w-square">
+                    <div class="w-title">Pending</div>
+                    <h1 class="w-amount" style="color: #f5a623; font-size: 38px;">03</h1>
+                    <div class="w-sub">New Requests</div>
+                </div>
+                <div class="crm-widget table-widget glass-box w-large">
+                    <div class="w-title">Recently Onboarded Clients</div>
+                    <table class="mini-table">
+                        <tr><th>Client Name</th><th>Join Date</th><th>Status</th></tr>
+                        <tr><td>Food Station</td><td>18 Aug 2026</td><td class="t-done">Active</td></tr>
+                        <tr><td>FoodVilla</td><td>12 Aug 2026</td><td class="t-done">Active</td></tr>
+                        <tr><td>Demo Cafe</td><td>05 Aug 2026</td><td class="t-wait">Trial Phase</td></tr>
+                    </table>
+                </div>
+                <div class="crm-widget glass-box w-tall">
+                    <div class="w-title">Quick Action</div>
+                    <div class="quick-scan-box">
+                        <i class="ph ph-qr-code" style="font-size: 60px; color: #00d084;"></i>
+                        <p style="margin: 10px 0; font-size: 12px;">Generate QR</p>
+                        <button class="add-hotel-btn" style="width: 100%; justify-content: center;" onclick="switchTab('add')">Create New</button>
+                    </div>
+                </div>
+            </div>
+
+           <!-- Add Client Section (Bento Grid Style) -->
+            <div id="addClientSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Onboard New Client</h2>
+                </div>
+                
+                <div class="crm-grid">
+                    <!-- Main Form (Large Box - Spans 3 columns) -->
+                    <div class="crm-widget table-widget glass-box w-large" style="padding: 30px;">
+                        <p class="section-sub" style="margin-top: 0;">Enter restaurant details to generate QR menu access.</p>
+                        <div class="form-grid">
+                            <div class="input-group"><label>Restaurant/Cafe Name</label><input type="text" id="clientNameInput" placeholder="e.g. Spice Route"></div>
+                            <div class="input-group"><label>Owner Name</label><input type="text" placeholder="Full Name"></div>
+                            <div class="input-group">
+                                <label>Email Address (Login ID)</label>
+                                <input type="email" id="clientEmailInput" placeholder="client@hotel.com">
+                            </div>
+                            <div class="input-group">
+                                <label>Set Password (For Owner)</label>
+                                <input type="text" id="clientPassInput" placeholder="e.g. Burger@123">
+                            </div>
+                            <div class="input-group"><label>Phone Number</label><input type="tel" placeholder="+91 "></div>
+                            <div class="input-group"><label>City / Location</label><input type="text" id="clientCityInput" placeholder="e.g. Patna, Bihar"></div>
+                            <div class="input-group">
+                                <label>Subscription Plan</label>
+                                <select id="clientPlanInput">
+                                    <option>14-Days Trial</option><option>Pro Plan (Monthly)</option><option>Premium (Yearly)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="add-hotel-btn form-submit" onclick="saveNewClient()">Save & Generate QR</button>
+                    </div>
+
+                    <!-- Onboarding Tips (Tall Box - Spans 1 column) -->
+                    <div class="crm-widget glass-box w-tall" style="background: rgba(0, 208, 132, 0.05); border: 1px solid rgba(0, 208, 132, 0.2);">
+                        <div class="w-title" style="color: #00d084; font-size: 14px; font-weight: 600;">Onboarding Tips</div>
+                        <div style="text-align: left; margin-top: 25px;">
+                            <p style="font-size: 12px; color: #a1a5b7; margin-bottom: 20px;"><i class="ph-fill ph-check-circle" style="color: #00d084;"></i> Use valid email for login info.</p>
+                            <p style="font-size: 12px; color: #a1a5b7; margin-bottom: 20px;"><i class="ph-fill ph-check-circle" style="color: #00d084;"></i> Add city for better search.</p>
+                            <p style="font-size: 12px; color: #a1a5b7; margin-bottom: 20px;"><i class="ph-fill ph-check-circle" style="color: #00d084;"></i> Trial auto-expires in 14 days.</p>
+                        </div>
+                        <i class="ph ph-lightbulb" style="font-size: 60px; color: rgba(0, 208, 132, 0.2); margin-top: auto;"></i>
+                    </div>
+                </div>
+            </div>
+
+          <!-- Client List Section (Bento Grid Style) -->
+            <div id="clientListSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Client Management</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <div class="header-search" style="width: 250px;">
+                            <i class="ph ph-magnifying-glass"></i>
+                            <input type="text" onkeyup="filterTable(this.value)" placeholder="Search by name...">
+                        </div>
+                        <!-- 📥 EXPORT BUTTON -->
+                        <button class="btn-icon" onclick="exportToCSV()" title="Download Excel" style="background: rgba(0,208,132,0.1); color: #00d084; border-color: rgba(0,208,132,0.2);">
+                            <i class="ph ph-download-simple"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="crm-grid">
+                    <!-- Quick Stat 1 (Square) -->
+                    <div class="crm-widget glass-box w-square">
+                        <div class="w-title">Total Clients</div>
+                        <h1 class="w-amount" style="color: #38bdf8; font-size: 38px;">12</h1>
+                    </div>
+                    
+                    <!-- Quick Stat 2 (Square) -->
+                    <div class="crm-widget glass-box w-square">
+                        <div class="w-title">Active Plans</div>
+                        <h1 class="w-amount" style="color: #00d084; font-size: 38px;">09</h1>
+                    </div>
+                    
+                    <!-- Alert Widget (Wide Box) -->
+                    <div class="crm-widget glass-box w-wide">
+                        <div class="w-title">Trial Expiring Soon</div>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <div class="stat-icon" style="color: #f5a623; background: rgba(245, 166, 35, 0.1); width: 50px; height: 50px; font-size: 24px;"><i class="ph ph-clock"></i></div>
+                            <div>
+                                <h2 style="font-size: 18px; color:#fff; margin:0;">Demo Cafe</h2>
+                                <p style="margin: 3px 0 0; font-size: 11px; color: #8b94a7;">Expires in 2 days</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Data Table (Spans full width - 4 columns) -->
+                    <div class="crm-widget table-widget glass-box" style="grid-column: span 4; grid-row: span 2; justify-content: flex-start; padding: 25px; overflow-x: auto;">
+                        <table class="main-data-table">
+                            <thead><tr><th>Client ID</th><th>Restaurant Name</th><th>City</th><th>Plan</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="clientTableBody">
+                                <!-- Data Firebase se automatically aayega -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+         <!-- Analytics Section (Bento Grid Style) -->
+            <div id="analyticsSection" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Platform Analytics</h2>
+                </div>
+                
+                <!-- Reusing our Overview Grid Class -->
+                <div class="crm-grid">
+                    
+                   <!-- 1. Main Chart (Large Box) -->
+                    <div class="crm-widget glass-box w-large" style="padding: 20px;">
+                        <div class="w-title" style="margin-bottom: 20px;">Monthly Scan Activity</div>
+                        <!-- Chart Container -->
+                        <div style="position: relative; height: 250px; width: 100%;">
+                            <canvas id="mainChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 2. Top Client (Square Box) -->
+                    <div class="crm-widget glass-box w-square">
+                        <div class="w-title">Top Performing Client</div>
+                        <div class="stat-icon" style="color: #f5a623; background: rgba(245, 166, 35, 0.1); margin: 15px 0 10px 0; font-size: 28px; width: 60px; height: 60px;">
+                            <i class="ph ph-star"></i>
+                        </div>
+                        <h2 style="font-size: 18px; color:#fff; margin:0;">Food Station</h2>
+                        <p style="margin: 5px 0 0; font-size: 11px; color: #00d084;">4,120 Scans</p>
+                    </div>
+
+                    <!-- 3. Devices Setup (Square Box) -->
+                    <div class="crm-widget glass-box w-square">
+                        <div class="w-title">Scans By Device</div>
+                        <div style="display: flex; justify-content: space-around; width: 100%; margin-top: 20px;">
+                            <div style="text-align:center;">
+                                <i class="ph ph-device-mobile" style="font-size:32px; color:#38bdf8;"></i><br>
+                                <span style="font-size:14px; font-weight:600; color:#fff;">85%</span><br>
+                                <span style="font-size:10px; color:#8b94a7;">Mobile</span>
+                            </div>
+                            <div style="text-align:center;">
+                                <i class="ph ph-desktop" style="font-size:32px; color:#a1a5b7;"></i><br>
+                                <span style="font-size:14px; font-weight:600; color:#fff;">15%</span><br>
+                                <span style="font-size:10px; color:#8b94a7;">Desktop</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Platform Growth (Wide Box) -->
+                    <div class="crm-widget glass-box w-wide" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="w-title">Platform Growth</div>
+                            <h1 class="w-amount" style="font-size: 32px;">+3,200</h1>
+                            <div class="w-sub">New Diners This Week</div>
+                        </div>
+                        <div class="stat-icon" style="color: #00d084; background: rgba(0, 208, 132, 0.1); width:70px; height:70px; font-size:32px;">
+                            <i class="ph ph-trend-up"></i>
+                        </div>
+                    </div>
+
+                    <!-- 5. Status (Wide Box) -->
+                    <div class="crm-widget glass-box w-wide">
+                        <div class="w-title">System Status</div>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                            <div style="width: 15px; height: 15px; background: #00d084; border-radius: 50%; box-shadow: 0 0 10px #00d084;"></div>
+                            <h2 style="font-size: 16px; color:#fff; margin:0;">All Systems Operational</h2>
+                        </div>
+                        <p style="margin: 5px 0 0; font-size: 11px; color: #8b94a7;">API latency: 42ms</p>
+                    </div>
+
+                </div>
+            </div>
+
+           <!-- ✏️ UPGRADED EDIT MODAL (Full Control Panel) -->
+            <div class="modal-overlay" id="editModal" style="display: none;">
+                <div class="glass-box modal-box" style="width: 400px;">
+                    <h3 style="margin: 0 0 15px 0; color: #fff;">Control Panel: Edit Client</h3>
+                    
+                    <!-- Hidden ID input -->
+                    <input type="hidden" id="editClientId"> 
+                    
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label style="color:#8b94a7; font-size:12px; margin-bottom:5px; display:block;">Restaurant Name</label>
+                        <input type="text" id="editName" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 6px;">
+                    </div>
+                    
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <label style="color:#8b94a7; font-size:12px; margin-bottom:5px; display:block;">City / Location</label>
+                        <input type="text" id="editCity" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 6px;">
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div class="input-group" style="flex: 1;">
+                            <label style="color:#8b94a7; font-size:12px; margin-bottom:5px; display:block;">Update Plan</label>
+                            <select id="editPlan" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 6px;">
+                                <option>Premium (Yearly)</option>
+                                <option>Pro Plan (Monthly)</option>
+                                <option>14-Days Trial</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="flex: 1;">
+                            <label style="color:#8b94a7; font-size:12px; margin-bottom:5px; display:block;">Account Status</label>
+                            <select id="editStatus" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 6px;">
+                                <option value="Active">Active</option>
+                                <option value="Trial Phase">Trial Phase</option>
+                                <option value="Deactivated">Deactivated (Block)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="add-hotel-btn" style="flex: 1; justify-content: center;" onclick="saveEditedClient()">Update Database</button>
+                        <button class="btn-icon" style="background: rgba(255, 59, 48, 0.1); color: #ff3b30; border-color: rgba(255, 59, 48, 0.2); padding: 0 15px;" onclick="deleteClient()" title="Delete Restaurant"><i class="ph ph-trash"></i></button>
+                        <button class="btn-icon" style="color: #a1a5b7;" onclick="closeEditModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End of Main Content -->
+    </div> <!-- End of Dashboard Container -->
+
+    <!-- 🔥 Firebase Cloud Database SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    
+    <!-- Only Link JS ONCE -->
+    <script src="dashboard.js"></script>
+</body>
+</html>
 
