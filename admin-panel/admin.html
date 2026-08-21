@@ -1,1 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Partner POS - Premium Merchant Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Okra:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- 🍔 Favicon (Browser Icon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#E23744">
+    
+    <!-- 🔥 Cache Busting v14 -->
+    <link rel="stylesheet" href="admin.css?v=14">
+    
+    <!-- 🚀 0ms DASHBOARD NAME & ZERO-FLASH AUTH SHIELD -->
+    <script>
+        // 🕒 LIVE POS SHIFT CLOCK AUTO-UPDATER
+        setInterval(() => {
+            const clockEl = document.getElementById('pos-live-clock');
+            if (clockEl) {
+                const now = new Date();
+                clockEl.innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            }
+        }, 1000);
+        document.addEventListener('DOMContentLoaded', () => {
+            const cachedName = localStorage.getItem('crave_hotel_name_cache');
+            if (cachedName) {
+                const logoEl = document.getElementById('admin-restaurant-name');
+                if (logoEl) logoEl.innerText = cachedName;
+                document.title = cachedName + " - Admin Dashboard";
+            }
+        });
+
+        // 🔥 ZERO-FLASH LOGIN SHIELD: Agar pehle se login hai, to 0ms me Login Screen hide karo!
+        if (localStorage.getItem('pos_is_logged_in') === 'true') {
+            const style = document.createElement('style');
+            style.id = 'zeroFlashShield';
+            style.innerHTML = '#loginScreen { display: none !important; }';
+            document.head.appendChild(style);
+        }
+    </script>
+</head>
+<body>
+    
+   <!-- 🎵 Premium App Sounds -->
+    <!-- New Order Sound (Option A: Modern POS) -->
+    <audio id="orderSound" src="https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3" preload="auto"></audio>
+    
+    <!-- Waiter Call Sound (Option 2: Airport Chime) -->
+    <audio id="waiterSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    <!-- 🗑️ DELETE DISH CONFIRM MODAL -->
+    <div class="custom-confirm" id="deleteConfirmModal">
+        <div class="confirm-box">
+            <div class="confirm-icon"><i class="ph-fill ph-trash"></i></div>
+            <h3>Delete Dish?</h3>
+            <p>Are you sure you want to remove this dish? It will be gone forever.</p>
+            <div class="confirm-actions">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn-confirm-del" id="confirmDeleteBtn">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔒 UNIVERSAL WHITE-LABEL RESTAURANT LOGIN SCREEN (100% FULL SCREEN PROTECTED) -->
+    <div class="login-overlay" id="loginScreen" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box;">
+        <div class="login-card" style="width: 100%; max-width: 400px; background: #ffffff; padding: 30px 20px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;">
+            <!-- 1. Security Badge -->
+            <span style="font-size: 11px; font-weight: 800; color: #E53935; letter-spacing: 1.5px; display: block; margin-bottom: 10px;">
+                <i class="ph-bold ph-shield-check"></i> • SECURE ADMIN PORTAL
+            </span>
+            
+            <!-- 2. Portal Title -->
+            <h2 id="login-brand-title" class="login-title" style="font-size: 26px; font-weight: 800; color: #1C1C1E; margin-bottom: 6px;">
+                Restaurant Admin Portal
+            </h2>
+            <p id="login-subtitle" class="login-subtitle" style="font-size: 13px; font-weight: 600; color: #757575; margin-bottom: 25px;">
+                Smart Kitchens • Fast Service • Happy Diners 🍔
+            </p>
+
+            <!-- 3. Email Input -->
+            <div class="input-group">
+                <input type="email" id="adminEmail" placeholder="Merchant Email Address" required>
+                <i class="ph-fill ph-envelope input-icon"></i>
+            </div>
+
+            <!-- 4. Password Input -->
+            <div class="input-group" style="position: relative;">
+                <input type="password" id="adminPass" placeholder="Password" required>
+                <i class="ph-fill ph-eye input-icon" id="togglePassEye" onclick="togglePasswordVisibility()" style="cursor: pointer;"></i>
+            </div>
+
+            <!-- 🔥 5. FORGOT PASSWORD LINK (CSS GHOST FIXED) -->
+            <div style="text-align: right; margin-top: 5px; margin-bottom: 20px; position: relative; z-index: 999;">
+                <span onclick="document.getElementById('forgotPassModal').classList.add('show');" style="font-size: 13px; color: #E53935; font-weight: 800; cursor: pointer; padding: 5px 0 5px 5px; display: inline-block;">
+                    Forgot Password?
+                </span>
+            </div>
+
+            <!-- 6. Error Box -->
+            <div id="loginErrorBox" style="display: none; background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.3); color: #E53935; padding: 12px 14px; border-radius: 14px; font-size: 12px; font-weight: 700; margin-bottom: 15px; text-align: left; align-items: center; gap: 8px;">
+                <i class="ph-bold ph-warning-circle" style="font-size: 18px; flex-shrink: 0;"></i>
+                <span id="loginErrorText">Invalid credentials</span>
+            </div>
+            
+            <!-- 7. Login Trigger Button -->
+            <button id="loginBtn" class="premium-login-btn" onclick="loginAdmin()">
+                Login to Dashboard <i class="ph-bold ph-arrow-right"></i>
+            </button>
+
+            <!-- 8. Footer -->
+            <div class="login-footer" style="margin-top: 25px; font-size: 12px; color: #757575;">
+                Powered by <strong>Arun</strong> • Enterprise POS
+            </div>
+        </div>
+    </div>
+
+   <!-- 🏆 ULTRA-CLEAN MINIMALIST TOP NAV (VIP LAYOUT) -->
+    <div class="top-nav">
+        
+        <!-- LEFT: Sirf Hotel Name (Brand Logo) -->
+        <div>
+            <h1 class="brand-logo" id="admin-restaurant-name" style="margin: 0; font-size: 22px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px;">Partner POS</h1>
+        </div>
+
+        <!-- RIGHT: Gol Notification Bell + Three-Line Menu -->
+        <div style="display: flex; align-items: center; gap: 14px; position: relative;">
+            
+            <!-- 🔔 Bell Icon -->
+            <button onclick="switchTab('orders'); switchAdminOrderTab('new');" class="hover-glow" style="position: relative; background: var(--input-bg); border: 1px solid var(--border); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: var(--transition);">
+                <i class="ph-bold ph-bell" style="font-size: 20px;"></i>
+                <span id="nav-bell-badge" style="display: none; position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);">0</span>
+            </button>
+
+            <!-- 🍔 Three-Line Menu (Manager Profile) -->
+            <button onclick="toggleAdminMenu(event)" class="hover-glow" style="background: var(--input-bg); border: 1px solid var(--border); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: var(--transition);" title="Menu">
+                <i class="ph-bold ph-list" style="font-size: 22px;"></i>
+            </button>
+
+            <!-- 🔥 THREE-LINE DROPDOWN MENU (Right aligned with animation) -->
+            <div id="adminProfileDropdown" style="display: none; position: absolute; top: 55px; right: 0; width: 240px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 12px; z-index: 600; flex-direction: column; gap: 6px; transform-origin: top right; animation: dropScale 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);">
+                <div style="padding: 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 4px;">
+                    <span style="font-size: 13px; font-weight: 800; color: var(--text-main); display: block;">Manager Profile</span>
+                    <span style="font-size: 11px; color: var(--success); font-weight: 700;">🟢 Active Billing Shift</span>
+                </div>
+                
+                <button onclick="switchTab('settings'); toggleAdminMenu(event);" class="hover-glow" style="width: 100%; text-align: left; background: var(--input-bg); border: none; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i class="ph-bold ph-qr-code" style="color: var(--danger); font-size: 16px;"></i> Open Table QR / Print
+                </button>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-size: 12px; font-weight: 700; color: var(--text-main);">
+                    <span style="display: flex; align-items: center; gap: 8px;"><i class="ph-bold ph-bell-ringing" style="color: var(--info);"></i> Sound Alerts</span>
+                    <input type="checkbox" id="soundToggleNav" checked onchange="toggleNavSound(this.checked)" style="cursor: pointer;">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-size: 12px; font-weight: 700; color: var(--text-main);">
+                    <span style="display: flex; align-items: center; gap: 8px;"><i class="ph-bold ph-moon-stars" style="color: var(--warning);"></i> Dark Mode</span>
+                    <input type="checkbox" id="themeToggleNav" onchange="toggleTheme(); syncNavTheme(this.checked);" style="cursor: pointer;">
+                </div>
+
+                <button onclick="triggerLogout(); toggleAdminMenu(event);" style="width: 100%; text-align: left; background: rgba(229,57,53,0.1); border: none; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: 800; color: var(--danger); cursor: pointer; display: flex; align-items: center; gap: 8px; margin-top: 4px; transition: 0.2s;">
+                    <i class="ph-bold ph-sign-out" style="font-size: 16px;"></i> Logout Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📱 MAIN APP WRAPPER -->
+    <div class="app-container">
+        <div class="main-content">
+            
+            <!-- STATS COUNTER BAR -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="switchTab('menu')">
+                    <div class="stat-info">
+                        <div class="stat-title">Menu Items</div>
+                        <div class="stat-value" id="total-dishes">0</div>
+                    </div>
+                    <div class="stat-icon" style="background:rgba(0,122,255,0.1); color:var(--info);"><i class="ph-fill ph-book-open"></i></div>
+                </div>
+                <div class="stat-card" id="live-order-card" onclick="switchTab('orders')">
+                    <div class="stat-info">
+                        <div class="stat-title">Live Orders</div>
+                        <div class="stat-value" id="total-orders" style="color:var(--warning);">0</div>
+                    </div>
+                    <div class="stat-icon" style="background:rgba(255,159,0,0.1); color:var(--warning);"><i class="ph-fill ph-bell-ringing"></i></div>
+                </div>
+                <div class="stat-card" onclick="switchTab('crm')">
+                    <div class="stat-info">
+                        <div class="stat-title">Customers</div>
+                        <div class="stat-value" id="total-customers">0</div>
+                    </div>
+                    <div class="stat-icon" style="background:rgba(36,150,63,0.1); color:var(--success);"><i class="ph-fill ph-users"></i></div>
+                </div>
+                <div class="stat-card" onclick="switchTab('stats')">
+                    <div class="stat-info">
+                        <div class="stat-title">Revenue</div>
+                        <div class="stat-value green" id="total-revenue">₹0</div>
+                    </div>
+                    <div class="stat-icon" style="background:rgba(255,159,0,0.1); color:var(--warning);"><i class="ph-fill ph-currency-inr"></i></div>
+                </div>
+            </div>
+
+            <!-- 🍔 MENU MANAGEMENT SECTION -->
+            <div class="section-card view-section active" id="section-menu">
+                <div class="section-header">
+                    <h3><i class="ph-fill ph-book-open text-primary"></i> Menu Management</h3>
+                    <button class="btn-add" onclick="openModal()"><i class="ph-bold ph-plus"></i> Add Dish</button>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-input-wrapper" style="position: relative; width: 100%;">
+                        <input type="text" class="search-input" id="adminSearchInput" placeholder="Search dishes..." onkeyup="filterAdminMenu()" style="width: 100%; box-sizing: border-box; padding-right: 45px;">
+                        <i class="ph-bold ph-magnifying-glass" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 18px; pointer-events: none;"></i>
+                    </div>
+                </div>
+                
+                <div class="admin-cat-scroll" id="admin-category-filter">
+                    <div class="admin-cat-pill active" onclick="filterAdminCat('All', this)">All</div>
+                    <div class="admin-cat-pill" onclick="filterAdminCat('Starters', this)"><i class="ph-fill ph-fire"></i> Starters</div>
+                    <div class="admin-cat-pill" onclick="filterAdminCat('Main Course', this)"><i class="ph-fill ph-cooking-pot"></i> Main Course</div>
+                    <div class="admin-cat-pill" onclick="filterAdminCat('Breads', this)"><i class="ph-fill ph-bread"></i> Breads</div>
+                    <div class="admin-cat-pill" onclick="filterAdminCat('Rice', this)"><i class="ph-fill ph-bowl-steam"></i> Rice</div>
+                    <div class="admin-cat-pill" onclick="filterAdminCat('Drinks', this)"><i class="ph-fill ph-brandy"></i> Drinks</div>
+                    <div class="admin-cat-pill" onclick="filterAdminCat('Desserts', this)"><i class="ph-fill ph-ice-cream"></i> Desserts</div>
+                </div>
+
+                <div class="menu-list" id="menu-body">
+                    <div style="padding: 30px; text-align: center; color: var(--text-sub); font-size: 13px;">Loading Menu...</div>
+                </div>
+            </div>
+
+            <!-- 🚨 KITCHEN ORDERS SECTION (3-TAB STRICT PIPELINE + PULSE HEADER) -->
+            <div class="section-card view-section" id="section-orders">
+                <div class="section-header">
+                    <h3><i class="ph-fill ph-receipt text-primary"></i> Kitchen Orders</h3>
+                </div>
+
+                <!-- 🏆 TOP BUSINESS PULSE BAR -->
+                <div class="pulse-header-bar">
+                    <div class="pulse-stat-box">
+                        <span class="pulse-stat-label">💰 Today's Sale</span>
+                        <span class="pulse-stat-value" id="pulse-today-sale" style="color: var(--success);">₹0</span>
+                    </div>
+                    <div class="pulse-stat-box">
+                        <span class="pulse-stat-label">📦 Total Orders</span>
+                        <span class="pulse-stat-value" id="pulse-total-orders">0</span>
+                    </div>
+                    <div class="pulse-stat-box">
+                        <span class="pulse-stat-label">🔥 Kitchen Active</span>
+                        <span class="pulse-stat-value" id="pulse-kitchen-active" style="color: var(--warning);">0</span>
+                    </div>
+                </div>
+
+                <div id="action-center-container" style="padding: 20px 20px 0 20px; display: none; background: var(--bg-main); border-bottom: 1px solid var(--border);">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight:800; display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-warning-circle" style="color:var(--danger);"></i> Action Center</h4>
+                    <div id="action-alerts-list"></div>
+                </div>
+
+                <!-- 🚀 STRICT 3-TAB PIPELINE NAVIGATION -->
+                <div class="admin-tracker-tabs">
+                    <button id="tab-admin-new" class="admin-tab-btn active" onclick="switchAdminOrderTab('new')">
+                        🚨 New <span id="badge-new-count" class="tab-badge">0</span>
+                    </button>
+                    <button id="tab-admin-active" class="admin-tab-btn" onclick="switchAdminOrderTab('active')">
+                        🔥 Kitchen <span id="badge-active-count" class="tab-badge">0</span>
+                    </button>
+                    <button id="tab-admin-past" class="admin-tab-btn" onclick="switchAdminOrderTab('past')">
+                        📁 History <span id="badge-past-count" class="tab-badge">0</span>
+                    </button>
+                </div>
+
+                <!-- TAB 1: NEW ORDERS -->
+                <div class="menu-list" id="admin-new-orders">
+                    <div style="padding: 40px; text-align: center; color: var(--text-sub); font-size: 13px;">Checking for new incoming orders...</div>
+                </div>
+
+                <!-- TAB 2: ACTIVE KITCHEN -->
+                <div class="menu-list" id="admin-active-orders" style="display: none;">
+                    <div style="padding: 40px; text-align: center; color: var(--text-sub); font-size: 13px;">No active orders in the kitchen.</div>
+                </div>
+                
+                <!-- TAB 3: ORDER HISTORY (WITH SEARCH & LIFETIME TOGGLE) -->
+                <div class="menu-list" id="admin-past-orders" style="display: none;">
+                    <div style="padding: 15px 20px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;">
+                        <div class="search-input-wrapper" style="position: relative; flex: 1; min-width: 200px;">
+                            <input type="text" id="historySearchInput" placeholder="Search customer, phone or dish..." onkeyup="filterHistoryOrders()" style="width: 100%; box-sizing: border-box; padding: 10px 35px 10px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); font-size: 13px;">
+                            <i class="ph-bold ph-magnifying-glass" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sub);"></i>
+                        </div>
+                        <div style="display: flex; gap: 6px; background: var(--input-bg); padding: 4px; border-radius: 10px; border: 1px solid var(--border);">
+                            <button id="btn-hist-today" onclick="setHistoryFilter('today')" style="padding: 6px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: var(--danger, #E53935); color: white;">Today</button>
+                            <button id="btn-hist-all" onclick="setHistoryFilter('all')" style="padding: 6px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; background: transparent; color: var(--text-sub);">All-Time</button>
+                        </div>
+                    </div>
+                    <div id="history-cards-container">
+                        <div style="padding: 40px; text-align: center; color: var(--text-sub); font-size: 13px;">No past orders for today.</div>
+                    </div>
+                </div>
+            </div> <!-- 🔥 PROPERLY CLOSED ORDERS SECTION CARD -->
+
+           <!-- 💬 WHATSAPP CRM & REVIEWS SECTION -->
+            <div class="section-card view-section" id="section-crm">
+                <div class="section-header">
+                    <h3><i class="ph-fill ph-whatsapp-logo" style="color:#25D366;"></i> WhatsApp CRM & Reviews</h3>
+                </div>
+                
+                <div class="crm-grid">
+                    <!-- LEFT COLUMN (WhatsApp & Reviews) -->
+                    <div class="crm-left">
+                        <div style="padding: 20px;">
+                            <p style="font-size: 13px; color: var(--text-sub); margin-top: 0; font-weight:500;">Send promotional offers directly to your past customers via WhatsApp.</p>
+                            <textarea id="promoMessage" class="input-field" placeholder="Type your discount offer here... (e.g. Get 20% OFF this weekend!)" style="height: 80px; resize: none; margin-bottom: 0; width: 100%; box-sizing: border-box;"></textarea>
+                        </div>
+
+                        <!-- 🔥 LIVE CUSTOMER REVIEWS FEED -->
+                        <div class="history-date-header" style="background: var(--bg-card); border-top: 1px solid var(--border);">
+                            <span>⭐ Recent Customer Reviews</span>
+                            <span id="avg-rating-badge" style="background: rgba(255, 159, 0, 0.15); color: #FF9F00; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 11px;">5.0 ★</span>
+                        </div>
+                        <div id="reviews-feed-list" style="max-height: 320px; overflow-y: auto; background: var(--bg-main); border-bottom: 1px solid var(--border);">
+                            <div style="padding: 30px; text-align: center; color: var(--text-sub); font-size: 13px;">Checking for customer reviews...</div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN (Customer Database) -->
+                    <div class="crm-right">
+                        <div class="history-date-header" style="background: var(--bg-main);">Customer Database</div>
+                        <div class="menu-list" id="crm-body">
+                            <div style="padding: 40px; text-align: center; color: var(--text-sub); font-size: 13px;"><i class="ph-bold ph-spinner ph-spin" style="font-size:24px;"></i><br>Loading customers...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📊 PREMIUM SAAS STATS DASHBOARD -->
+            <div class="section-card view-section" id="section-stats">
+                <div class="section-header" style="background: rgba(36,150,63,0.05);">
+                    <h3><i class="ph-fill ph-chart-pie-slice" style="color:var(--success);"></i> Business Analytics</h3>
+                </div>
+                
+                <!-- Revenue Overview -->
+                <div class="advanced-stats-grid" style="border-bottom: 1px solid var(--border);">
+                    <div class="mini-stat-card premium-hover">
+                        <span class="mini-stat-title">Revenue Today</span>
+                        <span class="mini-stat-val skeleton" id="rev-today">₹0</span>
+                    </div>
+                    <div class="mini-stat-card premium-hover">
+                        <span class="mini-stat-title">This Week</span>
+                        <span class="mini-stat-val skeleton" id="rev-week" style="color: var(--info);">₹0</span>
+                    </div>
+                    <div class="mini-stat-card premium-hover" style="grid-column: span 2; align-items: center;">
+                        <span class="mini-stat-title">Monthly Revenue</span>
+                        <span class="mini-stat-val skeleton" id="rev-month" style="font-size: 28px; color: var(--success);">₹0</span>
+                    </div>
+                </div>
+
+                <!-- Order Funnel -->
+                <div class="history-date-header" style="background: var(--bg-card);">Order Funnel Today</div>
+                <div class="advanced-stats-grid" style="padding-top: 10px;">
+                    <div class="mini-stat-card"><span class="mini-stat-title">Today's Orders</span><span class="mini-stat-val skeleton counter" id="saas-total-orders">0</span></div>
+                    <div class="mini-stat-card"><span class="mini-stat-title" style="color:var(--info);">Pending (New)</span><span class="mini-stat-val skeleton counter" id="saas-pending">0</span></div>
+                    <div class="mini-stat-card"><span class="mini-stat-title" style="color:var(--warning);">Preparing</span><span class="mini-stat-val skeleton counter" id="saas-preparing">0</span></div>
+                    <div class="mini-stat-card"><span class="mini-stat-title" style="color:var(--success);">Served</span><span class="mini-stat-val skeleton counter" id="saas-served">0</span></div>
+                    <div class="mini-stat-card"><span class="mini-stat-title" style="color:var(--danger);">Cancelled</span><span class="mini-stat-val skeleton counter" id="saas-cancelled">0</span></div>
+                </div>
+
+                <!-- Trending Insights -->
+                <div class="history-date-header" style="background: var(--bg-card); border-top: 1px solid var(--border);">Trending Insights</div>
+                <div style="padding: 20px; background: var(--bg-main);">
+                    <div class="mini-stat-card premium-hover" style="margin-bottom: 15px; flex-direction: row; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span class="mini-stat-title">Top Selling Dish</span>
+                            <div style="font-size: 16px; font-weight: 700; color: var(--text-main);" class="skeleton" id="top-dish-name">Loading...</div>
+                        </div>
+                        <i class="ph-fill ph-fire" style="font-size: 32px; color: var(--primary);"></i>
+                    </div>
+                    <div class="mini-stat-card premium-hover" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span class="mini-stat-title">Popular Category</span>
+                            <div style="font-size: 16px; font-weight: 700; color: var(--text-main);" class="skeleton" id="top-cat-name">Loading...</div>
+                        </div>
+                        <i class="ph-fill ph-chart-bar" style="font-size: 32px; color: var(--info);"></i>
+                    </div>
+                </div>
+
+                <!-- Interactive Chart -->
+                <div class="history-date-header" style="background: var(--bg-card); border-top: 1px solid var(--border);">
+                    <span>Revenue Trend 📊</span>
+                    <select id="chartFilter" class="chart-filter-select" onchange="if(window.allCompletedOrdersForChart) updateRevenueChart(window.allCompletedOrdersForChart)">
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <div style="padding: 20px; text-align: center; background: var(--bg-card); display:flex; flex-direction:column; align-items:center;">
+                    <canvas id="revenueBarChart" style="width: 100%; max-height: 250px;"></canvas>
+                    <p id="best-day-text" style="font-size:14px; font-weight:800; color:var(--success); margin-top:15px; margin-bottom:0;"></p>
+                </div>
+            </div>
+<!-- 🪑 TABLES & LIVE FLOOR PLAN SECTION -->
+            <div class="section-card view-section" id="section-tables">
+                <div class="section-header">
+                    <h3><i class="ph-fill ph-squares-four" style="color: var(--info);"></i> Live Table Manager</h3>
+                    <button class="btn-add" onclick="addNewTable()"><i class="ph-bold ph-plus"></i> Add Table</button>
+                </div>
+                
+                <div style="padding: 20px;">
+                    <p style="font-size: 13px; color: var(--text-sub); margin-top: 0; font-weight: 500; margin-bottom: 20px;">Manage your restaurant tables, check live status, and download unique QR codes for each table.</p>
+                    
+                    <!-- Yahan Tables ke dabbe (cards) aayenge -->
+                    <div id="tables-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                        
+                        <!-- Dummy Table Card (Design check karne ke liye) -->
+                        <div class="table-card">
+                            <div class="table-status-indicator status-available"></div>
+                            <div class="table-number">T-1</div>
+                            <div class="table-status-text">Available</div>
+                            <button class="btn-qr-download"><i class="ph-bold ph-qr-code"></i> Get QR</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+           <!-- ⚙️ APP SETTINGS SECTION -->
+            <div class="section-card view-section" id="section-settings">
+                <div class="section-header">
+                    <h3><i class="ph-fill ph-gear text-primary"></i> App Settings</h3>
+                </div>
+
+                <!-- 💸 VIP UPI SETTINGS CARD -->
+                <div class="settings-card" style="background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 15px 0; font-size: 16px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                        <i class="ph-fill ph-bank" style="color: #007AFF; font-size: 22px;"></i> Payment Settings
+                    </h3>
+                    <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 15px;">Enter your restaurant's UPI ID (GPay/PhonePe/Paytm) to receive direct payments from customers.</p>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="adminUpiInput" placeholder="e.g., itzarun@ptyes" style="flex: 1; padding: 12px 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-size: 14px; font-weight: 600; outline: none;">
+                        <button onclick="saveHotelUPI()" id="btnSaveUpi" style="background: #007AFF; color: white; border: none; padding: 0 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(0, 122, 255, 0.2);">
+                            Save UPI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <i class="ph-fill ph-bell-ringing"></i>
+                        <div>
+                            Sound Alerts
+                            <span class="setting-desc">Play sound for new orders & alerts</span>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <i class="ph-fill ph-moon-stars"></i>
+                        <div>
+                            Dark Mode
+                            <span class="setting-desc">Switch dashboard theme</span>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <!-- 🔒 Change Password Button -->
+                <div class="setting-row premium-hover" style="cursor: pointer;" onclick="document.getElementById('changePassModal').classList.add('show')">
+                    <div class="setting-label">
+                        <i class="ph-fill ph-lock-key" style="color: var(--success);"></i>
+                        <div>
+                            Change Password
+                            <span class="setting-desc">Update your admin account password</span>
+                        </div>
+                    </div>
+                    <i class="ph-bold ph-caret-right" style="color: var(--text-sub); font-size: 20px;"></i>
+                </div>
+                
+                <div class="section-header" style="border-top: 1px solid var(--border); margin-top:10px;">
+                    <h3><i class="ph-fill ph-qr-code"></i> Table QR Code</h3>
+                </div>
+                
+                <div class="qr-container">
+                    <p style="color: var(--text-sub); font-size: 14px; margin: 0; font-weight: 600;">Scan this to open Smart Menu</p>
+                    <div id="qrcode-box"></div>
+                    <input type="text" id="menu-link" class="link-input" value="https://itxarun.github.io/Smart-Menu/index.html" readonly>
+                    <button class="btn-download" onclick="downloadQR()"><i class="ph-bold ph-download-simple"></i> Download Print Version</button>
+                </div>
+                
+                <!-- 🚪 Safe Logout Button -->
+                <div onclick="triggerLogout()" style="cursor: pointer; margin: 20px 20px 40px 20px; text-align: center; background: rgba(229, 57, 53, 0.1); border-radius: 16px; padding: 15px; border: 1px solid rgba(229,57,53,0.2);">
+                    <div style="color: #E53935; font-weight: 700; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px;">
+                        <i class="ph-bold ph-sign-out" style="font-size: 20px;"></i> Logout
+                    </div>
+                </div>
+            </div>
+
+    <!-- 📱 BOTTOM NAV TABS -->
+    <div class="bottom-nav">
+        <a class="nav-tab active" onclick="switchTab('menu', this)"><i class="ph-fill ph-book-open"></i><label>MENU</label></a>
+        <a class="nav-tab" onclick="switchTab('orders', this)"><i class="ph-fill ph-receipt"></i><label>ORDERS</label></a>
+        <!-- 🪑 NAYA TABLE TAB -->
+        <div class="nav-tab" id="tab-tables" onclick="switchTab('tables')">
+            <i class="ph-fill ph-squares-four"></i>
+            <label>Tables</label>
+        </div>
+        <a class="nav-tab" onclick="switchTab('crm', this)"><i class="ph-fill ph-users"></i><label>CRM</label></a>
+        <a class="nav-tab" onclick="switchTab('stats', this)"><i class="ph-fill ph-chart-line-up"></i><label>STATS</label></a>
+        <a class="nav-tab" onclick="switchTab('settings', this)"><i class="ph-fill ph-gear"></i><label>SETTINGS</label></a>
+    </div>
+
+    <!-- 🍲 ADD / EDIT DISH MODAL -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-card">
+            <!-- 🔥 Highly Visible Top Close Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+                <h3 id="modalTitle" style="margin: 0; font-size: 20px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                    <i class="ph-fill ph-plus-circle" style="color: var(--primary);"></i> Add New Dish
+                </h3>
+                <button type="button" onclick="closeModal()" style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.3); width: 38px; height: 38px; border-radius: 50%; color: var(--danger, #E53935); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" title="Close">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="dishId">
+            
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="width: 80px;">
+                    <label>Icon</label>
+                    <input type="text" id="dishEmoji" placeholder="🍲" style="font-size: 20px; text-align: center;" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Dish Name</label>
+                    <input type="text" id="dishName" placeholder="Enter dish name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select id="dishCategory" class="input-field">
+                    <option value="Starters">🔥 Starters</option>
+                    <option value="Main Course">🍛 Main Course</option>
+                    <option value="Breads">🥖 Breads</option>
+                    <option value="Rice">🍚 Rice</option>
+                    <option value="Drinks">🥤 Drinks</option>
+                    <option value="Desserts">🍰 Desserts</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Full (₹)</label>
+                    <input type="number" id="dishPrice" placeholder="0" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Half (₹)</label>
+                    <input type="number" id="dishPriceHalf" placeholder="Opt">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Piece (₹)</label>
+                    <input type="number" id="dishPricePiece" placeholder="Opt">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>3D Model URL (.glb)</label>
+                <input type="url" id="dishModel" class="input-field" placeholder="https://raw.githubusercontent.com/..." required>
+            </div>
+
+            <div class="form-group" style="background: var(--input-bg); padding: 20px; border-radius: 16px; border: 1px dashed var(--border);">
+                <label style="color: var(--primary); display:flex; align-items:center; gap:6px;"><i class="ph-fill ph-image"></i> Dish Photos</label>
+                <p style="font-size: 11px; color: var(--text-sub); margin-top: -5px; margin-bottom: 15px; font-weight:500;">Provide image URLs. Customers can swipe these photos.</p>
+                
+                <input type="url" id="dishPhoto1" class="input-field" placeholder="1. Main Photo URL (Required)" style="margin-bottom: 12px; background: var(--bg-card);" required>
+                <input type="url" id="dishPhoto2" class="input-field" placeholder="2. Extra Photo URL (Optional)" style="margin-bottom: 12px; background: var(--bg-card);" required>
+                <input type="url" id="dishPhoto3" class="input-field" placeholder="3. Extra Photo URL (Optional)" style="margin-bottom: 12px; background: var(--bg-card);" required>
+                <input type="url" id="dishPhoto4" class="input-field" placeholder="4. Extra Photo URL (Optional)" style="background: var(--bg-card);" required>
+            </div>
+
+            <!-- 🔥 Save & Cancel Dual Action Row -->
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="button" onclick="closeModal()" style="flex: 0.4; padding: 16px; border-radius: 16px; background: var(--input-bg); color: var(--text-main); font-weight: 700; border: none; cursor: pointer;">
+                    Cancel
+                </button>
+                <button type="button" class="btn-save" id="saveBtn" onclick="saveDish()" style="flex: 1; margin-top: 0;">
+                    <i class="ph-bold ph-floppy-disk"></i> Save & Publish
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- 🚪 LOGOUT MODAL -->
+    <div class="modal-overlay" id="logoutConfirmModal">
+        <div class="modal-content" style="background: var(--bg-card); max-width: 320px; text-align: center; padding: 30px 20px; border-radius: 32px; margin: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2);">
+            <div style="background: rgba(229,57,53,0.1); width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto;">
+                <i class="ph-bold ph-sign-out" style="font-size: 32px; color: var(--danger, #E53935);"></i>
+            </div>
+            <h3 style="margin-bottom: 10px; color: var(--text-main, #1C1C1E); font-family: 'Okra', sans-serif;">Are you sure?</h3>
+            <p style="font-size: 13px; color: var(--text-sub, #757575); margin-bottom: 25px;">Do you really want to logout from the admin panel?</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeLogoutModal()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--input-bg); color: var(--text-main);">No</button>
+                <button onclick="executeLogout()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--danger, #E53935); color: white; box-shadow: 0 8px 20px rgba(229,57,53,0.3);">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 👤 CUSTOMER LIFETIME HISTORY & LEDGER MODAL -->
+    <div class="modal-overlay" id="customerHistoryModal">
+        <div class="modal-card" style="max-width: 500px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px;">
+                <div>
+                    <h3 id="custModalName" style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+                        <i class="ph-fill ph-user-circle" style="color: var(--primary); font-size: 24px;"></i> Customer Name
+                    </h3>
+                    <span id="custModalPhone" style="font-size: 12px; color: var(--text-sub); font-weight: 600; margin-top: 2px; display: block;">+91 0000000000</span>
+                </div>
+                <button type="button" onclick="closeCustomerHistoryModal()" style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.3); width: 36px; height: 36px; border-radius: 50%; color: var(--danger, #E53935); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; background: var(--bg-main); padding: 12px; border-radius: 14px; border: 1px solid var(--border); text-align: center;">
+                <div>
+                    <span style="font-size: 10px; color: var(--text-sub); font-weight: 700; text-transform: uppercase;">Total Spend</span>
+                    <div id="custModalSpend" style="font-size: 16px; font-weight: 800; color: var(--success); margin-top: 2px;">₹0</div>
+                </div>
+                <div>
+                    <span style="font-size: 10px; color: var(--text-sub); font-weight: 700; text-transform: uppercase;">Orders</span>
+                    <div id="custModalCount" style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-top: 2px;">0</div>
+                </div>
+                <div>
+                    <span style="font-size: 10px; color: var(--text-sub); font-weight: 700; text-transform: uppercase;">Favorite Dish</span>
+                    <div id="custModalFav" style="font-size: 12px; font-weight: 800; color: var(--primary); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">N/A</div>
+                </div>
+            </div>
+
+            <div style="font-size: 12px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin-bottom: 10px;">
+                📜 Order Timeline
+            </div>
+
+            <div id="customer-orders-timeline" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 5px;"></div>
+        </div>
+    </div>
+
+    <!-- 🔥 Cache Busting v14 for JS -->
+    <script type="module" src="admin.js?v=14"></script>
+    
+    <!-- 🚀 PREMIUM QR STANDEE (HIDDEN FOR EXPORT) -->
+    <div id="premium-qr-export" style="position: absolute; left: -9999px; top: 0; width: 800px; background: #ffffff; font-family: 'Arial', sans-serif; overflow: hidden; border: 2px solid #fff;">
+        <div style="background: linear-gradient(135deg, #8B0000, #B30000); color: white; text-align: center; padding: 50px 20px; border-bottom: 15px solid #D4AF37; border-bottom-left-radius: 50%; border-bottom-right-radius: 50%;">
+            <h1 id="export-brand-name" style="font-size: 60px; margin: 0; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">RESTAURANT MENU</h1>
+            <p style="font-size: 18px; margin-top: 15px; color: #f9d877; font-weight: bold; letter-spacing: 2px;">SMART MENU • FAST SERVICE • HAPPY YOU</p>
+        </div>
+        
+        <div style="text-align: center; font-size: 45px; font-weight: 900; color: #8B0000; margin-top: 50px;">SCAN TO VIEW<br>MENU & ORDER</div>
+        
+        <div style="text-align: center; margin: 40px auto;">
+            <div id="export-qr-box" style="border: 8px solid #8B0000; border-radius: 35px; padding: 25px; display: inline-block; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.15);"></div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-around; margin-top: 30px; padding: 0 40px;">
+            <div style="width: 45%;">
+                <div style="background: #8B0000; color: white; padding: 15px 20px; font-weight: bold; font-size: 20px; margin-bottom: 25px; border-radius: 8px; border-left: 8px solid #D4AF37; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">📱 DIGITAL MENU</div>
+                <div style="background: #8B0000; color: white; padding: 15px 20px; font-weight: bold; font-size: 20px; margin-bottom: 25px; border-radius: 8px; border-left: 8px solid #D4AF37; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">🍽️ EASY ORDERING</div>
+            </div>
+            <div style="width: 45%;">
+                <div style="background: #8B0000; color: white; padding: 15px 20px; font-weight: bold; font-size: 20px; margin-bottom: 25px; border-radius: 8px; border-left: 8px solid #D4AF37; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">⚡ FAST SERVICE</div>
+                <div style="background: #8B0000; color: white; padding: 15px 20px; font-weight: bold; font-size: 20px; margin-bottom: 25px; border-radius: 8px; border-left: 8px solid #D4AF37; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">🛡️ CONTACTLESS</div>
+            </div>
+        </div>
+        
+        <div style="background: #f4f4f4; border-top: 5px solid #8B0000; padding: 30px; text-align: center; margin-top: 40px;">
+            <div style="font-size: 35px; color: #8B0000; font-family: cursive, sans-serif; font-weight: bold; margin-bottom: 20px;">Thank You - Enjoy Your Meal</div>
+            <div style="display: flex; justify-content: space-around; padding: 0 20px;">
+                <div style="font-size: 16px; font-weight: bold; color: #333;"><div style="background: #8B0000; color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px;">1</div><br>OPEN CAMERA</div>
+                <div style="font-size: 16px; font-weight: bold; color: #333;"><div style="background: #8B0000; color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px;">2</div><br>SCAN QR CODE</div>
+                <div style="font-size: 16px; font-weight: 800; color: #333;"><div style="background: #8B0000; color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px;">3</div><br>ORDER & PAY</div>
+            </div>
+        </div>
+    </div><!-- 🔑 FORGOT PASSWORD MODAL (MOBILE CENTERED FIXED) -->
+    <div class="modal-overlay" id="forgotPassModal" style="align-items: center !important;">
+        <div class="modal-card" style="transform: none !important; margin: auto; max-width: 380px; text-align: center; border-radius: 24px; padding: 30px 20px;">
+            
+            <div style="background: rgba(229,57,53,0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto;">
+                <i class="ph-bold ph-key" style="font-size: 28px; color: #E53935;"></i>
+            </div>
+            
+            <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: #1C1C1E; font-family: 'Okra', sans-serif;">Reset Password</h3>
+            <p style="font-size: 13px; color: #757575; margin-bottom: 20px; font-weight: 600;">Enter your registered email address to receive a password reset link.</p>
+            
+            <div class="input-group" style="margin-bottom: 20px; position: relative;">
+                <input type="email" id="resetEmailInput" placeholder="manager@restaurant.com" required style="width: 100%; padding: 14px 14px 14px 45px; border: 1px solid #E0E0E0; border-radius: 12px; font-size: 14px; box-sizing: border-box; background: #F9F9F9; outline: none; font-family: 'Poppins', sans-serif;">
+                <i class="ph-fill ph-envelope" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #757575; font-size: 18px;"></i>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button onclick="document.getElementById('forgotPassModal').classList.remove('show');" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: #F5F5F5; color: #1C1C1E;">Cancel</button>
+                <button id="btnSendReset" onclick="executePasswordReset()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: #E53935; color: white;">Send Link</button>
+            </div>
+            
+            <div id="resetFeedbackMsg" style="display: none; margin-top: 15px; font-size: 12px; font-weight: 700; color: #24963F;"></div>
+        </div>
+    </div>
+    <!-- 🖨️ THERMAL PRINTER RECEIPT TEMPLATE (Hidden by default) -->
+    <div id="print-receipt" style="display: none; background: white; color: black; font-family: monospace; padding: 10px;">
+        <div style="text-align: center; margin-bottom: 10px;">
+           <h2 id="print-hotel-name" style="margin: 0; font-size: 18px; font-weight: 800; font-family: sans-serif;">Partner POS</h2>
+            <p style="margin: 0; font-size: 10px;">Premium Restaurant POS</p>
+            <p style="margin: 0; font-size: 10px;">--------------------------</p>
+        </div>
+        
+        <div style="margin-bottom: 10px; font-size: 12px;">
+            <p style="margin: 2px 0;"><strong>Order ID:</strong> #<span id="print-order-id">1234</span></p>
+            <p style="margin: 2px 0;"><strong>Date:</strong> <span id="print-date">09/08/2026</span></p>
+            <p style="margin: 2px 0;"><strong>Type:</strong> <span id="print-type">Dine-in (Table 4)</span></p>
+            <p style="margin: 0; font-size: 10px;">--------------------------</p>
+        </div>
+
+        <table style="width: 100%; font-size: 12px; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding-bottom: 5px;">Item</th>
+                    <th style="padding-bottom: 5px; text-align: center;">Qty</th>
+                    <th style="padding-bottom: 5px; text-align: right;">Amt</th>
+                </tr>
+            </thead>
+            <tbody id="print-items-body">
+                <!-- Items Javascript se aayenge -->
+            </tbody>
+        </table>
+
+        <div style="margin-top: 10px; font-size: 12px;">
+            <p style="margin: 0; font-size: 10px;">--------------------------</p>
+            <h3 style="margin: 5px 0; font-size: 14px; text-align: right;">Total: ₹<span id="print-total">0</span></h3>
+            <p style="margin: 0; font-size: 10px;">--------------------------</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 15px;">
+            <p style="margin: 0; font-size: 10px;">Thank you for visiting!</p>
+        </div>
+    </div>
+    <!-- 🔒 CHANGE PASSWORD MODAL -->
+    <div class="modal-overlay" id="changePassModal" style="align-items: center !important;">
+        <div class="modal-card" style="transform: none !important; margin: auto; max-width: 380px; text-align: center; border-radius: 24px; padding: 30px 20px;">
+            
+            <div style="background: rgba(36, 150, 63, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto;">
+                <i class="ph-bold ph-shield-check" style="font-size: 28px; color: var(--success);"></i>
+            </div>
+            
+            <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: var(--text-main); font-family: 'Okra', sans-serif;">Change Password</h3>
+            <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px; font-weight: 600;">Create a new strong password for your admin account.</p>
+            
+            <div class="input-group" style="margin-bottom: 15px; position: relative;">
+                <input type="password" id="newPassInput" placeholder="New Password" required style="width: 100%; padding: 14px 14px 14px 45px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; box-sizing: border-box; background: var(--input-bg); color: var(--text-main); outline: none; font-family: 'Poppins', sans-serif;">
+                <i class="ph-fill ph-lock" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 18px;"></i>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 20px; position: relative;">
+                <input type="password" id="confirmNewPassInput" placeholder="Confirm New Password" required style="width: 100%; padding: 14px 14px 14px 45px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; box-sizing: border-box; background: var(--input-bg); color: var(--text-main); outline: none; font-family: 'Poppins', sans-serif;">
+                <i class="ph-fill ph-check-circle" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 18px;"></i>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button onclick="document.getElementById('changePassModal').classList.remove('show'); document.getElementById('changePassFeedback').style.display='none';" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--input-bg); color: var(--text-main);">Cancel</button>
+                <button id="btnUpdatePass" onclick="updateAdminPassword()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--success); color: white; box-shadow: 0 8px 20px rgba(36, 150, 63, 0.3);">Update</button>
+            </div>
+            
+            <div id="changePassFeedback" style="display: none; margin-top: 15px; font-size: 12px; font-weight: 700;"></div>
+        </div>
+    </div>
+    <!-- 🪑 ADD NEW TABLE MODAL -->
+    <div class="modal-overlay" id="addTableModal" style="align-items: center !important;">
+        <div class="modal-card" style="transform: none !important; margin: auto; max-width: 320px; text-align: center; border-radius: 24px; padding: 30px 20px;">
+            
+            <div style="background: rgba(0, 122, 255, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto;">
+                <i class="ph-fill ph-squares-four" style="font-size: 28px; color: #007AFF;"></i>
+            </div>
+            
+            <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: var(--text-main); font-family: 'Okra', sans-serif;">Add New Table</h3>
+            <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px; font-weight: 500;">Enter the table number you want to add.</p>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <input type="number" id="newTableInput" placeholder="Table No. (e.g., 5)" style="width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 18px; font-weight: 800; text-align: center; background: var(--input-bg); color: var(--text-main); outline: none;">
+            </div>
+            
+            <!-- Error dikhane ke liye -->
+            <div id="addTableError" style="color: var(--danger); font-size: 12px; font-weight: 700; margin-bottom: 15px; display: none;"></div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button onclick="document.getElementById('addTableModal').classList.remove('show')" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--input-bg); color: var(--text-main);">Cancel</button>
+                <button onclick="confirmAddNewTable()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: #007AFF; color: white; box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3);">Add Table</button>
+            </div>
+        </div>
+    </div>
+    <!-- 🗑️ CUSTOM VIP DELETE TABLE MODAL -->
+    <div class="modal-overlay" id="deleteTableModal" style="align-items: center !important;">
+        <div class="modal-card" style="transform: none !important; margin: auto; max-width: 320px; text-align: center; border-radius: 24px; padding: 30px 20px;">
+            <div style="background: rgba(229, 57, 53, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto;">
+                <i class="ph-fill ph-trash" style="font-size: 28px; color: var(--danger);"></i>
+            </div>
+            <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: var(--text-main); font-family: 'Okra', sans-serif;">Remove Table?</h3>
+            <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 25px; font-weight: 500;">Are you sure you want to delete this table? Customers won't be able to order from it.</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeDeleteTableModal()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--input-bg); color: var(--text-main);">Cancel</button>
+                <button onclick="confirmDeleteTableAction()" style="flex: 1; padding: 14px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; background: var(--danger); color: white; box-shadow: 0 8px 20px rgba(229, 57, 53, 0.3);">Yes, Remove</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
 
