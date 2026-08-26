@@ -962,12 +962,33 @@ async function loadDynamicMenu() {
             setTimeout(() => fullScreenLoader.style.display = 'none', 200);
         }
 
-        // 🔥 ASLI DATA FETCH (Ye background me aaram se aayega)
-        const restaurant = await APIService.getRestaurant();
-        const categories = await APIService.getCategories();
-        const dishes = await APIService.getDishes();
+        // 🌉 THE SMART BRIDGE FOR CUSTOMER APP
+        let restaurant = null;
+        try {
+            let q1 = query(collection(db, "clients"), where("clientId", "==", window.currentRestaurantId));
+            let snap1 = await getDocs(q1);
+            if (!snap1.empty) {
+                restaurant = snap1.docs[0].data();
+                restaurant.name = restaurant.clientName || "Qrio Partner";
+            } else {
+                let q2 = query(collection(db, "merchants"), where("restaurantId", "==", window.currentRestaurantId));
+                let snap2 = await getDocs(q2);
+                if (!snap2.empty) restaurant = snap2.docs[0].data();
+            }
+        } catch(e) { console.log("Bridge Error:", e); }
 
-        if (!restaurant) { console.error("❌ Restaurant not found! Default ID use ho rahi hai."); return; }
+        if (!restaurant) { 
+            console.warn("Restaurant data missing, using default."); 
+            restaurant = { name: "Qrio Smart Menu" }; 
+        }
+
+        // 🍔 DIRECT MENU FETCH (Bypass APIService to prevent crash)
+        let dishes = [];
+        try {
+            const qDishes = query(collection(db, "menu_items"), where("restaurantId", "==", window.currentRestaurantId));
+            const snapDishes = await getDocs(qDishes);
+            snapDishes.forEach(doc => { let d = doc.data(); d.id = doc.id; dishes.push(d); });
+        } catch(e) { console.error("Dish fetch error:", e); }
         document.title = `${restaurant.name} - Smart Menu`;
 
         const loaderBrand = document.getElementById('loader-brand-name');
@@ -988,8 +1009,24 @@ async function loadDynamicMenu() {
 
         // Skeleton hatake Asli Data lagao
         window.allDishes = dishes;
-        if (typeof window.applyFilters === 'function') { window.applyFilters(); }
-        if (window.allDishes.length > 0) { window.loadDish(window.allDishes[0]); }
+        
+        // Agar malik ne ek bhi dish nahi daali hai
+        if (window.allDishes.length === 0) {
+            const sidebar = document.getElementById('sidebar-menu');
+            if(sidebar) sidebar.innerHTML = '<div style="padding: 50px 20px; text-align: center; color: var(--text-sub);"><i class="ph-fill ph-empty" style="font-size: 40px; opacity: 0.3;"></i><br><b>Menu is Empty!</b><br><span style="font-size: 12px;">Admin Panel se dishes add karein.</span></div>';
+            
+            const photoSlider = document.getElementById('photo-slider');
+            if(photoSlider) photoSlider.innerHTML = '<div style="padding: 100px 20px; text-align: center; color: var(--text-sub);">No dishes to show</div>';
+            
+            const dispName = document.getElementById('display-name');
+            if(dispName) dispName.innerHTML = 'No Item Selected';
+            
+            const dispPrice = document.getElementById('display-price');
+            if(dispPrice) dispPrice.innerHTML = '₹0';
+        } else {
+            if (typeof window.applyFilters === 'function') { window.applyFilters(); }
+            window.loadDish(window.allDishes[0]); 
+        }
         
         console.log("✅ Data Load & Render Successful!");
     } catch(e) { 
