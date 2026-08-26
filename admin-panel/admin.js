@@ -107,25 +107,31 @@ onAuthStateChanged(auth, async (user) => {
     
     if (user) { 
         try {
-            let q = query(collection(db, "merchants"), where("email", "==", user.email));
-            let querySnapshot = await getDocs(q);
+            let merchantData = null;
             
-            if (querySnapshot.empty) {
-                q = query(collection(db, "merchants"), where("uid", "==", user.uid));
-                querySnapshot = await getDocs(q);
+            // 1. Pehle Naye Master Panel (clients) me check karega
+            let q1 = query(collection(db, "clients"), where("email", "==", user.email));
+            let snap1 = await getDocs(q1);
+            
+            if (!snap1.empty) {
+                merchantData = snap1.docs[0].data();
+            } else {
+                // 2. Agar nahi mila, toh purane (merchants) me check karega
+                let q2 = query(collection(db, "merchants"), where("email", "==", user.email));
+                let snap2 = await getDocs(q2);
+                if (!snap2.empty) merchantData = snap2.docs[0].data();
             }
             
-            if (!querySnapshot.empty) {
-                const merchantData = querySnapshot.docs[0].data();
-                window.currentRestaurantId = merchantData.restaurantId; 
-                
-                const realName = merchantData.restaurantName || "Partner POS";
+            if (merchantData) {
+                // ID aur Name dono database ke hisaab se set karega
+                window.currentRestaurantId = merchantData.clientId || merchantData.restaurantId; 
+                const realName = merchantData.clientName || merchantData.restaurantName || "Qrio Partner";
 
                 const brandLogos = document.querySelectorAll('#admin-restaurant-name, #qr-brand-name, .brand-logo');
                 brandLogos.forEach(el => el.innerText = realName);
                 
                 localStorage.setItem('crave_hotel_name_cache', realName);
-                localStorage.setItem('crave_restaurant_id_cache', merchantData.restaurantId);
+                localStorage.setItem('crave_restaurant_id_cache', window.currentRestaurantId);
                 localStorage.setItem('pos_is_logged_in', 'true');
 
                 if(loginScreen) loginScreen.style.setProperty('display', 'none', 'important'); 
@@ -135,20 +141,17 @@ onAuthStateChanged(auth, async (user) => {
                 localStorage.removeItem('pos_is_logged_in');
                 if (shield) shield.remove();
                 await signOut(auth);
-                window.showLoginError("No Restaurant Profile linked with this Account! Please contact Support.");
+                window.showLoginError("No Qrio Restaurant Profile linked with this Account!");
                 if(loginScreen) loginScreen.style.setProperty('display', 'flex', 'important');
-                if(btn) {
-                    btn.innerHTML = 'Login to Dashboard <i class="ph-bold ph-arrow-right"></i>'; 
-                    btn.disabled = false;
-                }
+                if(btn) { btn.innerHTML = 'Login to Dashboard <i class="ph-bold ph-arrow-right"></i>'; btn.disabled = false; }
             }
 
         } catch (error) {
-            console.error("Error fetching merchant data:", error);
+            console.error("Auth Error:", error);
             localStorage.removeItem('pos_is_logged_in');
             if (shield) shield.remove();
             await signOut(auth);
-            window.showLoginError("Authentication Error: " + error.message);
+            window.showLoginError("Error: " + error.message);
             if(loginScreen) loginScreen.style.setProperty('display', 'flex', 'important');
         }
     } else { 
@@ -897,9 +900,16 @@ window.switchTab = (tabId, element = null) => {
     if (tabId === 'settings') {
         setTimeout(() => {
             const qrBox = document.getElementById("qrcode-box");
-            if (qrBox) {
+           if (qrBox) {
                 qrBox.innerHTML = ""; 
-                const dynamicLink = `https://itxarun.github.io/Smart-Menu/index.html?rest=${window.currentRestaurantId}`;
+                
+                // NAYA LOGIC: Automatically "menu" folder ka raasta dhundhega
+                const currentOrigin = window.location.origin;
+                let pathParts = window.location.pathname.split('/');
+                pathParts.pop(); // admin.html hatayega
+                pathParts.pop(); // admin-panel folder hatayega
+                const basePath = pathParts.join('/');
+                const dynamicLink = `${currentOrigin}${basePath}/menu/index.html?rest=${window.currentRestaurantId}`;
                 
                 const linkInput = document.getElementById("menu-link");
                 if (linkInput) linkInput.value = dynamicLink;
@@ -1577,9 +1587,14 @@ window.safeDownloadTableQR = async (tableNum) => {
     try {
         if(typeof window.showToast === 'function') window.showToast("Generating QR...");
         
-        const domain = window.location.origin + window.location.pathname.replace('admin.html', 'index.html');
+        // NAYA LOGIC: Folder structure fix
+        const currentOrigin = window.location.origin;
+        let pathParts = window.location.pathname.split('/');
+        pathParts.pop(); pathParts.pop();
+        const basePath = pathParts.join('/');
+        
         const restId = window.currentRestaurantId || 'rest_001';
-        const qrUrl = `${domain}?rest=${restId}&table=${tableNum}`;
+        const qrUrl = `${currentOrigin}${basePath}/menu/index.html?rest=${restId}&table=${tableNum}`;
         const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(qrUrl)}&margin=10`;
 
         const response = await fetch(apiUrl);
