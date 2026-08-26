@@ -123,9 +123,9 @@ onAuthStateChanged(auth, async (user) => {
             }
             
             if (merchantData) {
-                // ID aur Name dono database ke hisaab se set karega
-                window.currentRestaurantId = merchantData.clientId || merchantData.restaurantId; 
-                const realName = merchantData.clientName || merchantData.restaurantName || "Qrio Partner";
+                // 🌉 UNIVERSAL CATCHER: Har database field ko support karega
+                window.currentRestaurantId = merchantData.clientId || merchantData.hotelId || merchantData.restaurantId || merchantData.id; 
+                const realName = merchantData.clientName || merchantData.hotelName || merchantData.restaurantName || merchantData.name || "Qrio Partner";
 
                 const brandLogos = document.querySelectorAll('#admin-restaurant-name, #qr-brand-name, .brand-logo');
                 brandLogos.forEach(el => el.innerText = realName);
