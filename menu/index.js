@@ -962,23 +962,27 @@ async function loadDynamicMenu() {
             setTimeout(() => fullScreenLoader.style.display = 'none', 200);
         }
 
-        // 🌉 THE SMART BRIDGE FOR CUSTOMER APP
+        // 🌉 THE UNIVERSAL SMART BRIDGE FOR CUSTOMER APP
         let restaurant = null;
         try {
-            // 1. Pehle naye Master Panel me check karo
+            // Master panel se multiple ID names try karega
             let q1 = query(collection(db, "clients"), where("clientId", "==", window.currentRestaurantId));
             let snap1 = await getDocs(q1);
+            if(snap1.empty) snap1 = await getDocs(query(collection(db, "clients"), where("hotelId", "==", window.currentRestaurantId)));
+            if(snap1.empty) snap1 = await getDocs(query(collection(db, "clients"), where("restaurantId", "==", window.currentRestaurantId)));
+            
             if (!snap1.empty) {
                 restaurant = snap1.docs[0].data();
-                restaurant.name = restaurant.clientName || "Qrio Partner";
+                restaurant.name = restaurant.clientName || restaurant.hotelName || restaurant.restaurantName || restaurant.name || "Qrio Partner";
             } else {
-                // 2. Nahi mila toh purane me check karo
                 let q2 = query(collection(db, "merchants"), where("restaurantId", "==", window.currentRestaurantId));
                 let snap2 = await getDocs(q2);
-                if (!snap2.empty) restaurant = snap2.docs[0].data();
+                if (!snap2.empty) {
+                    restaurant = snap2.docs[0].data();
+                    restaurant.name = restaurant.restaurantName || restaurant.hotelName || restaurant.name || "Qrio Partner";
+                }
             }
         } catch(e) { console.log("Bridge Error:", e); }
-
         if (!restaurant) { 
             console.warn("Restaurant data missing, using default."); 
             restaurant = { name: "Qrio Smart Menu" }; 
