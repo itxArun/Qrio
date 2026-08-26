@@ -965,12 +965,14 @@ async function loadDynamicMenu() {
         // 🌉 THE SMART BRIDGE FOR CUSTOMER APP
         let restaurant = null;
         try {
+            // 1. Pehle naye Master Panel me check karo
             let q1 = query(collection(db, "clients"), where("clientId", "==", window.currentRestaurantId));
             let snap1 = await getDocs(q1);
             if (!snap1.empty) {
                 restaurant = snap1.docs[0].data();
                 restaurant.name = restaurant.clientName || "Qrio Partner";
             } else {
+                // 2. Nahi mila toh purane me check karo
                 let q2 = query(collection(db, "merchants"), where("restaurantId", "==", window.currentRestaurantId));
                 let snap2 = await getDocs(q2);
                 if (!snap2.empty) restaurant = snap2.docs[0].data();
