@@ -962,7 +962,7 @@ async function loadDynamicMenu() {
             setTimeout(() => fullScreenLoader.style.display = 'none', 200);
         }
 
-        // 🌉 THE UNIVERSAL SMART BRIDGE FOR CUSTOMER APP
+       // 🌉 THE UNIVERSAL SMART BRIDGE FOR CUSTOMER APP
         let restaurant = null;
         try {
             // Master panel se multiple ID names try karega
