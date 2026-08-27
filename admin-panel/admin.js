@@ -122,7 +122,7 @@ onAuthStateChanged(auth, async (user) => {
                 if (!snap2.empty) merchantData = snap2.docs[0].data();
             }
             
-            if (merchantData) {
+          if (merchantData) {
                 // 🌉 UNIVERSAL CATCHER: Har database field ko support karega
                 window.currentRestaurantId = merchantData.clientId || merchantData.hotelId || merchantData.restaurantId || merchantData.id; 
                 const realName = merchantData.clientName || merchantData.hotelName || merchantData.restaurantName || merchantData.name || "Qrio Partner";
