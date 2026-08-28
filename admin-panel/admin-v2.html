@@ -12,6 +12,62 @@
     <link rel="stylesheet" href="admin-v2.css">
 </head>
 <body>
+    <!-- ==================================
+         QRIO PREMIUM LOGIN SCREEN (V2)
+    ================================== -->
+    <div id="loginScreen" class="premium-login-wrapper">
+        <div class="login-container">
+            
+            <!-- Left Side: Branding -->
+            <div class="login-brand-side">
+                <h2><i class="ph-fill ph-pizza"></i> Qrio.</h2>
+                <h1>Manage Your<br>Restaurant<br>Like a Pro.</h1>
+                <p>Login to access your smart dashboard, track live orders, and grow your revenue.</p>
+            </div>
+            
+            <!-- Right Side: Form -->
+            <div class="login-form-side">
+                <div class="login-header">
+                    <h2>Welcome Back! 👋</h2>
+                    <p>Enter your details to sign in to your panel.</p>
+                </div>
+
+                <!-- Error Box (JS will show this if wrong password) -->
+                <div id="loginErrorBox" style="display: none; background: #fee2e2; color: #ef4444; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 20px;">
+                    <i class="ph-bold ph-warning-circle"></i> <span id="loginErrorText">Error message here</span>
+                </div>
+
+                <!-- Email Input -->
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-box">
+                        <i class="ph-bold ph-envelope"></i>
+                        <input type="email" id="adminEmail" placeholder="admin@hotel.com">
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-box">
+                        <i class="ph-bold ph-lock-key"></i>
+                        <input type="password" id="adminPass" placeholder="••••••••">
+                        <i class="ph-bold ph-eye" id="togglePassEye" onclick="togglePasswordVisibility()" style="cursor: pointer;"></i>
+                    </div>
+                </div>
+
+                <div class="forgot-pass">
+                    <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                </div>
+
+                <!-- Login Button -->
+                <button id="loginBtn" class="premium-login-btn">
+                    Login to Dashboard <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+            
+        </div>
+    </div>
     <div class="app-container">
         
         <!-- PART A: The Clean Sidebar -->
