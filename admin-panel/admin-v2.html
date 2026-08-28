@@ -69,20 +69,18 @@
             <!-- PART C: The Workspace -->
         <div class="dashboard-workspace">
             
-            <!-- The 4 Features / KPI Cards with Circles -->
+           <!-- The 4 Features / KPI Cards with Circles -->
             <div class="kpi-grid">
                 
                 <!-- Card 1: Total Menu -->
                 <div class="kpi-card">
                     <div class="kpi-info">
                         <p>Total Menu</p>
-                        <h3>325</h3>
+                        <!-- 🔥 ID ADDED -->
+                        <h3 id="total-dishes">0</h3>
                     </div>
-                    <!-- 75% Orange Circle -->
                     <div class="circle-graph" style="background: conic-gradient(#FF6B00 75%, #FFF0E6 75%);">
-                        <div class="circle-inner" style="color: #FF6B00;">
-                            <i class="ph-bold ph-pizza"></i>
-                        </div>
+                        <div class="circle-inner" style="color: #FF6B00;"><i class="ph-bold ph-pizza"></i></div>
                     </div>
                 </div>
 
@@ -90,13 +88,11 @@
                 <div class="kpi-card">
                     <div class="kpi-info">
                         <p>Total Revenue</p>
-                        <h3>₹425k</h3>
+                        <!-- 🔥 ID ADDED -->
+                        <h3 id="total-revenue">₹0</h3>
                     </div>
-                    <!-- 85% Green Circle -->
                     <div class="circle-graph" style="background: conic-gradient(#20c997 85%, #E6F9F3 85%);">
-                        <div class="circle-inner" style="color: #20c997;">
-                            <i class="ph-bold ph-currency-inr"></i>
-                        </div>
+                        <div class="circle-inner" style="color: #20c997;"><i class="ph-bold ph-currency-inr"></i></div>
                     </div>
                 </div>
 
@@ -104,13 +100,11 @@
                 <div class="kpi-card">
                     <div class="kpi-info">
                         <p>Total Orders</p>
-                        <h3>415</h3>
+                        <!-- 🔥 ID ADDED -->
+                        <h3 id="total-orders">0</h3>
                     </div>
-                    <!-- 60% Blue Circle -->
                     <div class="circle-graph" style="background: conic-gradient(#4361ee 60%, #EBEEFD 60%);">
-                        <div class="circle-inner" style="color: #4361ee;">
-                            <i class="ph-bold ph-shopping-cart"></i>
-                        </div>
+                        <div class="circle-inner" style="color: #4361ee;"><i class="ph-bold ph-shopping-cart"></i></div>
                     </div>
                 </div>
 
@@ -118,17 +112,15 @@
                 <div class="kpi-card">
                     <div class="kpi-info">
                         <p>Total Customers</p>
-                        <h3>985</h3>
+                        <!-- 🔥 ID ADDED -->
+                        <h3 id="total-customers">0</h3>
                     </div>
-                    <!-- 90% Yellow Circle -->
                     <div class="circle-graph" style="background: conic-gradient(#f5b700 90%, #FEF8E6 90%);">
-                        <div class="circle-inner" style="color: #f5b700;">
-                            <i class="ph-bold ph-users"></i>
-                        </div>
+                        <div class="circle-inner" style="color: #f5b700;"><i class="ph-bold ph-users"></i></div>
                     </div>
                 </div>
 
-           </div>
+            </div>
                 
             <!-- ==================================
                  MIDDLE SECTION: Trending, Chart & Stats
@@ -423,5 +415,7 @@
             }
         });
     </script>
+    <!-- 🔥 CONNECTING TO FIREBASE & ADMIN LOGIC 🔥 -->
+    <script type="module" src="admin.js"></script>
 </body>
 </html>
