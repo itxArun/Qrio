@@ -131,11 +131,11 @@
            </div>
                 
             <!-- ==================================
-                 MIDDLE SECTION: Trending & Chart
+                 MIDDLE SECTION: Trending, Chart & Stats
             ================================== -->
             <div class="middle-grid">
                 
-                <!-- Left Column: Trending Items -->
+                <!-- 1. Left Column: Trending Items -->
                 <div class="dashboard-card trending-card">
                     <div class="card-header">
                         <h3>Trending Items</h3>
@@ -143,7 +143,6 @@
                     </div>
                     
                     <div class="trending-list">
-                        <!-- Item 1 -->
                         <div class="trending-item">
                             <span class="item-rank">#1</span>
                             <img src="https://images.unsplash.com/photo-1589302168068-964664d93cb0?w=100&h=100&fit=crop" alt="Biryani" class="item-img">
@@ -157,7 +156,6 @@
                             </div>
                         </div>
 
-                        <!-- Item 2 -->
                         <div class="trending-item">
                             <span class="item-rank">#2</span>
                             <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" alt="Burger" class="item-img">
@@ -171,7 +169,6 @@
                             </div>
                         </div>
 
-                        <!-- Item 3 -->
                         <div class="trending-item">
                             <span class="item-rank">#3</span>
                             <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Noodles" class="item-img">
@@ -187,7 +184,7 @@
                     </div>
                 </div>
 
-               <!-- Right Column: Revenue Chart Area -->
+                <!-- 2. Middle Column: Revenue Chart Area -->
                 <div class="dashboard-card revenue-card">
                     <div class="card-header">
                         <h3>Revenue Overview</h3>
@@ -200,15 +197,12 @@
                         </div>
                     </div>
                     
-                    <!-- 🔥 NAYA: Khali dabbe ki jagah asali Canvas -->
                     <div class="chart-container" style="position: relative; height: 260px; width: 100%; margin-top: 10px;">
                         <canvas id="mainRevenueChart"></canvas>
                     </div>
                 </div>
 
-            </div> <!-- Middle Grid End -->
-
-                <!-- Rightmost Column: Sessions & Customer Rate -->
+                <!-- 3. Rightmost Column: Sessions & Customer Rate -->
                 <div class="right-column">
                     
                     <!-- Top Mini Card: Total Sessions -->
@@ -222,7 +216,6 @@
                                 <i class="ph-bold ph-users-three"></i>
                             </div>
                         </div>
-                        <!-- 🔥 NAYA: Mini Chart 1 Canvas -->
                         <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
                             <canvas id="miniSessionChart"></canvas>
                         </div>
@@ -243,7 +236,6 @@
                                 <i class="ph-bold ph-chart-pie-slice"></i>
                             </div>
                         </div>
-                        <!-- 🔥 NAYA: Mini Chart 2 Canvas -->
                         <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
                             <canvas id="miniCustomerChart"></canvas>
                         </div>
@@ -252,9 +244,11 @@
                         </div>
                     </div>
 
-                </div>
+                </div> <!-- Right Column End -->
 
-            </div> <!-- Workspace End -->
+            </div> <!-- Middle Grid End -->
+
+        </div> <!-- Workspace End -->
             
         </main>
     </div>
