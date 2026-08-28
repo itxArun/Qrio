@@ -510,5 +510,51 @@
             }
         }, 2000);
     </script>
+    <!-- 🔥 NAYA: Premium Add Table Modal -->
+    <div id="premiumTableModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>Add New Table</h2>
+                <i class="ph-bold ph-x close-modal" onclick="closeTableModal()"></i>
+            </div>
+            <div class="modal-body">
+                <p>Enter the table number or name to generate a new QR code.</p>
+                <div class="input-group">
+                    <label>Table Number</label>
+                    <div class="input-box">
+                        <i class="ph-bold ph-hash"></i>
+                        <input type="text" id="newTableName" placeholder="e.g., Table 5">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeTableModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmAddTable()">Create Table</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Controls JS -->
+    <script>
+        const premiumModal = document.getElementById('premiumTableModal');
+        // Open Modal
+        document.getElementById('addTableBtn').addEventListener('click', () => {
+            premiumModal.style.display = 'flex';
+        });
+        // Close Modal
+        function closeTableModal() {
+            premiumModal.style.display = 'none';
+        }
+        // Save Button (Baad me isko database se jodenge)
+        function confirmAddTable() {
+            const tableVal = document.getElementById('newTableName').value;
+            if(tableVal) {
+                alert("Awesome! Connecting " + tableVal + " to Database next...");
+                closeTableModal();
+            } else {
+                alert("Please enter a table name!");
+            }
+        }
+    </script>
 </body>
 </html>
