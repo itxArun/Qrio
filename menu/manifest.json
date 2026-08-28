@@ -1,7 +1,7 @@
 
 {
-  "name": "NextPlate - Smart Menu",
-  "short_name": "NextPlate",
+  ""name": "Qrio - Smart Menu",
+  "short_name": "Qrio",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#F8F9FA",
