@@ -274,8 +274,9 @@ db.collection("merchants").onSnapshot((snapshot) => {
         const data = doc.data();
         clientsData.push({ 
             dbId: doc.id, 
-            id: data.restaurantId || data.id || '#SM-???', 
-            name: data.restaurantName || data.name || 'Unknown', 
+            // 🚀 UPDATE: Naya Stealth ID Pattern
+            id: data.restaurantId || data.id || 'QRIO-???', 
+            name: data.restaurantName || data.name || 'Unknown',
             city: data.city || 'N/A', 
             plan: data.plan || 'Free Tier', 
             status: data.status || 'Active',
@@ -366,10 +367,13 @@ window.saveNewClient = () => {
         return; 
     }
 
-    const randomId = '#SM-' + Math.floor(Math.random() * 900 + 100);
+    // 🚀 STEALTH ID GENERATOR (No '#' Symbol, Premium 4-Digit Look)
+    const randomId = 'QRIO-' + Math.floor(Math.random() * 9000 + 1000);
     showToast("Creating Secure Login & Database... ⏳", "success");
     
-    secondaryAuth.createUserWithEmailAndPassword(emailVal, passVal)
+    // 🛡️ AUTO-LOGOUT FIX: Firebase ko bolna ki primary user ko chhedna nahi hai
+    secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE)
+        .then(() => secondaryAuth.createUserWithEmailAndPassword(emailVal, passVal))
         .then((userCredential) => {
             secondaryAuth.signOut();
             return db.collection("merchants").add({
