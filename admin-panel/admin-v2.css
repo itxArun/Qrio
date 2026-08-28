@@ -273,16 +273,55 @@ body {
     font-size: 20px;
 }
 /* ==================================
-   5. Middle Section (Trending & Chart)
+   5. Middle Section (Trending, Chart & Stats)
 ================================== */
 .middle-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr; /* Left 40%, Right 60% */
+    /* 🔥 AB YE 3 HISSO ME BATEGA: 1fr (Trending), 1.5fr (Chart), 0.8fr (Right Stats) */
+    grid-template-columns: 1fr 1.5fr 0.8fr; 
     gap: 20px;
     margin-top: 20px;
     width: 100%;
 }
 
+/* ==================================
+   Right Column (Sessions & Customer Rate)
+================================== */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Dono cards ke beech ki doori */
+}
+
+.stats-mini-card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1; /* Dono card barabar height lenge */
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.stats-header h3 { font-size: 12px; color: var(--text-sub); font-weight: 600; margin-bottom: 2px;}
+.stats-header h2 { font-size: 24px; color: var(--text-main); font-weight: 800; }
+
+.mini-chart-box {
+    height: 70px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px dashed #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .dashboard-card {
     background: var(--bg-card);
     padding: 22px;
