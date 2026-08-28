@@ -77,8 +77,10 @@
                 <h2><i class="ph-fill ph-pizza"></i> <span id="admin-restaurant-name">Qrio.</span></h2>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
-                <a href="#" class="nav-item"><i class="ph-bold ph-receipt"></i> Live Orders</a>
+                <!-- 🔥 ADDED: ID and onclick function -->
+                <a href="#" id="nav-dashboard" class="nav-item active" onclick="switchView('dashboard')"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
+                <a href="#" id="nav-live-orders" class="nav-item" onclick="switchView('live-orders')"><i class="ph-bold ph-receipt"></i> Live Orders</a>
+                
                 <a href="#" class="nav-item"><i class="ph-bold ph-fork-knife"></i> Menus</a>
                 <a href="#" class="nav-item"><i class="ph-bold ph-users"></i> Customers</a>
                 <a href="#" class="nav-item"><i class="ph-bold ph-gear"></i> Settings</a>
@@ -140,6 +142,9 @@
             
             <!-- PART C: The Workspace -->
         <div class="dashboard-workspace">
+            
+            <!-- 🔥 VIEW 1: MAIN DASHBOARD -->
+            <div id="view-dashboard">
             
            <!-- The 4 Features / KPI Cards with Circles -->
             <div class="kpi-grid">
@@ -377,6 +382,45 @@
                 </div>
 
             </div> <!-- Bottom Grid End -->
+                </div> <!-- 🔥 VIEW 1 END (Dashboard ko yahan band kiya) -->
+
+            <!-- ==================================
+                 🔥 VIEW 2: FULL LIVE ORDERS PAGE
+            ================================== -->
+            <div id="view-live-orders" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
+                    <div class="card-header" style="margin-bottom: 25px;">
+                        <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-receipt" style="color: var(--primary);"></i> Manage Live Orders</h2>
+                        <button class="btn-primary" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                            <i class="ph-bold ph-arrows-clockwise"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="sleek-table" style="min-width: 900px;">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Time</th>
+                                    <th>Customer & Table</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="v2-full-orders-list">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-sub);">
+                                        <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Fetching detailed live orders...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- View 2 End -->
+
+        </div> <!-- Workspace End -->
         </div> <!-- Workspace End -->
             
         </main>
@@ -554,6 +598,18 @@
             } else {
                 alert("Please enter a table name!");
             }
+        }
+    </script>
+    <!-- 🔥 TAB SWITCHING LOGIC 🔥 -->
+    <script>
+        function switchView(viewName) {
+            // Content ko hide/show karna
+            document.getElementById('view-dashboard').style.display = (viewName === 'dashboard') ? 'block' : 'none';
+            document.getElementById('view-live-orders').style.display = (viewName === 'live-orders') ? 'block' : 'none';
+            
+            // Sidebar me Orange Active class lagana aur hatana
+            document.getElementById('nav-dashboard').classList.toggle('active', viewName === 'dashboard');
+            document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
         }
     </script>
 </body>
