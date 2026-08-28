@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qrio - Smart Dashboard</title>
+    <!-- Premium Font (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons (Best icons for SaaS) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Linking our new CSS -->
+    <link rel="stylesheet" href="admin-v2.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- PART A: The Clean Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h2><i class="ph-fill ph-pizza"></i> Qrio.</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-receipt"></i> Live Orders</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-fork-knife"></i> Menus</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-users"></i> Customers</a>
+                <a href="#" class="nav-item"><i class="ph-bold ph-gear"></i> Settings</a>
+            </nav>
+        </aside>
+
+        <!-- PART B: Main Content Area -->
+        <main class="main-content">
+            
+            <!-- The Header -->
+            <header class="top-header">
+                <div class="search-bar">
+                    <i class="ph-bold ph-magnifying-glass"></i>
+                    <input type="text" placeholder="Search orders or menus...">
+                </div>
+                <div class="header-profile">
+                    <div class="notif-bell"><i class="ph-fill ph-bell"></i></div>
+                    <div class="profile-pic">A</div>
+                </div>
+            </header>
+            
+            <!-- PART C: The Workspace -->
+            <div class="dashboard-workspace">
+                <h2 style="color: var(--text-main); margin-bottom: 5px;">Welcome back, Arun! 👋</h2>
+                <p style="color: var(--text-sub); margin-bottom: 30px; font-size: 14px;">Here is what's happening with your restaurant today.</p>
+                
+                <!-- Yahan hum agle step me wo 4 Sundar Dabbe (Cards) daalenge -->
+            </div>
+            
+        </main>
+    </div>
+</body>
+</html>
