@@ -58,27 +58,68 @@ body { background-color: var(--bg-main); color: var(--text-main); }
 }
 
 /* ==================================
-   Header & Workspace
+   Upgraded Premium Header
 ================================== */
-.main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-
-.top-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: transparent; }
-
-.search-bar {
-    display: flex; align-items: center; background: var(--bg-card);
-    padding: 10px 20px; border-radius: 50px; width: 300px;
-    box-shadow: var(--shadow-soft);
+.top-header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 15px 40px; background: transparent; 
 }
-.search-bar input { border: none; outline: none; margin-left: 10px; font-size: 13px; background: transparent; width: 100%; color: var(--text-main); }
+
+.header-left { display: flex; align-items: center; gap: 15px; }
+
+/* Hamburger Menu Button */
+.hamburger-btn { 
+    background: var(--bg-card); border: none; width: 45px; height: 45px; 
+    border-radius: 12px; display: flex; justify-content: center; align-items: center; 
+    font-size: 22px; color: var(--text-main); cursor: pointer; 
+    box-shadow: var(--shadow-soft); transition: 0.3s; 
+}
+.hamburger-btn:hover { color: var(--primary); transform: translateY(-2px); }
+
+/* Search Bar */
+.search-bar { 
+    display: flex; align-items: center; background: var(--bg-card); 
+    padding: 12px 25px; border-radius: 12px; width: 350px; 
+    box-shadow: var(--shadow-soft); 
+}
+.search-bar input { border: none; outline: none; margin-left: 10px; font-size: 13px; background: transparent; width: 100%; color: var(--text-main); font-weight: 500;}
 .search-bar i { color: var(--text-sub); font-size: 18px; }
 
-.header-profile { display: flex; align-items: center; gap: 20px; }
-.notif-bell { font-size: 22px; color: var(--text-sub); cursor: pointer; }
-.profile-pic {
-    width: 40px; height: 40px; background: var(--primary); color: white;
-    border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    font-weight: 700; font-size: 16px; box-shadow: 0 8px 15px rgba(255, 107, 0, 0.3);
+/* Right Side Elements */
+.header-right { display: flex; align-items: center; gap: 35px; }
+.action-icons { display: flex; align-items: center; gap: 12px; }
+
+/* Colorful Icon Buttons from Image */
+.icon-btn { 
+    width: 42px; height: 42px; border-radius: 12px; display: flex; 
+    justify-content: center; align-items: center; font-size: 20px; 
+    cursor: pointer; position: relative; transition: 0.3s; 
 }
+.icon-btn:hover { transform: translateY(-3px); }
+
+.icon-purple { color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
+.icon-blue { color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+.icon-lightblue { color: #0ea5e9; background: rgba(14, 165, 233, 0.1); }
+.icon-orange { color: #f97316; background: rgba(249, 115, 22, 0.1); }
+
+/* Notification Red Dot */
+.badge { 
+    position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; 
+    background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-card); 
+}
+
+/* Profile Section */
+.header-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.profile-text { display: flex; flex-direction: column; text-align: right; }
+.greeting { font-size: 11px; color: var(--text-sub); font-weight: 600; }
+.name { font-size: 14px; color: var(--text-main); font-weight: 800; }
+
+.profile-pic { 
+    width: 45px; height: 45px; border-radius: 12px; overflow: hidden; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+}
+.profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+
 
 .dashboard-workspace { padding: 0 40px 40px 40px; }
 
