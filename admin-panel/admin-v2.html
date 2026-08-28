@@ -17,7 +17,8 @@
         <!-- PART A: The Clean Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <h2><i class="ph-fill ph-pizza"></i> Qrio.</h2>
+                <!-- 🔥 ID ADDED: admin.js ab yahan automatically Hotel ka naam dalega -->
+                <h2><i class="ph-fill ph-pizza"></i> <span id="admin-restaurant-name">Qrio.</span></h2>
             </div>
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
@@ -260,39 +261,12 @@
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <!-- 🔥 ID ADDED: JS yahan asali orders render karega -->
+                            <tbody id="v2-recent-orders-list">
                                 <tr>
-                                    <td style="font-weight: 700;">#QR-8942</td>
-                                    <td>
-                                        <div class="customer-info">
-                                            <div class="avatar">R</div>
-                                            <span>Rahul Verma</span>
-                                        </div>
+                                    <td colspan="4" style="text-align: center; color: var(--text-sub);">
+                                        <i class="ph-bold ph-spinner ph-spin" style="font-size: 20px;"></i> Loading live orders...
                                     </td>
-                                    <td style="font-weight: 700;">₹450</td>
-                                    <td><span class="status-badge status-prep">Cooking</span></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 700;">#QR-8941</td>
-                                    <td>
-                                        <div class="customer-info">
-                                            <div class="avatar" style="background: #3b82f6;">S</div>
-                                            <span>Simran Kaur</span>
-                                        </div>
-                                    </td>
-                                    <td style="font-weight: 700;">₹1,250</td>
-                                    <td><span class="status-badge status-ready">Ready</span></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 700;">#QR-8940</td>
-                                    <td>
-                                        <div class="customer-info">
-                                            <div class="avatar" style="background: #10b981;">A</div>
-                                            <span>Aman Singh</span>
-                                        </div>
-                                    </td>
-                                    <td style="font-weight: 700;">₹320</td>
-                                    <td><span class="status-badge status-done">Served</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -417,5 +391,53 @@
     </script>
     <!-- 🔥 CONNECTING TO FIREBASE & ADMIN LOGIC 🔥 -->
     <script type="module" src="admin.js"></script>
+    <!-- 🔥 V2 CUSTOM ENGINE: LIVE ORDERS TABLE RENDERER 🔥 -->
+    <script>
+        setInterval(() => {
+            // Check agar admin.js ne orders load kar liye hain
+            if(window.allOrdersMaster && window.allOrdersMaster.length > 0) {
+                const tbody = document.getElementById('v2-recent-orders-list');
+                if(tbody) {
+                    let rowsHtml = '';
+                    // Top 5 sabse naye orders nikalna
+                    let recentOrders = window.allOrdersMaster.slice(0, 5);
+                    
+                    recentOrders.forEach(o => {
+                        // Status ka color set karna
+                        let statusClass = 'status-prep'; // Orange (Default for New/Prep)
+                        if(o.status === 'Completed' || o.status === 'Served') statusClass = 'status-done'; // Green
+                        else if(o.status === 'Ready' || o.status === 'Accepted') statusClass = 'status-ready'; // Blue
+                        else if(o.status === 'Cancelled') statusClass = 'status-prep'; 
+                        
+                        // Customer Initial banana (jaise Arun ka 'A')
+                        let name = o.customerName && o.customerName !== 'N/A' ? o.customerName : 'Guest';
+                        let initial = name.charAt(0).toUpperCase();
+
+                        rowsHtml += `
+                        <tr>
+                            <td style="font-weight: 700; color: var(--primary);">#QR-${o.docId.substring(0,4).toUpperCase()}</td>
+                            <td>
+                                <div class="customer-info">
+                                    <div class="avatar">${initial}</div>
+                                    <span style="text-transform: capitalize;">${name}</span>
+                                </div>
+                            </td>
+                            <td style="font-weight: 700;">₹${o.totalAmount}</td>
+                            <td><span class="status-badge ${statusClass}">${o.status}</span></td>
+                        </tr>
+                        `;
+                    });
+                    
+                    // Table me chipka do
+                    tbody.innerHTML = rowsHtml;
+                }
+            } else {
+                const tbody = document.getElementById('v2-recent-orders-list');
+                if(tbody && window.allOrdersMaster && window.allOrdersMaster.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-sub);">No orders found for today.</td></tr>`;
+                }
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
