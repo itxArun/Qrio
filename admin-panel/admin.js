@@ -1611,11 +1611,16 @@ window.safeDownloadTableQR = async (tableNum) => {
         document.body.removeChild(link);
         URL.revokeObjectURL(blobUrl);
 
-    } catch(err) {
+   } catch(err) {
         console.error("Direct download failed, opening in new tab:", err);
-        const domain = window.location.origin + window.location.pathname.replace('admin.html', 'index.html');
+        
+        const currentOrigin = window.location.origin;
+        let pathParts = window.location.pathname.split('/');
+        pathParts.pop(); pathParts.pop();
+        const basePath = pathParts.join('/');
+        
         const restId = window.currentRestaurantId || 'rest_001';
-        const fallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(domain + "?rest=" + restId + "&table=" + tableNum)}`;
+        const fallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(currentOrigin + basePath + "/menu/index.html?rest=" + restId + "&table=" + tableNum)}`;
         window.open(fallbackUrl, '_blank');
     }
 };
