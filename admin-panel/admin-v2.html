@@ -128,10 +128,89 @@
                     </div>
                 </div>
 
-            </div>
+           </div>
                 
-                <!-- Yahan hum agle step me wo 4 Sundar Dabbe (Cards) daalenge -->
-            </div>
+            <!-- ==================================
+                 MIDDLE SECTION: Trending & Chart
+            ================================== -->
+            <div class="middle-grid">
+                
+                <!-- Left Column: Trending Items -->
+                <div class="dashboard-card trending-card">
+                    <div class="card-header">
+                        <h3>Trending Items</h3>
+                        <i class="ph-bold ph-dots-three"></i>
+                    </div>
+                    
+                    <div class="trending-list">
+                        <!-- Item 1 -->
+                        <div class="trending-item">
+                            <span class="item-rank">#1</span>
+                            <img src="https://images.unsplash.com/photo-1589302168068-964664d93cb0?w=100&h=100&fit=crop" alt="Biryani" class="item-img">
+                            <div class="item-details">
+                                <h4>Chicken Biryani</h4>
+                                <p>₹250 <span class="badge-cat">Main Course</span></p>
+                            </div>
+                            <div class="item-sales">
+                                <h4>158</h4>
+                                <p class="trend-up"><i class="ph-bold ph-trend-up"></i> 20%</p>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="trending-item">
+                            <span class="item-rank">#2</span>
+                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" alt="Burger" class="item-img">
+                            <div class="item-details">
+                                <h4>Paneer Burger</h4>
+                                <p>₹120 <span class="badge-cat">Snacks</span></p>
+                            </div>
+                            <div class="item-sales">
+                                <h4>112</h4>
+                                <p class="trend-up"><i class="ph-bold ph-trend-up"></i> 12%</p>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="trending-item">
+                            <span class="item-rank">#3</span>
+                            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Noodles" class="item-img">
+                            <div class="item-details">
+                                <h4>Hakka Noodles</h4>
+                                <p>₹150 <span class="badge-cat">Starters</span></p>
+                            </div>
+                            <div class="item-sales">
+                                <h4>85</h4>
+                                <p class="trend-down"><i class="ph-bold ph-trend-down"></i> 5%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Revenue Chart Area -->
+                <div class="dashboard-card revenue-card">
+                    <div class="card-header">
+                        <h3>Revenue Overview</h3>
+                        <div class="chart-filters">
+                            <select>
+                                <option>This Week</option>
+                                <option>This Month</option>
+                                <option>This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container" style="height: 250px; width: 100%; display: flex; justify-content: center; align-items: center; border: 2px dashed #e2e8f0; border-radius: 12px; background: #f8fafc; color: var(--text-sub);">
+                        <div style="text-align: center;">
+                            <i class="ph-bold ph-chart-line-up" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
+                            <p>Live Chart Box (JS Will Load Here)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- Middle Grid End -->
+
+        </div> <!-- Workspace End -->
             
         </main>
     </div>
