@@ -111,7 +111,8 @@
                         <div class="icon-btn icon-orange"><i class="ph-bold ph-gear"></i></div>
                     </div>
                     
-                    <div class="header-profile">
+                    <!-- 🔥 NAYA: Profile with Dropdown -->
+                    <div class="header-profile" style="position: relative;">
                         <div class="profile-text">
                             <span class="greeting">Hello,</span>
                             <span class="name">Arun</span>
@@ -119,8 +120,16 @@
                         <div class="profile-pic">
                             <img src="https://ui-avatars.com/api/?name=Arun&background=FF6B00&color=fff" alt="Profile">
                         </div>
+                        
+                        <!-- The Hover Dropdown Menu -->
+                        <div class="profile-dropdown">
+                            <a href="#"><i class="ph-bold ph-user"></i> My Profile</a>
+                            <a href="#"><i class="ph-bold ph-gear"></i> Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <!-- Logout Button Here -->
+                            <a href="#" onclick="executeLogout()" style="color: #ef4444;"><i class="ph-bold ph-sign-out"></i> Logout</a>
+                        </div>
                     </div>
-                </div>
             </header>
             
             <!-- PART C: The Workspace -->
