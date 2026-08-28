@@ -187,7 +187,7 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Revenue Chart Area -->
+               <!-- Right Column: Revenue Chart Area -->
                 <div class="dashboard-card revenue-card">
                     <div class="card-header">
                         <h3>Revenue Overview</h3>
@@ -200,14 +200,15 @@
                         </div>
                     </div>
                     
-                    <div class="chart-container" style="height: 250px; width: 100%; display: flex; justify-content: center; align-items: center; border: 2px dashed #e2e8f0; border-radius: 12px; background: #f8fafc; color: var(--text-sub);">
-                        <div style="text-align: center;">
-                            <i class="ph-bold ph-chart-line-up" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
-                            <p>Live Chart Box (JS Will Load Here)</p>
-                        </div>
+                    <!-- 🔥 NAYA: Khali dabbe ki jagah asali Canvas -->
+                    <div class="chart-container" style="position: relative; height: 260px; width: 100%; margin-top: 10px;">
+                        <canvas id="mainRevenueChart"></canvas>
                     </div>
                 </div>
-<!-- Rightmost Column: Sessions & Customer Rate -->
+
+            </div> <!-- Middle Grid End -->
+
+                <!-- Rightmost Column: Sessions & Customer Rate -->
                 <div class="right-column">
                     
                     <!-- Top Mini Card: Total Sessions -->
@@ -221,9 +222,9 @@
                                 <i class="ph-bold ph-users-three"></i>
                             </div>
                         </div>
-                        <!-- Mini Chart Placeholder -->
-                        <div class="mini-chart-box">
-                            <i class="ph-bold ph-wave-sine" style="font-size: 28px; color: #3b82f6;"></i>
+                        <!-- 🔥 NAYA: Mini Chart 1 Canvas -->
+                        <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
+                            <canvas id="miniSessionChart"></canvas>
                         </div>
                         <div style="display: flex; gap: 8px;">
                             <span style="font-size: 10px; background: rgba(67, 97, 238, 0.1); color: var(--primary); padding: 4px 8px; border-radius: 6px; font-weight: 700;">Live</span>
@@ -242,9 +243,9 @@
                                 <i class="ph-bold ph-chart-pie-slice"></i>
                             </div>
                         </div>
-                        <!-- Mini Chart Placeholder -->
-                        <div class="mini-chart-box">
-                            <i class="ph-bold ph-chart-bar" style="font-size: 28px; color: #f97316;"></i>
+                        <!-- 🔥 NAYA: Mini Chart 2 Canvas -->
+                        <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
+                            <canvas id="miniCustomerChart"></canvas>
                         </div>
                         <div style="font-size: 11px; color: #10b981; font-weight: 700; margin-top: 2px;">
                             <i class="ph-bold ph-trend-up"></i> +1.2% from last week
@@ -252,11 +253,89 @@
                     </div>
 
                 </div>
-            </div> <!-- Middle Grid End -->
 
-        </div> <!-- Workspace End -->
+            </div> <!-- Workspace End -->
             
         </main>
     </div>
+
+    <!-- 🔥 STEP 2: CHART.JS ENGINE & SCRIPT YAHAN HAI 🔥 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 1. MAIN REVENUE CHART (Smooth Blue Curve)
+        const ctxMain = document.getElementById('mainRevenueChart').getContext('2d');
+        new Chart(ctxMain, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [120, 190, 150, 280, 220, 350, 420],
+                    borderColor: '#4361ee', // Premium Blue
+                    backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4, // Isse line smooth (curvy) hoti hai
+                    fill: true,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#4361ee',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }, // Upar ka title hide
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 11 }, color: '#8f9bba' } },
+                    y: { grid: { color: '#f1f5f9', borderDash: [5, 5] }, ticks: { font: { family: 'Poppins', size: 11 }, color: '#8f9bba' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // 2. MINI SESSIONS CHART (Sparkline style)
+        const ctxSession = document.getElementById('miniSessionChart').getContext('2d');
+        new Chart(ctxSession, {
+            type: 'line',
+            data: {
+                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+                datasets: [{
+                    data: [40, 55, 45, 70, 60, 85, 90],
+                    borderColor: '#3b82f6', // Light Blue
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } }
+            }
+        });
+
+        // 3. MINI CUSTOMER RATE CHART (Sparkline style)
+        const ctxCustomer = document.getElementById('miniCustomerChart').getContext('2d');
+        new Chart(ctxCustomer, {
+            type: 'line',
+            data: {
+                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+                datasets: [{
+                    data: [10, 25, 15, 30, 28, 45, 50],
+                    borderColor: '#f97316', // Orange
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } }
+            }
+        });
+    </script>
 </body>
 </html>
