@@ -367,27 +367,40 @@ window.saveNewClient = () => {
         return; 
     }
 
-    // 🚀 STEALTH ID GENERATOR (No '#' Symbol, Premium 4-Digit Look)
+    // 🚀 STEALTH ID GENERATOR (Premium 4-Digit Look)
     const randomId = 'QRIO-' + Math.floor(Math.random() * 9000 + 1000);
     showToast("Creating Secure Login & Database... ⏳", "success");
-    
-    // 🛡️ AUTO-LOGOUT FIX: Firebase ko bolna ki primary user ko chhedna nahi hai
-    secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE)
-        .then(() => secondaryAuth.createUserWithEmailAndPassword(emailVal, passVal))
-        .then((userCredential) => {
-            secondaryAuth.signOut();
-            return db.collection("merchants").add({
-                restaurantId: randomId,
-                restaurantName: nameVal,
-                email: emailVal, 
-                upiId: "Not Provided", 
-                city: cityVal,
-                plan: planVal,
-                status: 'Active',
-                statusClass: 'active-badge',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp() 
-            });
+
+    // 🛡️ THE ULTIMATE ANTI-LOGOUT FIX: Using REST API to silently create user
+    const apiKey = "AIzaSyDHfU0QaryYKy7zfhFXQdMEqh1KdIApNXY"; // Tumhari Firebase API Key
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email: emailVal,
+            password: passVal,
+            returnSecureToken: false // 👈 Ye Firebase ko bolega "Naye user ko login mat karna!"
         })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) throw new Error(data.error.message);
+        
+        // User successfully ban gaya, ab Database me save karo
+        return db.collection("merchants").add({
+            restaurantId: randomId,
+            restaurantName: nameVal,
+            email: emailVal, 
+            upiId: "Not Provided", 
+            city: cityVal,
+            plan: planVal,
+            status: 'Active',
+            statusClass: 'active-badge',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+        });
+    })
         .then(() => {
             showToast("Hotel Created & Owner Account Ready! 🚀", "success");
             const inputs = document.querySelectorAll('#addClientSection input');
