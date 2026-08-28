@@ -1,11 +1,15 @@
-/* Core Premium Colors - Orange SaaS Theme */
+/* ==================================
+   QRIO PREMIUM SAAS THEME (V2)
+================================== */
+
+/* Core Variables - Orange Theme */
 :root {
-    --primary: #FF6B00;         /* Vibrant Orange from your image */
+    --primary: #FF6B00;         /* Vibrant Orange */
     --bg-main: #f4f6fa;         /* Very light gray/blue background */
     --bg-card: #ffffff;         /* Pure white cards */
-    --text-main: #2b3674;       /* Deep text */
+    --text-main: #2b3674;       /* Deep text for headings */
     --text-sub: #8f9bba;        /* Light muted text */
-    --sidebar-width: 240px;     /* Patla sidebar */
+    --sidebar-width: 240px;     /* Sleek sidebar width */
     --shadow-soft: 0px 15px 40px rgba(112, 144, 176, 0.12); /* Glass shadow */
 }
 
@@ -16,84 +20,160 @@
     font-family: 'Poppins', sans-serif;
 }
 
-body { background-color: var(--bg-main); color: var(--text-main); }
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-main); 
+}
 
 /* Master Layout Grid */
-.app-container { display: flex; height: 100vh; overflow: hidden; }
+.app-container { 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
+}
 
 /* ==================================
-   Sidebar Styling (Sleek Fonts)
+   1. The Clean Sidebar
 ================================== */
 .sidebar {
     width: var(--sidebar-width);
     background-color: var(--bg-card);
-    display: flex; flex-direction: column;
+    display: flex; 
+    flex-direction: column;
     padding: 25px 15px;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
     z-index: 10;
 }
 
 .sidebar-logo h2 {
-    font-size: 22px; /* Chhota aur sleek */
-    font-weight: 800; color: var(--text-main);
-    margin-bottom: 35px; text-align: center;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 22px; 
+    font-weight: 800; 
+    color: var(--text-main);
+    margin-bottom: 35px; 
+    text-align: center;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px;
 }
 .sidebar-logo h2 i { color: var(--primary); }
 
 .nav-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 18px; /* Patli padding */
-    color: var(--text-sub); text-decoration: none;
-    font-size: 13px; /* Sleek font size */
-    font-weight: 600; border-radius: 12px;
-    margin-bottom: 5px; transition: all 0.3s ease;
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    padding: 12px 18px; 
+    color: var(--text-sub); 
+    text-decoration: none;
+    font-size: 13px; 
+    font-weight: 600; 
+    border-radius: 12px;
+    margin-bottom: 5px; 
+    transition: all 0.3s ease;
 }
 .nav-item i { font-size: 18px; }
 
 .nav-item:hover, .nav-item.active {
-    background-color: var(--primary); color: #ffffff;
+    background-color: var(--primary); 
+    color: #ffffff;
     box-shadow: 0 8px 16px rgba(255, 107, 0, 0.25);
     transform: translateY(-2px);
 }
 
 /* ==================================
-   Upgraded Premium Header
+   2. Main Content & Premium Header
 ================================== */
+.main-content { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    overflow-y: auto; 
+    width: 100%; /* Full width fix */
+}
+
 .top-header { 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 15px 40px; background: transparent; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px 30px; 
+    background: transparent; 
+    width: 100%; 
 }
 
-.header-left { display: flex; align-items: center; gap: 15px; }
+.header-left { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
 
-/* Hamburger Menu Button */
+/* Hamburger Menu */
 .hamburger-btn { 
-    background: var(--bg-card); border: none; width: 45px; height: 45px; 
-    border-radius: 12px; display: flex; justify-content: center; align-items: center; 
-    font-size: 22px; color: var(--text-main); cursor: pointer; 
-    box-shadow: var(--shadow-soft); transition: 0.3s; 
+    background: var(--bg-card); 
+    border: none; 
+    width: 45px; 
+    height: 45px; 
+    border-radius: 12px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 22px; 
+    color: var(--text-main); 
+    cursor: pointer; 
+    box-shadow: var(--shadow-soft); 
+    transition: 0.3s; 
 }
-.hamburger-btn:hover { color: var(--primary); transform: translateY(-2px); }
+.hamburger-btn:hover { 
+    color: var(--primary); 
+    transform: translateY(-2px); 
+}
 
 /* Search Bar */
 .search-bar { 
-    display: flex; align-items: center; background: var(--bg-card); 
-    padding: 12px 25px; border-radius: 12px; width: 350px; 
+    display: flex; 
+    align-items: center; 
+    background: var(--bg-card); 
+    padding: 12px 25px; 
+    border-radius: 12px; 
+    width: 350px; 
     box-shadow: var(--shadow-soft); 
 }
-.search-bar input { border: none; outline: none; margin-left: 10px; font-size: 13px; background: transparent; width: 100%; color: var(--text-main); font-weight: 500;}
+.search-bar input { 
+    border: none; 
+    outline: none; 
+    margin-left: 10px; 
+    font-size: 13px; 
+    background: transparent; 
+    width: 100%; 
+    color: var(--text-main); 
+    font-weight: 500;
+}
+.search-bar input::placeholder { color: var(--text-sub); }
 .search-bar i { color: var(--text-sub); font-size: 18px; }
 
-/* Right Side Elements */
-.header-right { display: flex; align-items: center; gap: 35px; }
-.action-icons { display: flex; align-items: center; gap: 12px; }
+/* Right Side Actions */
+.header-right { 
+    display: flex; 
+    align-items: center; 
+    gap: 35px; 
+}
+.action-icons { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
 
-/* Colorful Icon Buttons from Image */
+/* Colorful Icon Buttons */
 .icon-btn { 
-    width: 42px; height: 42px; border-radius: 12px; display: flex; 
-    justify-content: center; align-items: center; font-size: 20px; 
-    cursor: pointer; position: relative; transition: 0.3s; 
+    width: 42px; 
+    height: 42px; 
+    border-radius: 12px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 20px; 
+    cursor: pointer; 
+    position: relative; 
+    transition: 0.3s; 
 }
 .icon-btn:hover { transform: translateY(-3px); }
 
@@ -104,8 +184,14 @@ body { background-color: var(--bg-main); color: var(--text-main); }
 
 /* Notification Red Dot */
 .badge { 
-    position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; 
-    background: #ef4444; border-radius: 50%; border: 2px solid var(--bg-card); 
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    width: 8px; 
+    height: 8px; 
+    background: #ef4444; 
+    border-radius: 50%; 
+    border: 2px solid var(--bg-card); 
 }
 
 /* Profile Section */
@@ -115,41 +201,51 @@ body { background-color: var(--bg-main); color: var(--text-main); }
 .name { font-size: 14px; color: var(--text-main); font-weight: 800; }
 
 .profile-pic { 
-    width: 45px; height: 45px; border-radius: 12px; overflow: hidden; 
+    width: 45px; 
+    height: 45px; 
+    border-radius: 12px; 
+    overflow: hidden; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
 }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
 
-
 /* ==================================
-   The 4 KPI Cards (Dabbe)
+   3. Workspace & KPI Cards
 ================================== */
+.dashboard-workspace { 
+    padding: 5px 30px 30px 30px; /* Compact top padding */
+    width: 100%; 
+}
+
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-top: 15px;
+    gap: 15px; /* Compact gap */
+    width: 100%;
 }
 
 .kpi-card {
     background: var(--bg-card);
-    padding: 20px;
-    border-radius: 20px;
+    padding: 15px 18px; /* Sleek padding */
+    border-radius: 16px;
     box-shadow: var(--shadow-soft);
-    display: flex;
-    justify-content: space-between;
+    display: flex; 
+    justify-content: space-between; 
     align-items: center;
     transition: 0.3s;
 }
 
-.kpi-card:hover { transform: translateY(-5px); }
+.kpi-card:hover { transform: translateY(-3px); }
 
-.kpi-info p { font-size: 12px; color: var(--text-sub); font-weight: 600; margin-bottom: 4px; }
-.kpi-info h3 { font-size: 22px; font-weight: 800; color: var(--text-main); }
+.kpi-info p { font-size: 11px; color: var(--text-sub); font-weight: 600; margin-bottom: 2px; }
+.kpi-info h3 { font-size: 20px; font-weight: 800; color: var(--text-main); }
 
 .kpi-icon {
-    width: 50px; height: 50px;
-    border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    font-size: 24px;
+    width: 42px; 
+    height: 42px; 
+    border-radius: 12px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    font-size: 20px;
 }
