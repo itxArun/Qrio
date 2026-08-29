@@ -77,13 +77,30 @@
                 <h2><i class="ph-fill ph-pizza"></i> <span id="admin-restaurant-name">Qrio.</span></h2>
             </div>
             <nav class="sidebar-nav">
-                <!-- 🔥 ADDED: ID and onclick function -->
+                
+                <!-- CATEGORY 1: CORE -->
+                <div class="nav-heading">Main Menu</div>
                 <a href="#" id="nav-dashboard" class="nav-item active" onclick="switchView('dashboard')"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
                 <a href="#" id="nav-live-orders" class="nav-item" onclick="switchView('live-orders')"><i class="ph-bold ph-receipt"></i> Live Orders</a>
-                
-                <a href="#" class="nav-item"><i class="ph-bold ph-fork-knife"></i> Menus</a>
-                <a href="#" class="nav-item"><i class="ph-bold ph-users"></i> Customers</a>
-                <a href="#" class="nav-item"><i class="ph-bold ph-gear"></i> Settings</a>
+                <a href="#" id="nav-menus" class="nav-item"><i class="ph-bold ph-fork-knife"></i> Menus</a>
+
+                <!-- CATEGORY 2: MANAGEMENT -->
+                <div class="nav-heading">Management</div>
+                <a href="#" id="nav-tables" class="nav-item"><i class="ph-bold ph-grid-four"></i> Table & QR</a>
+                <a href="#" id="nav-inventory" class="nav-item"><i class="ph-bold ph-box-arrow-down"></i> Inventory</a>
+                <a href="#" id="nav-staff" class="nav-item"><i class="ph-bold ph-users-three"></i> Staff</a>
+
+                <!-- CATEGORY 3: GROWTH -->
+                <div class="nav-heading">Growth & Sales</div>
+                <a href="#" id="nav-customers" class="nav-item"><i class="ph-bold ph-users"></i> Customers</a>
+                <a href="#" id="nav-offers" class="nav-item"><i class="ph-bold ph-ticket"></i> Offers</a>
+                <a href="#" id="nav-reviews" class="nav-item"><i class="ph-bold ph-star"></i> Reviews</a>
+
+                <!-- CATEGORY 4: SYSTEM -->
+                <div class="nav-heading">System</div>
+                <a href="#" id="nav-analytics" class="nav-item"><i class="ph-bold ph-chart-line-up"></i> Analytics</a>
+                <a href="#" id="nav-settings" class="nav-item"><i class="ph-bold ph-gear"></i> Settings</a>
+
             </nav>
         </aside>
 
