@@ -79,7 +79,15 @@ body {
     box-shadow: 0 8px 16px rgba(255, 107, 0, 0.25);
     transform: translateY(-2px);
 }
-
+/* 🔥 NAYA: Sidebar Categories Heading */
+.nav-heading {
+    font-size: 10px;
+    font-weight: 800;
+    color: #8f9bba; /* Muted gray color */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 20px 0 8px 15px;
+}
 /* ==================================
    2. Main Content & Premium Header
 ================================== */
