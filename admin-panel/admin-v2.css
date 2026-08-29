@@ -584,3 +584,29 @@ body {
 .modal-footer { display: flex; gap: 10px; margin-top: 25px; justify-content: flex-end; }
 .btn-cancel { padding: 12px 20px; border: none; background: #f1f5f9; color: var(--text-main); font-weight: 700; border-radius: 10px; cursor: pointer; }
 .btn-primary { padding: 12px 20px; border: none; background: var(--primary); color: white; font-weight: 700; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);}
+/* ==================================
+   MENU ITEMS CARD STYLE (Admin.js override)
+================================== */
+.menu-item-row {
+    background: var(--bg-card);
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    transition: 0.3s;
+}
+.menu-item-info { display: flex; align-items: center; gap: 15px; width: 100%; cursor: pointer;}
+.dish-icon { font-size: 30px; background: #f8fafc; width: 50px; height: 50px; border-radius: 12px; display: flex; justify-content: center; align-items: center;}
+.dish-details { display: flex; flex-direction: column; gap: 5px; }
+.dish-name { font-size: 14px; font-weight: 800; color: var(--text-main); }
+.dish-price { font-size: 13px; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; gap: 8px;}
+.cat-badge { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+.btn-dots { background: transparent; border: none; font-size: 20px; color: var(--text-sub); cursor: pointer; }
+.dropdown-menu { position: absolute; right: 10px; top: 50px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 10px; padding: 10px; display: none; z-index: 50; flex-direction: column; gap: 8px; width: 150px; }
+.dropdown-menu.show { display: flex; }
+.dropdown-item { font-size: 12px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 5px; }
+.dropdown-item:hover { color: var(--primary); }
