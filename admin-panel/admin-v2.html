@@ -745,6 +745,40 @@
             document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
             document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
         }
+        // Food Modal Logic
+        const foodModal = document.getElementById('foodModal');
+        
+        function openFoodModal(mode, foodData = null) {
+            foodModal.style.display = 'flex';
+            if(mode === 'add') {
+                document.getElementById('foodModalTitle').innerText = 'Add New Dish';
+                document.getElementById('editFoodId').value = '';
+                // Clear fields
+                document.getElementById('foodName').value = '';
+                document.getElementById('foodPrice').value = '';
+                document.getElementById('foodCategory').value = '';
+                document.getElementById('foodImg1').value = '';
+                document.getElementById('foodImg2').value = '';
+                document.getElementById('foodImg3').value = '';
+                document.getElementById('foodGlb').value = '';
+            } else if (mode === 'edit' && foodData) {
+                document.getElementById('foodModalTitle').innerText = 'Edit Dish';
+                // Jab edit click hoga, toh purana data isme bhar jayega
+                document.getElementById('editFoodId').value = foodData.id;
+                document.getElementById('foodName').value = foodData.name;
+                document.getElementById('foodPrice').value = foodData.price;
+                /* Note: admin.js aage is data ko handle karega */
+            }
+        }
+
+        function closeFoodModal() {
+            foodModal.style.display = 'none';
+        }
+
+        function saveFoodData() {
+            alert("Ready to send to Firebase via admin.js!");
+            closeFoodModal();
+        }
     </script>
     
 </body>
