@@ -436,7 +436,26 @@
                     </div>
                 </div>
             </div> <!-- View 2 End -->
-
+<!-- ==================================
+                 🔥 VIEW 3: MENUS MANAGEMENT
+            ================================== -->
+            <div id="view-menus" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
+                    <div class="card-header" style="margin-bottom: 25px;">
+                        <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-fork-knife" style="color: var(--primary);"></i> Manage Menus</h2>
+                        <button class="btn-primary" onclick="openFoodModal('add')" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                            <i class="ph-bold ph-plus-circle"></i> Add New Dish
+                        </button>
+                    </div>
+                    
+                    <!-- Food Items Grid (Sleek Cards) -->
+                    <div id="v2-food-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-sub);">
+                            <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Loading your delicious menu...
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- View 3 End -->
         </div> <!-- Workspace End -->
         </div> <!-- Workspace End -->
             
@@ -631,7 +650,68 @@
             </div>
         </div>
     </div>
+<!-- 🔥 NAYA: Premium Add/Edit Food Modal -->
+    <div id="foodModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 id="foodModalTitle">Add New Dish</h2>
+                <i class="ph-bold ph-x close-modal" onclick="closeFoodModal()"></i>
+            </div>
+            
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                <!-- Name & Category -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Dish Name</label>
+                    <div class="input-box"><input type="text" id="foodName" placeholder="e.g., Shahi Paneer"></div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Price (₹)</label>
+                        <div class="input-box"><i class="ph-bold ph-currency-inr"></i><input type="number" id="foodPrice" placeholder="250"></div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Category</label>
+                        <div class="input-box"><input type="text" id="foodCategory" placeholder="Main Course"></div>
+                    </div>
+                </div>
 
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Food Type</label>
+                    <select id="foodType" style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-family: 'Poppins'; outline: none;">
+                        <option value="Veg">🟢 Vegetarian</option>
+                        <option value="Non-Veg">🔴 Non-Vegetarian</option>
+                    </select>
+                </div>
+
+                <!-- Images & GLB -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Image Link 1 (Main Thumbnail)</label>
+                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="foodImg1" placeholder="Paste Image URL 1"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Image Link 2</label>
+                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="foodImg2" placeholder="Paste Image URL 2"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Image Link 3</label>
+                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="foodImg3" placeholder="Paste Image URL 3"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>3D Model (GLB Link) <span style="font-size: 10px; color: var(--primary);">*For AR Smart Menu</span></label>
+                    <div class="input-box"><i class="ph-bold ph-cube"></i><input type="text" id="foodGlb" placeholder="Paste .glb URL"></div>
+                </div>
+                
+                <!-- Hidden ID (For Edit Logic) -->
+                <input type="hidden" id="editFoodId">
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeFoodModal()">Cancel</button>
+                <button class="btn-primary" onclick="saveFoodData()"><i class="ph-bold ph-floppy-disk"></i> Save Dish</button>
+            </div>
+        </div>
+    </div>
     <!-- Modal Controls JS -->
     <script>
         const premiumModal = document.getElementById('premiumTableModal');
@@ -657,14 +737,15 @@
     <!-- 🔥 TAB SWITCHING LOGIC 🔥 -->
     <script>
         function switchView(viewName) {
-            // Content ko hide/show karna
             document.getElementById('view-dashboard').style.display = (viewName === 'dashboard') ? 'block' : 'none';
             document.getElementById('view-live-orders').style.display = (viewName === 'live-orders') ? 'block' : 'none';
+            document.getElementById('view-menus').style.display = (viewName === 'menus') ? 'block' : 'none';
             
-            // Sidebar me Orange Active class lagana aur hatana
             document.getElementById('nav-dashboard').classList.toggle('active', viewName === 'dashboard');
             document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
+            document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
         }
     </script>
+    
 </body>
 </html>
