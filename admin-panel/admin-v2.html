@@ -443,24 +443,105 @@
                 <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
                     <div class="card-header" style="margin-bottom: 25px;">
                         <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-fork-knife" style="color: var(--primary);"></i> Manage Menus</h2>
-                        <button class="btn-primary" onclick="openFoodModal('add')" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                        <!-- Naya ID aur Function match kiya -->
+                        <button class="btn-primary" onclick="openModal()" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
                             <i class="ph-bold ph-plus-circle"></i> Add New Dish
                         </button>
                     </div>
                     
-                    <!-- Food Items Grid (Sleek Cards) -->
-                    <div id="v2-food-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                    <!-- 🔥 JS id="menu-body" dhoondh raha tha -->
+                    <div id="menu-body" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
                         <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-sub);">
                             <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Loading your delicious menu...
                         </div>
                     </div>
                 </div>
             </div> <!-- View 3 End -->
+
         </div> <!-- Workspace End -->
-        </div> <!-- Workspace End -->
+        
+    </main>
+</div>
+
+<!-- ==================================
+     🔥 ADMIN.JS COMPATIBLE ADD/EDIT MODAL
+================================== -->
+<div id="addModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center;">
+    <div class="modal-box" style="width: 500px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <h2 id="modalTitle"><i class="ph-fill ph-plus-circle"></i> Add New Dish</h2>
+            <i class="ph-bold ph-x close-modal" onclick="closeModal()"></i>
+        </div>
+        
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+            <!-- Hidden ID -->
+            <input type="hidden" id="dishId">
             
-        </main>
+            <div style="display: flex; gap: 15px;">
+                <div class="input-group" style="margin-bottom: 0; width: 30%;">
+                    <label>Emoji</label>
+                    <div class="input-box"><input type="text" id="dishEmoji" placeholder="🍲"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                    <label>Dish Name</label>
+                    <div class="input-box"><input type="text" id="dishName" placeholder="e.g., Shahi Paneer"></div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px;">
+                <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                    <label>Category</label>
+                    <div class="input-box"><input type="text" id="dishCategory" placeholder="Main Course"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                    <label>Price (₹)</label>
+                    <div class="input-box"><i class="ph-bold ph-currency-inr"></i><input type="number" id="dishPrice" placeholder="250"></div>
+                </div>
+            </div>
+
+            <!-- Optional Pricing -->
+            <div style="display: flex; gap: 15px;">
+                <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                    <label>Half Price (Optional)</label>
+                    <div class="input-box"><input type="number" id="dishPriceHalf" placeholder="₹"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                    <label>Piece Price (Optional)</label>
+                    <div class="input-box"><input type="number" id="dishPricePiece" placeholder="₹"></div>
+                </div>
+            </div>
+
+            <!-- 3D Model GLB -->
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>3D Model (GLB Link) <span style="font-size: 10px; color: var(--primary);">*For AR</span></label>
+                <div class="input-box"><i class="ph-bold ph-cube"></i><input type="text" id="dishModel" placeholder="Paste .glb URL"></div>
+            </div>
+
+            <!-- Photos -->
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>Image 1 (Main)</label>
+                <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="dishPhoto1" placeholder="Image URL"></div>
+            </div>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label>Image 2</label>
+                <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="dishPhoto2" placeholder="Image URL"></div>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <div class="input-group" style="margin-bottom: 0; flex:1;">
+                    <div class="input-box"><input type="text" id="dishPhoto3" placeholder="Image 3 URL"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0; flex:1;">
+                    <div class="input-box"><input type="text" id="dishPhoto4" placeholder="Image 4 URL"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-primary" id="saveBtn" onclick="saveDish()"><i class="ph-bold ph-floppy-disk"></i> Save & Publish</button>
+        </div>
     </div>
+</div>
 
     <!-- 🔥 STEP 2: CHART.JS ENGINE & SCRIPT YAHAN HAI 🔥 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -650,68 +731,7 @@
             </div>
         </div>
     </div>
-<!-- 🔥 NAYA: Premium Add/Edit Food Modal -->
-    <div id="foodModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box" style="width: 500px; max-height: 90vh; overflow-y: auto;">
-            <div class="modal-header">
-                <h2 id="foodModalTitle">Add New Dish</h2>
-                <i class="ph-bold ph-x close-modal" onclick="closeFoodModal()"></i>
-            </div>
-            
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
-                <!-- Name & Category -->
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Dish Name</label>
-                    <div class="input-box"><input type="text" id="foodName" placeholder="e.g., Shahi Paneer"></div>
-                </div>
-                
-                <div style="display: flex; gap: 15px;">
-                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                        <label>Price (₹)</label>
-                        <div class="input-box"><i class="ph-bold ph-currency-inr"></i><input type="number" id="foodPrice" placeholder="250"></div>
-                    </div>
-                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                        <label>Category</label>
-                        <div class="input-box"><input type="text" id="foodCategory" placeholder="Main Course"></div>
-                    </div>
-                </div>
 
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Food Type</label>
-                    <select id="foodType" style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-family: 'Poppins'; outline: none;">
-                        <option value="Veg">🟢 Vegetarian</option>
-                        <option value="Non-Veg">🔴 Non-Vegetarian</option>
-                    </select>
-                </div>
-
-                <!-- Images & GLB -->
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Image Link 1 (Main Thumbnail)</label>
-                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="foodImg1" placeholder="Paste Image URL 1"></div>
-                </div>
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Image Link 2</label>
-                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="foodImg2" placeholder="Paste Image URL 2"></div>
-                </div>
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>Image Link 3</label>
-                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="foodImg3" placeholder="Paste Image URL 3"></div>
-                </div>
-                <div class="input-group" style="margin-bottom: 0;">
-                    <label>3D Model (GLB Link) <span style="font-size: 10px; color: var(--primary);">*For AR Smart Menu</span></label>
-                    <div class="input-box"><i class="ph-bold ph-cube"></i><input type="text" id="foodGlb" placeholder="Paste .glb URL"></div>
-                </div>
-                
-                <!-- Hidden ID (For Edit Logic) -->
-                <input type="hidden" id="editFoodId">
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeFoodModal()">Cancel</button>
-                <button class="btn-primary" onclick="saveFoodData()"><i class="ph-bold ph-floppy-disk"></i> Save Dish</button>
-            </div>
-        </div>
-    </div>
     <!-- Modal Controls JS -->
     <script>
         const premiumModal = document.getElementById('premiumTableModal');
@@ -745,41 +765,6 @@
             document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
             document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
         }
-        // Food Modal Logic
-        const foodModal = document.getElementById('foodModal');
         
-        function openFoodModal(mode, foodData = null) {
-            foodModal.style.display = 'flex';
-            if(mode === 'add') {
-                document.getElementById('foodModalTitle').innerText = 'Add New Dish';
-                document.getElementById('editFoodId').value = '';
-                // Clear fields
-                document.getElementById('foodName').value = '';
-                document.getElementById('foodPrice').value = '';
-                document.getElementById('foodCategory').value = '';
-                document.getElementById('foodImg1').value = '';
-                document.getElementById('foodImg2').value = '';
-                document.getElementById('foodImg3').value = '';
-                document.getElementById('foodGlb').value = '';
-            } else if (mode === 'edit' && foodData) {
-                document.getElementById('foodModalTitle').innerText = 'Edit Dish';
-                // Jab edit click hoga, toh purana data isme bhar jayega
-                document.getElementById('editFoodId').value = foodData.id;
-                document.getElementById('foodName').value = foodData.name;
-                document.getElementById('foodPrice').value = foodData.price;
-                /* Note: admin.js aage is data ko handle karega */
-            }
-        }
-
-        function closeFoodModal() {
-            foodModal.style.display = 'none';
-        }
-
-        function saveFoodData() {
-            alert("Ready to send to Firebase via admin.js!");
-            closeFoodModal();
-        }
-    </script>
-    
 </body>
 </html>
