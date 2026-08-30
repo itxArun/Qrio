@@ -611,122 +611,79 @@ body {
 .dropdown-item { font-size: 12px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 5px; }
 .dropdown-item:hover { color: var(--primary); }
 /* ==================================
-   🔥 LIVE ORDERS: THE FINAL PERFECT UI
+   🔥 PRO LIVE ORDERS: FLAWLESS UI FIXES
 ================================== */
 
-/* Make sure all admin.js colors are active! */
-:root {
-    --success: #10b981;
-    --warning: #f5b700;
-    --danger: #ef4444;
-    --primary: #FF6B00;
-    --info: #3b82f6;
-}
-
-/* 1. Layout Structure */
-.live-orders-smart-grid { 
-    display: grid; 
-    grid-template-columns: 340px 1fr; 
-    gap: 20px; 
-    align-items: start; 
-}
+/* 1. Layout & Scrollbar Fix (Slim & Modern) */
+.live-orders-smart-grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
 .live-left-col { display: flex; flex-direction: column; gap: 20px; }
 
-/* 2. 🎨 DISTINCT BOX COLORS (No Mixing) */
-/* Waiter Box: Premium Light Red */
-#action-center-container .dashboard-card { background: #fef2f2 !important; border: 1px solid #fecaca !important; }
-#action-center-container .card-header { background: #fee2e2 !important; border-bottom: 1px dashed #fca5a5 !important; }
+#admin-new-orders { padding-bottom: 20px !important; max-height: 65vh !important; overflow-y: auto !important; padding-right: 10px !important; }
+#admin-new-orders::-webkit-scrollbar { width: 4px !important; }
+#admin-new-orders::-webkit-scrollbar-thumb { background: #cbd5e1 !important; border-radius: 4px !important; }
 
-/* New Orders Box: Premium Light Blue */
-.live-left-col > .dashboard-card:nth-child(2) { background: #f0f9ff !important; border: 1px solid #bae6fd !important; }
-.live-left-col > .dashboard-card:nth-child(2) > div:first-child { border-bottom: 2px dashed #93c5fd !important; }
-
-/* Kitchen Box: Premium Light Orange/Yellow */
-.live-right-col .dashboard-card { background: #fffbeb !important; border: 1px solid #fde68a !important; }
-.live-right-col .dashboard-card > div:first-child { border-bottom: 2px dashed #fcd34d !important; }
-
-
-/* 3. 🛎️ WAITER CALL FIX (No Broken Text, Button Visible) */
+/* 2. Waiter Call Alert Fix (Perfect Flexbox) */
 .action-alert {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    background: #ffffff !important;
-    padding: 12px 15px !important;
-    border-radius: 12px !important;
-    border: 1px solid #fca5a5 !important;
-    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.1) !important;
+    display: flex !important; flex-direction: row !important; justify-content: space-between !important;
+    align-items: center !important; padding: 10px 14px !important; border-radius: 12px !important;
 }
-/* Allow text to break naturally based on admin.js */
-.action-alert > div { display: block !important; line-height: 1.5 !important; } 
+.action-alert > div { display: flex !important; flex-wrap: wrap !important; align-items: center !important; gap: 6px !important; }
+.action-alert > div br { display: none !important; } /* Line break hataya */
+.action-alert > div span { margin-left: 0 !important; } /* Margin fix */
+.action-alert > div span:last-child {
+    background: #f1f5f9 !important; padding: 3px 8px !important;
+    border-radius: 6px !important; font-size: 10px !important; font-weight: 700 !important;
+}
 .action-alert button {
-    background: var(--danger) !important; 
-    color: white !important;
-    border: none !important;
-    padding: 8px 16px !important;
-    border-radius: 8px !important;
-    font-weight: 800 !important;
-    cursor: pointer !important;
-    min-width: 80px !important;
-    box-shadow: 0 4px 10px rgba(239,68,68,0.2) !important;
+    padding: 6px 12px !important; font-size: 11px !important; height: auto !important;
+    border-radius: 8px !important; min-width: auto !important;
 }
 
+/* 3. Base Order Card */
+.order-card { position: relative !important; padding-top: 15px !important; }
 
-/* 4. ⏱️ TIME FORMATTING FIX */
+/* 4. Top Row (Table vs Time) Alignment */
 .card-top-row {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important; /* Perfect Top Alignment */
-    margin-bottom: 12px !important;
-}
-.order-time-display {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 4px !important;
-}
-.main-time { font-size: 11px !important; font-weight: 700 !important; color: #64748b !important; }
-.time-ago-tracker { font-size: 12px !important; font-weight: 800 !important; }
-
-
-/* 5. 💳 ORDER CARD & MISSING BUTTONS FIX */
-.order-card {
-    background: #ffffff !important;
-    border-radius: 14px !important;
-    padding: 16px !important;
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
-    margin-bottom: 12px !important;
-}
-.order-actions-row {
-    display: flex !important;
-    gap: 8px !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
+    display: flex !important; flex-direction: row !important;
+    justify-content: space-between !important; align-items: center !important; margin-bottom: 12px !important;
 }
 
-/* Base style for buttons (Colors are handled by admin.js natively now!) */
-.btn-action-new {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 8px 12px !important;
-    border-radius: 8px !important;
-    font-size: 11px !important;
-    font-weight: 800 !important;
+/* 5. 👑 "T-3" MAGIC (Hiding 'Table 3', showing T-03) */
+.type-dinein .table-id-box {
+    font-size: 0 !important; /* "Table X" text hide karega */
+    display: flex !important; align-items: center !important;
+}
+.type-dinein .number-avatar {
+    font-size: 16px !important; font-weight: 900 !important;
+    background: transparent !important; color: var(--text-main) !important;
+    width: auto !important; height: auto !important; padding: 0 !important;
+}
+.type-dinein .number-avatar::before { content: "T-" !important; }
+
+.type-takeaway .table-id-box { font-size: 14px !important; } /* Takeaway normal rahega */
+
+/* 6. 📌 UNPAID BADGE MOVED TO TOP ROW */
+.card-badge-row { display: flex !important; gap: 8px !important; margin-bottom: 12px !important; }
+.card-badge-row button {
+    position: absolute !important; /* Hawa me uthaya */
+    top: 15px !important;
+    left: 55px !important; /* T-03 ke exact bagal me */
+    padding: 3px 6px !important;
+    font-size: 9px !important;
+    border-radius: 6px !important;
+    height: max-content !important;
     border: none !important;
-    cursor: pointer !important;
-    text-transform: uppercase !important;
-    color: white !important; /* Forces text to be visible on colored backgrounds */
 }
-/* Make ACCEPT button look normal if it has white bg initially */
-.btn-action-new[onclick*="Accepted"] { color: #fff !important; }
-.btn-action-new[onclick*="Cancelled"] { background: rgba(239, 68, 68, 0.1) !important; color: var(--danger) !important; }
+.type-takeaway .card-badge-row button { left: 95px !important; } /* Takeaway word lamba hai */
 
-/* 6. Scrolling Fix for New Orders */
-#admin-new-orders {
-    padding-bottom: 30px !important;
-    max-height: 65vh !important;
-    overflow-y: auto !important;
-    padding-right: 8px !important;
-}
+/* 7. Timer Color Softer (No more danger red) */
+.time-ago-tracker { color: #f97316 !important; font-size: 11px !important; font-weight: 800 !important; }
+.order-time-display { display: flex !important; flex-direction: column !important; align-items: flex-end !important; gap: 2px !important; }
+
+/* 8. Premium Button Colors (Softer, Modern SaaS Look) */
+.btn-action-new { box-shadow: none !important; transition: 0.2s !important; }
+.btn-action-new:hover { transform: translateY(-2px) !important; filter: brightness(1.05) !important; }
+.btn-action-new[onclick*="Accepted"] { background: #10b981 !important; color: white !important; } /* Soft Emerald Green */
+.btn-action-new[onclick*="Ready"] { background: #0ea5e9 !important; color: white !important; } /* Soft Sky Blue */
+.btn-action-new[onclick*="Completed"] { background: #3b82f6 !important; color: white !important; } /* Mark Ready */
+.btn-action-new[onclick*="Served"] { background: var(--primary) !important; color: white !important; }
