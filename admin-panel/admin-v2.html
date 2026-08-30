@@ -10,6 +10,11 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Linking our new CSS -->
     <link rel="stylesheet" href="admin-v2.css">
+    
+    <!-- 🔥 FIX: Hiding default alerts of admin.js that are not in V2 yet -->
+    <style>
+        #action-center-container, #logoutConfirmModal, #deleteConfirmModal, #customerHistoryModal, #forgotPassModal, #changePassModal, #addTableModal, #deleteTableModal { display: none !important; }
+    </style>
 </head>
 <body>
     <!-- ==================================
@@ -68,6 +73,7 @@
             
         </div>
     </div>
+    
     <div class="app-container">
         
         <!-- PART A: The Clean Sidebar -->
@@ -102,6 +108,11 @@
                 <a href="#" id="nav-settings" class="nav-item"><i class="ph-bold ph-gear"></i> Settings</a>
 
             </nav>
+            <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                <a href="#" class="nav-item" onclick="executeLogout()" style="color: #ef4444;">
+                    <i class="ph-bold ph-sign-out"></i> Logout
+                </a>
+            </div>
         </aside>
 
         <!-- PART B: Main Content Area -->
@@ -114,7 +125,7 @@
                     <button class="hamburger-btn"><i class="ph-bold ph-list"></i></button>
                     <div class="search-bar">
                         <i class="ph-bold ph-magnifying-glass"></i>
-                        <input type="text" placeholder="Search here...">
+                        <input type="text" id="adminSearchInput" placeholder="Search menu here..." onkeyup="filterAdminMenu()">
                     </div>
                 </div>
                 
@@ -130,7 +141,7 @@
                         <div class="icon-btn icon-purple"><i class="ph-bold ph-qr-code"></i></div>
                         <div class="icon-btn icon-blue">
                             <i class="ph-bold ph-bell"></i>
-                            <span class="badge"></span>
+                            <span class="badge" id="nav-bell-badge" style="display:none;">0</span>
                         </div>
                         <div class="icon-btn icon-lightblue"><i class="ph-bold ph-chat-teardrop-dots"></i></div>
                         <div class="icon-btn icon-orange"><i class="ph-bold ph-gear"></i></div>
@@ -158,424 +169,417 @@
             </header>
             
             <!-- PART C: The Workspace -->
-        <div class="dashboard-workspace">
-            
-            <!-- 🔥 VIEW 1: MAIN DASHBOARD -->
-            <div id="view-dashboard">
-            
-           <!-- The 4 Features / KPI Cards with Circles -->
-            <div class="kpi-grid">
+            <div class="dashboard-workspace">
                 
-                <!-- Card 1: Total Menu -->
-                <div class="kpi-card">
-                    <div class="kpi-info">
-                        <p>Total Menu</p>
-                        <!-- 🔥 ID ADDED -->
-                        <h3 id="total-dishes">0</h3>
-                    </div>
-                    <div class="circle-graph" style="background: conic-gradient(#FF6B00 75%, #FFF0E6 75%);">
-                        <div class="circle-inner" style="color: #FF6B00;"><i class="ph-bold ph-pizza"></i></div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Total Revenue -->
-                <div class="kpi-card">
-                    <div class="kpi-info">
-                        <p>Total Revenue</p>
-                        <!-- 🔥 ID ADDED -->
-                        <h3 id="total-revenue">₹0</h3>
-                    </div>
-                    <div class="circle-graph" style="background: conic-gradient(#20c997 85%, #E6F9F3 85%);">
-                        <div class="circle-inner" style="color: #20c997;"><i class="ph-bold ph-currency-inr"></i></div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Total Orders -->
-                <div class="kpi-card">
-                    <div class="kpi-info">
-                        <p>Total Orders</p>
-                        <!-- 🔥 ID ADDED -->
-                        <h3 id="total-orders">0</h3>
-                    </div>
-                    <div class="circle-graph" style="background: conic-gradient(#4361ee 60%, #EBEEFD 60%);">
-                        <div class="circle-inner" style="color: #4361ee;"><i class="ph-bold ph-shopping-cart"></i></div>
-                    </div>
-                </div>
-
-                <!-- Card 4: Total Customers -->
-                <div class="kpi-card">
-                    <div class="kpi-info">
-                        <p>Total Customers</p>
-                        <!-- 🔥 ID ADDED -->
-                        <h3 id="total-customers">0</h3>
-                    </div>
-                    <div class="circle-graph" style="background: conic-gradient(#f5b700 90%, #FEF8E6 90%);">
-                        <div class="circle-inner" style="color: #f5b700;"><i class="ph-bold ph-users"></i></div>
-                    </div>
-                </div>
-
-            </div>
+                <!-- ==================================
+                     🔥 VIEW 1: MAIN DASHBOARD
+                ================================== -->
+                <div id="view-dashboard">
                 
-            <!-- ==================================
-                 MIDDLE SECTION: Trending, Chart & Stats
-            ================================== -->
-            <div class="middle-grid">
-                
-                <!-- 1. Left Column: Trending Items -->
-                <div class="dashboard-card trending-card">
-                    <div class="card-header">
-                        <h3>Trending Items</h3>
-                        <i class="ph-bold ph-dots-three"></i>
+                    <!-- The 4 Features / KPI Cards with Circles -->
+                    <div class="kpi-grid">
+                        
+                        <!-- Card 1: Total Menu -->
+                        <div class="kpi-card">
+                            <div class="kpi-info">
+                                <p>Total Menu</p>
+                                <!-- 🔥 ID ADDED -->
+                                <h3 id="total-dishes">0</h3>
+                            </div>
+                            <div class="circle-graph" style="background: conic-gradient(#FF6B00 75%, #FFF0E6 75%);">
+                                <div class="circle-inner" style="color: #FF6B00;"><i class="ph-bold ph-pizza"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Total Revenue -->
+                        <div class="kpi-card">
+                            <div class="kpi-info">
+                                <p>Total Revenue</p>
+                                <!-- 🔥 ID ADDED -->
+                                <h3 id="total-revenue">₹0</h3>
+                            </div>
+                            <div class="circle-graph" style="background: conic-gradient(#20c997 85%, #E6F9F3 85%);">
+                                <div class="circle-inner" style="color: #20c997;"><i class="ph-bold ph-currency-inr"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Total Orders -->
+                        <div class="kpi-card">
+                            <div class="kpi-info">
+                                <p>Total Orders</p>
+                                <!-- 🔥 ID ADDED -->
+                                <h3 id="total-orders">0</h3>
+                            </div>
+                            <div class="circle-graph" style="background: conic-gradient(#4361ee 60%, #EBEEFD 60%);">
+                                <div class="circle-inner" style="color: #4361ee;"><i class="ph-bold ph-shopping-cart"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Total Customers -->
+                        <div class="kpi-card">
+                            <div class="kpi-info">
+                                <p>Total Customers</p>
+                                <!-- 🔥 ID ADDED -->
+                                <h3 id="total-customers">0</h3>
+                            </div>
+                            <div class="circle-graph" style="background: conic-gradient(#f5b700 90%, #FEF8E6 90%);">
+                                <div class="circle-inner" style="color: #f5b700;"><i class="ph-bold ph-users"></i></div>
+                            </div>
+                        </div>
+
                     </div>
                     
-                    <div class="trending-list">
-                        <div class="trending-item">
-                            <span class="item-rank">#1</span>
-                            <img src="https://images.unsplash.com/photo-1589302168068-964664d93cb0?w=100&h=100&fit=crop" alt="Biryani" class="item-img">
-                            <div class="item-details">
-                                <h4>Chicken Biryani</h4>
-                                <p>₹250 <span class="badge-cat">Main Course</span></p>
+                    <!-- MIDDLE SECTION: Trending, Chart & Stats -->
+                    <div class="middle-grid">
+                        
+                        <!-- 1. Left Column: Trending Items -->
+                        <div class="dashboard-card trending-card">
+                            <div class="card-header">
+                                <h3>Trending Items</h3>
+                                <i class="ph-bold ph-dots-three"></i>
                             </div>
-                            <div class="item-sales">
-                                <h4>158</h4>
-                                <p class="trend-up"><i class="ph-bold ph-trend-up"></i> 20%</p>
-                            </div>
-                        </div>
-
-                        <div class="trending-item">
-                            <span class="item-rank">#2</span>
-                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop" alt="Burger" class="item-img">
-                            <div class="item-details">
-                                <h4>Paneer Burger</h4>
-                                <p>₹120 <span class="badge-cat">Snacks</span></p>
-                            </div>
-                            <div class="item-sales">
-                                <h4>112</h4>
-                                <p class="trend-up"><i class="ph-bold ph-trend-up"></i> 12%</p>
-                            </div>
-                        </div>
-
-                        <div class="trending-item">
-                            <span class="item-rank">#3</span>
-                            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100&h=100&fit=crop" alt="Noodles" class="item-img">
-                            <div class="item-details">
-                                <h4>Hakka Noodles</h4>
-                                <p>₹150 <span class="badge-cat">Starters</span></p>
-                            </div>
-                            <div class="item-sales">
-                                <h4>85</h4>
-                                <p class="trend-down"><i class="ph-bold ph-trend-down"></i> 5%</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. Middle Column: Revenue Chart Area -->
-                <div class="dashboard-card revenue-card">
-                    <div class="card-header">
-                        <h3>Revenue Overview</h3>
-                        <div class="chart-filters">
-                            <select>
-                                <option>This Week</option>
-                                <option>This Month</option>
-                                <option>This Year</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="chart-container" style="position: relative; height: 260px; width: 100%; margin-top: 10px;">
-                        <canvas id="mainRevenueChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- 3. Rightmost Column: Sessions & Customer Rate -->
-                <div class="right-column">
-                    
-                    <!-- Top Mini Card: Total Sessions -->
-                    <div class="stats-mini-card">
-                        <div class="stats-header">
-                            <div>
-                                <h3>Total Sessions</h3>
-                                <h2>845</h2>
-                            </div>
-                            <div class="icon-btn icon-blue" style="width: 35px; height: 35px; font-size: 16px;">
-                                <i class="ph-bold ph-users-three"></i>
-                            </div>
-                        </div>
-                        <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
-                            <canvas id="miniSessionChart"></canvas>
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <span style="font-size: 10px; background: rgba(67, 97, 238, 0.1); color: var(--primary); padding: 4px 8px; border-radius: 6px; font-weight: 700;">Live</span>
-                            <span style="font-size: 10px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-weight: 700;">4 Visitors</span>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Mini Card: Customer Rate -->
-                    <div class="stats-mini-card">
-                        <div class="stats-header">
-                            <div>
-                                <h3>Customer Rate</h3>
-                                <h2>5.12%</h2>
-                            </div>
-                            <div class="icon-btn icon-orange" style="width: 35px; height: 35px; font-size: 16px;">
-                                <i class="ph-bold ph-chart-pie-slice"></i>
-                            </div>
-                        </div>
-                        <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
-                            <canvas id="miniCustomerChart"></canvas>
-                        </div>
-                        <div style="font-size: 11px; color: #10b981; font-weight: 700; margin-top: 2px;">
-                            <i class="ph-bold ph-trend-up"></i> +1.2% from last week
-                        </div>
-                    </div>
-
-                </div> <!-- Right Column End -->
-
-            </div> <!-- Middle Grid End -->
-<!-- ==================================
-                 BOTTOM SECTION: Orders & Reviews
-            ================================== -->
-            <div class="bottom-grid">
-                
-                <!-- Left: Recent Orders Table -->
-                <div class="dashboard-card orders-card">
-                    <div class="card-header">
-                        <h3>Recent Orders</h3>
-                        <a href="#" style="font-size: 12px; color: var(--primary); text-decoration: none; font-weight: 700;">View All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="sleek-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <!-- 🔥 ID ADDED: JS yahan asali orders render karega -->
-                            <tbody id="v2-recent-orders-list">
-                                <tr>
-                                    <td colspan="4" style="text-align: center; color: var(--text-sub);">
-                                        <i class="ph-bold ph-spinner ph-spin" style="font-size: 20px;"></i> Loading live orders...
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Right: Customer Reviews -->
-                <div class="dashboard-card reviews-card">
-                    <div class="card-header">
-                        <h3>Customer Reviews</h3>
-                        <i class="ph-bold ph-dots-three"></i>
-                    </div>
-                    <div class="reviews-list">
-                        <!-- Review 1 -->
-                        <div class="review-item">
-                            <img src="https://ui-avatars.com/api/?name=Mical+Doe&background=random" alt="User" class="review-img">
-                            <div class="review-content">
-                                <h4>Mical Doe <span class="review-time">2 hrs ago</span></h4>
-                                <div class="stars">
-                                    <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+                            
+                            <div class="trending-list">
+                                <div class="trending-item">
+                                    <span class="item-rank">#1</span>
+                                    <img src="https://images.unsplash.com/photo-1589302168068-964664d93cb0?w=100&h=100&fit=crop" alt="Biryani" class="item-img">
+                                    <div class="item-details">
+                                        <h4 id="top-dish-name" class="skeleton">Loading...</h4>
+                                        <p><span class="badge-cat" id="top-cat-name" class="skeleton">Loading...</span></p>
+                                    </div>
                                 </div>
-                                <p>"Amazing food and very fast service using the Qrio menu!"</p>
                             </div>
                         </div>
-                        <!-- Review 2 -->
-                        <div class="review-item">
-                            <img src="https://ui-avatars.com/api/?name=Stapni+Doe&background=random" alt="User" class="review-img">
-                            <div class="review-content">
-                                <h4>Stapni Doe <span class="review-time">1 day ago</span></h4>
-                                <div class="stars">
-                                    <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-regular ph-star"></i>
-                                </div>
-                                <p>"The paneer tikka was brilliant, but waiting time can be improved."</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-            </div> <!-- Bottom Grid End -->
+                        <!-- 2. Middle Column: Revenue Chart Area -->
+                        <div class="dashboard-card revenue-card">
+                            <div class="card-header">
+                                <h3>Revenue Overview</h3>
+                                <div class="chart-filters">
+                                    <select id="chartFilter" onchange="if(window.allCompletedOrdersForChart) window.updateRevenueChart(window.allCompletedOrdersForChart)">
+                                        <option value="weekly">This Week</option>
+                                        <option value="monthly">This Month</option>
+                                        <option value="yearly">This Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container" style="position: relative; height: 260px; width: 100%; margin-top: 10px;">
+                                <canvas id="revenueBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- 3. Rightmost Column: Sessions & Customer Rate -->
+                        <div class="right-column">
+                            
+                            <!-- Top Mini Card: Total Sessions -->
+                            <div class="stats-mini-card">
+                                <div class="stats-header">
+                                    <div>
+                                        <h3>Today's Sale</h3>
+                                        <h2 id="rev-today">₹0</h2>
+                                    </div>
+                                    <div class="icon-btn icon-blue" style="width: 35px; height: 35px; font-size: 16px;">
+                                        <i class="ph-bold ph-currency-inr"></i>
+                                    </div>
+                                </div>
+                                <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
+                                    <canvas id="miniSessionChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Mini Card: Customer Rate -->
+                            <div class="stats-mini-card">
+                                <div class="stats-header">
+                                    <div>
+                                        <h3>Completed</h3>
+                                        <h2 id="saas-served">0</h2>
+                                    </div>
+                                    <div class="icon-btn icon-orange" style="width: 35px; height: 35px; font-size: 16px;">
+                                        <i class="ph-bold ph-check-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="mini-chart-box" style="background: transparent; border: none; height: 60px;">
+                                    <canvas id="miniCustomerChart"></canvas>
+                                </div>
+                            </div>
+
+                        </div> <!-- Right Column End -->
+
+                    </div> <!-- Middle Grid End -->
+                    
+                    <!-- BOTTOM SECTION: Orders & Reviews -->
+                    <div class="bottom-grid">
+                        
+                        <!-- Left: Recent Orders Table -->
+                        <div class="dashboard-card orders-card">
+                            <div class="card-header">
+                                <h3>Recent Orders</h3>
+                                <a href="#" onclick="switchView('live-orders')" style="font-size: 12px; color: var(--primary); text-decoration: none; font-weight: 700;">View All</a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="sleek-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <!-- 🔥 ID ADDED: JS yahan asali orders render karega -->
+                                    <tbody id="v2-recent-orders-list">
+                                        <tr>
+                                            <td colspan="4" style="text-align: center; color: var(--text-sub);">
+                                                <i class="ph-bold ph-spinner ph-spin" style="font-size: 20px;"></i> Loading live orders...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right: Customer Reviews -->
+                        <div class="dashboard-card reviews-card">
+                            <div class="card-header">
+                                <h3>Customer Reviews <span id="avg-rating-badge" style="font-size: 10px; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">0 ★</span></h3>
+                                <i class="ph-bold ph-dots-three"></i>
+                            </div>
+                            <div class="reviews-list" id="reviews-feed-list" style="max-height: 300px; overflow-y: auto;">
+                                <!-- Reviews will load here -->
+                                <div style="text-align: center; padding: 20px; color: var(--text-sub);">Loading reviews...</div>
+                            </div>
+                        </div>
+
+                    </div> <!-- Bottom Grid End -->
                 </div> <!-- 🔥 VIEW 1 END (Dashboard ko yahan band kiya) -->
 
-            <!-- ==================================
-                 🔥 VIEW 2: FULL LIVE ORDERS PAGE
-            ================================== -->
-            <div id="view-live-orders" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
-                <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
-                    <div class="card-header" style="margin-bottom: 25px;">
-                        <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-receipt" style="color: var(--primary);"></i> Manage Live Orders</h2>
-                        <button class="btn-primary" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
-                            <i class="ph-bold ph-arrows-clockwise"></i> Refresh
-                        </button>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table class="sleek-table" style="min-width: 900px;">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Time</th>
-                                    <th>Customer & Table</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="v2-full-orders-list">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-sub);">
-                                        <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Fetching detailed live orders...
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div> <!-- View 2 End -->
-<!-- ==================================
-                 🔥 VIEW 3: MENUS MANAGEMENT
-            ================================== -->
-            <div id="view-menus" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
-                <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
-                    <div class="card-header" style="margin-bottom: 25px;">
-                        <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-fork-knife" style="color: var(--primary);"></i> Manage Menus</h2>
-                        <!-- Naya ID aur Function match kiya -->
-                        <button class="btn-primary" onclick="openModal()" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
-                            <i class="ph-bold ph-plus-circle"></i> Add New Dish
-                        </button>
-                    </div>
-                    
-                    <!-- 🔥 JS id="menu-body" dhoondh raha tha -->
-                    <div id="menu-body" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-sub);">
-                            <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Loading your delicious menu...
+                <!-- ==================================
+                     🔥 VIEW 2: FULL LIVE ORDERS PAGE
+                ================================== -->
+                <div id="view-live-orders" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
+                        <div class="card-header" style="margin-bottom: 25px;">
+                            <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-receipt" style="color: var(--primary);"></i> Manage Live Orders</h2>
+                            <button class="btn-primary" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <i class="ph-bold ph-arrows-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="sleek-table" style="min-width: 900px;">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Time</th>
+                                        <th>Customer & Table</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="v2-full-orders-list">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-sub);">
+                                            <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Fetching detailed live orders...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
-            </div> <!-- View 3 End -->
+                </div> <!-- View 2 End -->
+                
+                <!-- ==================================
+                     🔥 VIEW 3: MENUS MANAGEMENT
+                ================================== -->
+                <div id="view-menus" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
+                        <div class="card-header" style="margin-bottom: 25px;">
+                            <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-fork-knife" style="color: var(--primary);"></i> Manage Menus</h2>
+                            
+                            <div style="display: flex; gap: 10px;">
+                                <!-- Category Filters for Menu -->
+                                <button class="btn-cancel admin-cat-pill active" onclick="filterAdminCat('All', this)">All</button>
+                                <button class="btn-cancel admin-cat-pill" onclick="filterAdminCat('Veg', this)">Veg</button>
+                                <button class="btn-cancel admin-cat-pill" onclick="filterAdminCat('Non-Veg', this)">Non-Veg</button>
+                                
+                                <button class="btn-primary" onclick="openModal()" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px; margin-left: 15px;">
+                                    <i class="ph-bold ph-plus-circle"></i> Add New Dish
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 🔥 JS id="menu-body" dhoondh raha tha -->
+                        <div id="menu-body" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-sub);">
+                                <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Loading your delicious menu...
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- View 3 End -->
 
-        </div> <!-- Workspace End -->
-        
-    </main>
-</div>
-
-<!-- ==================================
-     🔥 ADMIN.JS COMPATIBLE ADD/EDIT MODAL
-================================== -->
-<div id="addModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center;">
-    <div class="modal-box" style="width: 500px; max-height: 90vh; overflow-y: auto;">
-        <div class="modal-header">
-            <h2 id="modalTitle"><i class="ph-fill ph-plus-circle"></i> Add New Dish</h2>
-            <i class="ph-bold ph-x close-modal" onclick="closeModal()"></i>
-        </div>
-        
-        <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
-            <!-- Hidden ID -->
-            <input type="hidden" id="dishId">
+            </div> <!-- Workspace End -->
             
-            <div style="display: flex; gap: 15px;">
-                <div class="input-group" style="margin-bottom: 0; width: 30%;">
-                    <label>Emoji</label>
-                    <div class="input-box"><input type="text" id="dishEmoji" placeholder="🍲"></div>
+        </main>
+    </div>
+
+    <!-- ==================================
+         🔥 ADMIN.JS COMPATIBLE ADD/EDIT MODAL
+    ================================== -->
+    <div id="addModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 999999;">
+        <div class="modal-box" style="width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="ph-fill ph-plus-circle"></i> Add New Dish</h2>
+                <i class="ph-bold ph-x close-modal" onclick="closeModal()"></i>
+            </div>
+            
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                <!-- Hidden ID -->
+                <input type="hidden" id="dishId">
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="input-group" style="margin-bottom: 0; width: 30%;">
+                        <label>Emoji</label>
+                        <div class="input-box"><input type="text" id="dishEmoji" placeholder="🍲"></div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Dish Name</label>
+                        <div class="input-box"><input type="text" id="dishName" placeholder="e.g., Shahi Paneer"></div>
+                    </div>
                 </div>
-                <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                    <label>Dish Name</label>
-                    <div class="input-box"><input type="text" id="dishName" placeholder="e.g., Shahi Paneer"></div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Category</label>
+                        <select id="dishCategory" class="input-box" style="width: 100%; border: none; outline: none; background: #f8fafc;">
+                            <option value="Veg">🟢 Veg</option>
+                            <option value="Non-Veg">🔴 Non-Veg</option>
+                            <option value="Starters">🍟 Starters</option>
+                            <option value="Main Course">🍛 Main Course</option>
+                            <option value="Breads">🥖 Breads</option>
+                            <option value="Rice">🍚 Rice</option>
+                            <option value="Drinks">🍹 Drinks</option>
+                            <option value="Desserts">🍨 Desserts</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Price (₹)</label>
+                        <div class="input-box"><i class="ph-bold ph-currency-inr"></i><input type="number" id="dishPrice" placeholder="250"></div>
+                    </div>
+                </div>
+
+                <!-- Optional Pricing -->
+                <div style="display: flex; gap: 15px;">
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Half Price (Optional)</label>
+                        <div class="input-box"><input type="number" id="dishPriceHalf" placeholder="₹"></div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0; flex: 1;">
+                        <label>Piece Price (Optional)</label>
+                        <div class="input-box"><input type="number" id="dishPricePiece" placeholder="₹"></div>
+                    </div>
+                </div>
+
+                <!-- 3D Model GLB -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>3D Model (GLB Link) <span style="font-size: 10px; color: var(--primary);">*For AR</span></label>
+                    <div class="input-box"><i class="ph-bold ph-cube"></i><input type="text" id="dishModel" placeholder="Paste .glb URL"></div>
+                </div>
+
+                <!-- Photos -->
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Image 1 (Main)</label>
+                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="dishPhoto1" placeholder="Image URL"></div>
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Image 2</label>
+                    <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="dishPhoto2" placeholder="Image URL"></div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="input-group" style="margin-bottom: 0; flex:1;">
+                        <div class="input-box"><input type="text" id="dishPhoto3" placeholder="Image 3 URL"></div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0; flex:1;">
+                        <div class="input-box"><input type="text" id="dishPhoto4" placeholder="Image 4 URL"></div>
+                    </div>
                 </div>
             </div>
             
-            <div style="display: flex; gap: 15px;">
-                <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                    <label>Category</label>
-                    <div class="input-box"><input type="text" id="dishCategory" placeholder="Main Course"></div>
-                </div>
-                <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                    <label>Price (₹)</label>
-                    <div class="input-box"><i class="ph-bold ph-currency-inr"></i><input type="number" id="dishPrice" placeholder="250"></div>
-                </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" id="saveBtn" onclick="saveDish()"><i class="ph-bold ph-floppy-disk"></i> Save & Publish</button>
             </div>
-
-            <!-- Optional Pricing -->
-            <div style="display: flex; gap: 15px;">
-                <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                    <label>Half Price (Optional)</label>
-                    <div class="input-box"><input type="number" id="dishPriceHalf" placeholder="₹"></div>
-                </div>
-                <div class="input-group" style="margin-bottom: 0; flex: 1;">
-                    <label>Piece Price (Optional)</label>
-                    <div class="input-box"><input type="number" id="dishPricePiece" placeholder="₹"></div>
-                </div>
-            </div>
-
-            <!-- 3D Model GLB -->
-            <div class="input-group" style="margin-bottom: 0;">
-                <label>3D Model (GLB Link) <span style="font-size: 10px; color: var(--primary);">*For AR</span></label>
-                <div class="input-box"><i class="ph-bold ph-cube"></i><input type="text" id="dishModel" placeholder="Paste .glb URL"></div>
-            </div>
-
-            <!-- Photos -->
-            <div class="input-group" style="margin-bottom: 0;">
-                <label>Image 1 (Main)</label>
-                <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="dishPhoto1" placeholder="Image URL"></div>
-            </div>
-            <div class="input-group" style="margin-bottom: 0;">
-                <label>Image 2</label>
-                <div class="input-box"><i class="ph-bold ph-image"></i><input type="text" id="dishPhoto2" placeholder="Image URL"></div>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <div class="input-group" style="margin-bottom: 0; flex:1;">
-                    <div class="input-box"><input type="text" id="dishPhoto3" placeholder="Image 3 URL"></div>
-                </div>
-                <div class="input-group" style="margin-bottom: 0; flex:1;">
-                    <div class="input-box"><input type="text" id="dishPhoto4" placeholder="Image 4 URL"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-            <button class="btn-primary" id="saveBtn" onclick="saveDish()"><i class="ph-bold ph-floppy-disk"></i> Save & Publish</button>
         </div>
     </div>
-</div>
+
+    <!-- 🔥 NAYA: Premium Add Table Modal -->
+    <div id="premiumTableModal" class="modal-overlay" style="display: none; z-index: 999999;">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>Add New Table</h2>
+                <i class="ph-bold ph-x close-modal" onclick="closeTableModal()"></i>
+            </div>
+            <div class="modal-body">
+                <p>Enter the table number or name to generate a new QR code.</p>
+                <div class="input-group">
+                    <label>Table Number</label>
+                    <div class="input-box">
+                        <i class="ph-bold ph-hash"></i>
+                        <input type="text" id="newTableName" placeholder="e.g., Table 5">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeTableModal()">Cancel</button>
+                <button class="btn-primary" onclick="confirmAddTable()">Create Table</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 🔥 STEP 2: CHART.JS ENGINE & SCRIPT YAHAN HAI 🔥 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    
     <script>
-        // 1. MAIN REVENUE CHART (Smooth Blue Curve)
-        const ctxMain = document.getElementById('mainRevenueChart').getContext('2d');
-        new Chart(ctxMain, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [120, 190, 150, 280, 220, 350, 420],
-                    borderColor: '#4361ee', // Premium Blue
-                    backgroundColor: 'rgba(67, 97, 238, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4, // Isse line smooth (curvy) hoti hai
-                    fill: true,
-                    pointBackgroundColor: '#ffffff',
-                    pointBorderColor: '#4361ee',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } }, // Upar ka title hide
-                scales: {
-                    x: { grid: { display: false }, ticks: { font: { family: 'Poppins', size: 11 }, color: '#8f9bba' } },
-                    y: { grid: { color: '#f1f5f9', borderDash: [5, 5] }, ticks: { font: { family: 'Poppins', size: 11 }, color: '#8f9bba' }, beginAtZero: true }
-                }
-            }
+        // Modal Controls JS
+        const premiumModal = document.getElementById('premiumTableModal');
+        // Open Modal
+        document.getElementById('addTableBtn').addEventListener('click', () => {
+            premiumModal.style.display = 'flex';
         });
+        // Close Modal
+        function closeTableModal() {
+            premiumModal.style.display = 'none';
+        }
+        // Save Button (Baad me isko database se jodenge)
+        function confirmAddTable() {
+            const tableVal = document.getElementById('newTableName').value;
+            if(tableVal) {
+                alert("Awesome! Connecting " + tableVal + " to Database next...");
+                closeTableModal();
+            } else {
+                alert("Please enter a table name!");
+            }
+        }
+        
+        // Tab Switching Logic
+        function switchView(viewName) {
+            // Saare dabbon (views) ko pehle hide karo
+            document.getElementById('view-dashboard').style.display = 'none';
+            document.getElementById('view-live-orders').style.display = 'none';
+            document.getElementById('view-menus').style.display = 'none';
+            
+            // Jo click hua hai, sirf usko block (show) karo
+            if (viewName === 'dashboard') document.getElementById('view-dashboard').style.display = 'block';
+            if (viewName === 'live-orders') document.getElementById('view-live-orders').style.display = 'block';
+            if (viewName === 'menus') document.getElementById('view-menus').style.display = 'block';
+            
+            // Sidebar buttons ka Orange color (Active class) change karo
+            document.getElementById('nav-dashboard').classList.toggle('active', viewName === 'dashboard');
+            document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
+            document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
+        }
 
         // 2. MINI SESSIONS CHART (Sparkline style)
         const ctxSession = document.getElementById('miniSessionChart').getContext('2d');
@@ -623,6 +627,7 @@
     </script>
     <!-- 🔥 CONNECTING TO FIREBASE & ADMIN LOGIC 🔥 -->
     <script type="module" src="admin.js"></script>
+    
     <!-- 🔥 V2 CUSTOM ENGINE: LIVE ORDERS TABLE RENDERER 🔥 -->
     <script>
         setInterval(() => {
@@ -708,70 +713,5 @@
             }
         }, 1500); // Har 1.5 second me update hoga
     </script>
-    <!-- 🔥 NAYA: Premium Add Table Modal -->
-    <div id="premiumTableModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h2>Add New Table</h2>
-                <i class="ph-bold ph-x close-modal" onclick="closeTableModal()"></i>
-            </div>
-            <div class="modal-body">
-                <p>Enter the table number or name to generate a new QR code.</p>
-                <div class="input-group">
-                    <label>Table Number</label>
-                    <div class="input-box">
-                        <i class="ph-bold ph-hash"></i>
-                        <input type="text" id="newTableName" placeholder="e.g., Table 5">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeTableModal()">Cancel</button>
-                <button class="btn-primary" onclick="confirmAddTable()">Create Table</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Controls JS -->
-    <script>
-        const premiumModal = document.getElementById('premiumTableModal');
-        // Open Modal
-        document.getElementById('addTableBtn').addEventListener('click', () => {
-            premiumModal.style.display = 'flex';
-        });
-        // Close Modal
-        function closeTableModal() {
-            premiumModal.style.display = 'none';
-        }
-        // Save Button (Baad me isko database se jodenge)
-        function confirmAddTable() {
-            const tableVal = document.getElementById('newTableName').value;
-            if(tableVal) {
-                alert("Awesome! Connecting " + tableVal + " to Database next...");
-                closeTableModal();
-            } else {
-                alert("Please enter a table name!");
-            }
-        }
-    </script>
-    <!-- 🔥 TAB SWITCHING LOGIC 🔥 -->
-    <script>
-        function switchView(viewName) {
-            // Saare dabbon (views) ko pehle hide karo
-            document.getElementById('view-dashboard').style.display = 'none';
-            document.getElementById('view-live-orders').style.display = 'none';
-            document.getElementById('view-menus').style.display = 'none';
-            
-            // Jo click hua hai, sirf usko block (show) karo
-            if (viewName === 'dashboard') document.getElementById('view-dashboard').style.display = 'block';
-            if (viewName === 'live-orders') document.getElementById('view-live-orders').style.display = 'block';
-            if (viewName === 'menus') document.getElementById('view-menus').style.display = 'block';
-            
-            // Sidebar buttons ka Orange color (Active class) change karo
-            document.getElementById('nav-dashboard').classList.toggle('active', viewName === 'dashboard');
-            document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
-            document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
-        }
-        
 </body>
 </html>
