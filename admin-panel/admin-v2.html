@@ -356,44 +356,49 @@
                     </div> <!-- Bottom Grid End -->
                 </div> <!-- 🔥 VIEW 1 END (Dashboard ko yahan band kiya) -->
 
-                <!-- ==================================
-                     🔥 VIEW 2: FULL LIVE ORDERS PAGE (KANBAN)
+               <!-- ==================================
+                     🔥 VIEW 2: LIVE ORDERS (PRO DASHBOARD LAYOUT)
                 ================================== -->
                 <div id="view-live-orders" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
                     
-                    <!-- 🚨 Top Section: Waiter Calls & Alerts -->
-                    <div id="action-center-container" style="display: none; margin-bottom: 20px;">
-                        <div class="dashboard-card" style="border-left: 4px solid var(--danger); background: #fff0f0; padding: 0; overflow: hidden;">
-                            <div class="card-header" style="padding: 15px 20px; border-bottom: 1px dashed #fecaca; background: rgba(239, 68, 68, 0.05); margin-bottom: 0;">
-                                <h3 style="color: var(--danger); font-size: 16px;"><i class="ph-bold ph-bell-ringing"></i> Urgent Waiter Calls</h3>
-                            </div>
-                            <div id="action-alerts-list" style="padding: 15px 20px; display: flex; flex-direction: column; gap: 10px;">
-                                <!-- JS renders waiter calls here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 🗂️ Middle Section: The 2-Column Pipeline -->
-                    <div class="pipeline-board">
+                    <div class="live-orders-smart-grid">
                         
-                        <!-- Column 1: New Orders -->
-                        <div class="pipeline-col">
-                            <div class="col-header">
-                                <h3><i class="ph-bold ph-bell-ringing" style="color: var(--warning);"></i> New Incoming</h3>
-                                <span class="badge" id="badge-new-count" style="background: var(--warning); font-size: 14px; padding: 4px 10px;">0</span>
+                        <!-- ⬅️ LEFT COLUMN (35% Width): Urgent & New -->
+                        <div class="live-left-col">
+                            
+                            <!-- 🚨 Box 1: Waiter Calls (Chhota aur Compact) -->
+                            <div id="action-center-container" style="display: none;">
+                                <div class="dashboard-card" style="border: 1px solid #fecaca; background: #fff5f5; padding: 0; overflow: hidden; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.08);">
+                                    <div class="card-header" style="padding: 12px 18px; border-bottom: 1px dashed #fecaca; background: rgba(239, 68, 68, 0.05); margin-bottom: 0;">
+                                        <h3 style="color: var(--danger); font-size: 14px; font-weight: 800;"><i class="ph-bold ph-bell-ringing"></i> Urgent Waiter Calls</h3>
+                                    </div>
+                                    <div id="action-alerts-list" style="padding: 12px 18px; display: flex; flex-direction: column; gap: 8px;">
+                                        <!-- JS renders waiter calls here -->
+                                    </div>
+                                </div>
                             </div>
-                            <!-- JS yahan asali New Order Cards dalega -->
-                            <div id="admin-new-orders" class="col-body"></div>
+
+                            <!-- 🔔 Box 2: New Incoming -->
+                            <div class="dashboard-card" style="padding: 15px 20px; border: 1px solid #e0e7ff; background: #f8fafc; box-shadow: 0 8px 20px rgba(67, 97, 238, 0.05); flex-grow: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 10px;">
+                                    <h3 style="font-size: 15px; font-weight: 800; color: var(--text-main);"><i class="ph-bold ph-bell-ringing" style="color: var(--warning);"></i> New Incoming</h3>
+                                    <span class="badge" id="badge-new-count" style="background: var(--warning); font-size: 12px; padding: 4px 8px;">0</span>
+                                </div>
+                                <div id="admin-new-orders" style="display: flex; flex-direction: column; gap: 12px; max-height: 60vh; overflow-y: auto; padding-right: 5px;"></div>
+                            </div>
+
                         </div>
 
-                        <!-- Column 2: In Kitchen / Ready -->
-                        <div class="pipeline-col">
-                            <div class="col-header">
-                                <h3><i class="ph-bold ph-cooking-pot" style="color: var(--primary);"></i> Active in Kitchen</h3>
-                                <span class="badge" id="badge-active-count" style="background: var(--primary); font-size: 14px; padding: 4px 10px;">0</span>
+                        <!-- ➡️ RIGHT COLUMN (65% Width): Active in Kitchen -->
+                        <div class="live-right-col">
+                            <div class="dashboard-card" style="padding: 20px; border: 1px solid #ffedd5; background: #fffcf8; box-shadow: 0 10px 30px rgba(255, 107, 0, 0.05); min-height: 75vh;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px dashed #fed7aa; padding-bottom: 12px;">
+                                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main);"><i class="ph-bold ph-cooking-pot" style="color: var(--primary);"></i> Active in Kitchen</h3>
+                                    <span class="badge" id="badge-active-count" style="background: var(--primary); font-size: 14px; padding: 4px 10px;">0</span>
+                                </div>
+                                <!-- 🔥 GRID LAYOUT: Ek line me 2-3 order chamkenge -->
+                                <div id="admin-active-orders" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; align-items: start;"></div>
                             </div>
-                            <!-- JS yahan Cooking aur Ready wale cards dalega -->
-                            <div id="admin-active-orders" class="col-body"></div>
                         </div>
 
                     </div>
