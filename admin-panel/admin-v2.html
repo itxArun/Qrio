@@ -82,7 +82,7 @@
                 <div class="nav-heading">Main Menu</div>
                 <a href="#" id="nav-dashboard" class="nav-item active" onclick="switchView('dashboard')"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
                 <a href="#" id="nav-live-orders" class="nav-item" onclick="switchView('live-orders')"><i class="ph-bold ph-receipt"></i> Live Orders</a>
-                <a href="#" id="nav-menus" class="nav-item"><i class="ph-bold ph-fork-knife"></i> Menus</a>
+                <a href="#" id="nav-menus" class="nav-item" onclick="switchView('menus')"><i class="ph-bold ph-fork-knife"></i> Menus</a>
 
                 <!-- CATEGORY 2: MANAGEMENT -->
                 <div class="nav-heading">Management</div>
@@ -757,10 +757,17 @@
     <!-- 🔥 TAB SWITCHING LOGIC 🔥 -->
     <script>
         function switchView(viewName) {
-            document.getElementById('view-dashboard').style.display = (viewName === 'dashboard') ? 'block' : 'none';
-            document.getElementById('view-live-orders').style.display = (viewName === 'live-orders') ? 'block' : 'none';
-            document.getElementById('view-menus').style.display = (viewName === 'menus') ? 'block' : 'none';
+            // Saare dabbon (views) ko pehle hide karo
+            document.getElementById('view-dashboard').style.display = 'none';
+            document.getElementById('view-live-orders').style.display = 'none';
+            document.getElementById('view-menus').style.display = 'none';
             
+            // Jo click hua hai, sirf usko block (show) karo
+            if (viewName === 'dashboard') document.getElementById('view-dashboard').style.display = 'block';
+            if (viewName === 'live-orders') document.getElementById('view-live-orders').style.display = 'block';
+            if (viewName === 'menus') document.getElementById('view-menus').style.display = 'block';
+            
+            // Sidebar buttons ka Orange color (Active class) change karo
             document.getElementById('nav-dashboard').classList.toggle('active', viewName === 'dashboard');
             document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
             document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
