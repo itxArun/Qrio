@@ -357,38 +357,45 @@
                 </div> <!-- 🔥 VIEW 1 END (Dashboard ko yahan band kiya) -->
 
                 <!-- ==================================
-                     🔥 VIEW 2: FULL LIVE ORDERS PAGE
+                     🔥 VIEW 2: FULL LIVE ORDERS PAGE (KANBAN)
                 ================================== -->
                 <div id="view-live-orders" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
-                    <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
-                        <div class="card-header" style="margin-bottom: 25px;">
-                            <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-receipt" style="color: var(--primary);"></i> Manage Live Orders</h2>
-                            <button class="btn-primary" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
-                                <i class="ph-bold ph-arrows-clockwise"></i> Refresh
-                            </button>
+                    
+                    <!-- 🚨 Top Section: Waiter Calls & Alerts -->
+                    <div id="action-center-container" style="display: none; margin-bottom: 20px;">
+                        <div class="dashboard-card" style="border-left: 4px solid var(--danger); background: #fff0f0; padding: 0; overflow: hidden;">
+                            <div class="card-header" style="padding: 15px 20px; border-bottom: 1px dashed #fecaca; background: rgba(239, 68, 68, 0.05); margin-bottom: 0;">
+                                <h3 style="color: var(--danger); font-size: 16px;"><i class="ph-bold ph-bell-ringing"></i> Urgent Waiter Calls</h3>
+                            </div>
+                            <div id="action-alerts-list" style="padding: 15px 20px; display: flex; flex-direction: column; gap: 10px;">
+                                <!-- JS renders waiter calls here -->
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- 🗂️ Middle Section: The 2-Column Pipeline -->
+                    <div class="pipeline-board">
                         
-                        <div class="table-responsive">
-                            <table class="sleek-table" style="min-width: 900px;">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Time</th>
-                                        <th>Customer & Table</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="v2-full-orders-list">
-                                    <tr>
-                                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-sub);">
-                                            <i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br><br>Fetching detailed live orders...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <!-- Column 1: New Orders -->
+                        <div class="pipeline-col">
+                            <div class="col-header">
+                                <h3><i class="ph-bold ph-bell-ringing" style="color: var(--warning);"></i> New Incoming</h3>
+                                <span class="badge" id="badge-new-count" style="background: var(--warning); font-size: 14px; padding: 4px 10px;">0</span>
+                            </div>
+                            <!-- JS yahan asali New Order Cards dalega -->
+                            <div id="admin-new-orders" class="col-body"></div>
                         </div>
+
+                        <!-- Column 2: In Kitchen / Ready -->
+                        <div class="pipeline-col">
+                            <div class="col-header">
+                                <h3><i class="ph-bold ph-cooking-pot" style="color: var(--primary);"></i> Active in Kitchen</h3>
+                                <span class="badge" id="badge-active-count" style="background: var(--primary); font-size: 14px; padding: 4px 10px;">0</span>
+                            </div>
+                            <!-- JS yahan Cooking aur Ready wale cards dalega -->
+                            <div id="admin-active-orders" class="col-body"></div>
+                        </div>
+
                     </div>
                 </div> <!-- View 2 End -->
                 
@@ -802,12 +809,5 @@
             }
         }, 1500); // Har 1.5 second me update hoga
     </script>
-    <!-- 🔥 FIX: Hidden containers to keep admin.js happy! -->
-    <div style="display: none;">
-        <div id="admin-new-orders"></div>
-        <div id="admin-active-orders"></div>
-        <div id="action-center-container"></div>
-        <div id="action-alerts-list"></div>
-    </div>
 </body>
 </html>
