@@ -84,6 +84,8 @@
             </div>
             <nav class="sidebar-nav">
                 
+                <nav class="sidebar-nav">
+                
                 <!-- CATEGORY 1: CORE -->
                 <div class="nav-heading">Main Menu</div>
                 <a href="#" id="nav-dashboard" class="nav-item active" onclick="switchView('dashboard')"><i class="ph-bold ph-squares-four"></i> Dashboard</a>
@@ -92,20 +94,20 @@
 
                 <!-- CATEGORY 2: MANAGEMENT -->
                 <div class="nav-heading">Management</div>
-                <a href="#" id="nav-tables" class="nav-item"><i class="ph-bold ph-grid-four"></i> Table & QR</a>
-                <a href="#" id="nav-inventory" class="nav-item"><i class="ph-bold ph-box-arrow-down"></i> Inventory</a>
-                <a href="#" id="nav-staff" class="nav-item"><i class="ph-bold ph-users-three"></i> Staff</a>
+                <a href="#" id="nav-tables" class="nav-item" onclick="switchView('tables')"><i class="ph-bold ph-grid-four"></i> Table & QR</a>
+                <a href="#" id="nav-inventory" class="nav-item" onclick="switchView('inventory')"><i class="ph-bold ph-box-arrow-down"></i> Inventory</a>
+                <a href="#" id="nav-staff" class="nav-item" onclick="switchView('staff')"><i class="ph-bold ph-users-three"></i> Staff</a>
 
                 <!-- CATEGORY 3: GROWTH -->
                 <div class="nav-heading">Growth & Sales</div>
-                <a href="#" id="nav-customers" class="nav-item"><i class="ph-bold ph-users"></i> Customers</a>
-                <a href="#" id="nav-offers" class="nav-item"><i class="ph-bold ph-ticket"></i> Offers</a>
-                <a href="#" id="nav-reviews" class="nav-item"><i class="ph-bold ph-star"></i> Reviews</a>
+                <a href="#" id="nav-customers" class="nav-item" onclick="switchView('customers')"><i class="ph-bold ph-users"></i> Customers</a>
+                <a href="#" id="nav-offers" class="nav-item" onclick="switchView('offers')"><i class="ph-bold ph-ticket"></i> Offers</a>
+                <a href="#" id="nav-reviews" class="nav-item" onclick="switchView('reviews')"><i class="ph-bold ph-star"></i> Reviews</a>
 
                 <!-- CATEGORY 4: SYSTEM -->
                 <div class="nav-heading">System</div>
-                <a href="#" id="nav-analytics" class="nav-item"><i class="ph-bold ph-chart-line-up"></i> Analytics</a>
-                <a href="#" id="nav-settings" class="nav-item"><i class="ph-bold ph-gear"></i> Settings</a>
+                <a href="#" id="nav-analytics" class="nav-item" onclick="switchView('analytics')"><i class="ph-bold ph-chart-line-up"></i> Analytics</a>
+                <a href="#" id="nav-settings" class="nav-item" onclick="switchView('settings')"><i class="ph-bold ph-gear"></i> Settings</a>
 
             </nav>
             <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #f1f5f9;">
@@ -418,7 +420,70 @@
                         </div>
                     </div>
                 </div> <!-- View 3 End -->
+<!-- ==================================
+                     🔥 VIEW 4: TABLE & QR
+                ================================== -->
+                <div id="view-tables" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
+                        <div class="card-header" style="margin-bottom: 25px;">
+                            <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-grid-four" style="color: var(--primary);"></i> Manage Tables & QR</h2>
+                            <button class="btn-primary" onclick="addNewTable()" style="padding: 10px 15px; font-size: 13px; display: flex; align-items: center; gap: 5px;">
+                                <i class="ph-bold ph-plus-circle"></i> Add New Table
+                            </button>
+                        </div>
+                        <!-- JS yahan Tables load karega -->
+                        <div id="tables-grid">
+                             <div style="text-align: center; padding: 40px; color: var(--text-sub);"><i class="ph-bold ph-spinner ph-spin" style="font-size: 24px; color: var(--primary);"></i><br>Loading tables...</div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- ==================================
+                     🔥 VIEW 5: CUSTOMERS (CRM)
+                ================================== -->
+                <div id="view-customers" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 30px; min-height: 500px;">
+                        <div class="card-header" style="margin-bottom: 25px;">
+                            <h2 style="color: var(--text-main); font-size: 22px;"><i class="ph-bold ph-users" style="color: var(--primary);"></i> Customer CRM</h2>
+                        </div>
+                        <!-- JS yahan Customers ki list load karega -->
+                        <div id="crm-body" style="display: flex; flex-direction: column; gap: 10px;">
+                            <div style="text-align: center; padding: 40px; color: var(--text-sub);">Syncing customer data...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================================
+                     🔥 PLACEHOLDER VIEWS (Coming Soon)
+                ================================== -->
+                <div id="view-inventory" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 50px; text-align: center; min-height: 400px;"><h2 style="color: var(--text-sub);"><i class="ph-bold ph-box-arrow-down" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>Inventory Module<br><span style="font-size: 14px; font-weight: 500;">Coming Soon in V2.1</span></h2></div>
+                </div>
+                <div id="view-staff" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 50px; text-align: center; min-height: 400px;"><h2 style="color: var(--text-sub);"><i class="ph-bold ph-users-three" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>Staff Management<br><span style="font-size: 14px; font-weight: 500;">Coming Soon in V2.1</span></h2></div>
+                </div>
+                <div id="view-offers" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 50px; text-align: center; min-height: 400px;"><h2 style="color: var(--text-sub);"><i class="ph-bold ph-ticket" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>Offers & Coupons<br><span style="font-size: 14px; font-weight: 500;">Coming Soon in V2.1</span></h2></div>
+                </div>
+                <div id="view-reviews" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 50px; text-align: center; min-height: 400px;"><h2 style="color: var(--text-sub);"><i class="ph-bold ph-star" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>All Reviews<br><span style="font-size: 14px; font-weight: 500;">Coming Soon in V2.1</span></h2></div>
+                </div>
+                <div id="view-analytics" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 50px; text-align: center; min-height: 400px;"><h2 style="color: var(--text-sub);"><i class="ph-bold ph-chart-line-up" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>Deep Analytics<br><span style="font-size: 14px; font-weight: 500;">Coming Soon in V2.1</span></h2></div>
+                </div>
+                <div id="view-settings" style="display: none; animation: modalPop 0.3s ease-out; width: 100%;">
+                    <div class="dashboard-card" style="padding: 30px; min-height: 400px;">
+                        <h2 style="color: var(--text-main); font-size: 22px; margin-bottom: 20px;"><i class="ph-bold ph-gear" style="color: var(--primary);"></i> Store Settings</h2>
+                        <div class="input-group" style="max-width: 400px;">
+                            <label style="font-size: 12px; font-weight: 700;">Receive Payments on UPI ID</label>
+                            <div class="input-box" style="background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 8px;">
+                                <i class="ph-bold ph-wallet"></i>
+                                <input type="text" id="adminUpiInput" placeholder="e.g., yourname@upi" style="border: none; background: transparent; width: 100%; outline: none;">
+                            </div>
+                            <button id="btnSaveUpi" onclick="saveHotelUPI()" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; margin-top: 15px; cursor: pointer;">Save UPI Settings</button>
+                        </div>
+                    </div>
+                </div>
             </div> <!-- Workspace End -->
             
         </main>
@@ -584,22 +649,25 @@
             }
         }
         
-        // Tab Switching Logic
+        // 🚀 SMART TAB SWITCHING LOGIC
         function switchView(viewName) {
-            // Saare dabbon (views) ko pehle hide karo
-            document.getElementById('view-dashboard').style.display = 'none';
-            document.getElementById('view-live-orders').style.display = 'none';
-            document.getElementById('view-menus').style.display = 'none';
+            // Humare saare views ki list
+            const allViews = ['dashboard', 'live-orders', 'menus', 'tables', 'inventory', 'staff', 'customers', 'offers', 'reviews', 'analytics', 'settings'];
             
-            // Jo click hua hai, sirf usko block (show) karo
-            if (viewName === 'dashboard') document.getElementById('view-dashboard').style.display = 'block';
-            if (viewName === 'live-orders') document.getElementById('view-live-orders').style.display = 'block';
-            if (viewName === 'menus') document.getElementById('view-menus').style.display = 'block';
-            
-            // Sidebar buttons ka Orange color (Active class) change karo
-            document.getElementById('nav-dashboard').classList.toggle('active', viewName === 'dashboard');
-            document.getElementById('nav-live-orders').classList.toggle('active', viewName === 'live-orders');
-            document.getElementById('nav-menus').classList.toggle('active', viewName === 'menus');
+            allViews.forEach(v => {
+                // 1. Pages ko hide/show karna
+                const viewEl = document.getElementById('view-' + v);
+                if (viewEl) viewEl.style.display = (v === viewName) ? 'block' : 'none';
+                
+                // 2. Sidebar me Orange color (Active class) lagana/hatana
+                const navEl = document.getElementById('nav-' + v);
+                if (navEl) navEl.classList.toggle('active', v === viewName);
+            });
+
+            // Agar Tables page khula hai, toh JS ko signal do ki tables paint kare
+            if (viewName === 'tables' && typeof window.renderTables === 'function') {
+                window.renderTables(); 
+            }
         }
 
         // 2. MINI SESSIONS CHART (Sparkline style)
