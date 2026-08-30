@@ -686,3 +686,80 @@ body {
 }
 .order-card > div:nth-child(5) > span { font-size: 14px !important; } /* Total amount chhota kiya */
 .btn-action-new { padding: 6px 10px !important; font-size: 10px !important; } /* Buttons chhote kiye */
+/* ==================================
+   🔥 SMART GRID & PREMIUM ORDER CARDS
+================================== */
+/* 1. Layout Structure */
+.live-orders-smart-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr; /* Left chhota, Right bada */
+    gap: 20px;
+    align-items: start;
+}
+.live-left-col { display: flex; flex-direction: column; gap: 20px; }
+
+/* 2. Premium Card Animations */
+@keyframes slideInPop {
+    0% { opacity: 0; transform: translateY(15px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.order-card {
+    background: #ffffff;
+    border-radius: 14px !important;
+    padding: 14px !important;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideInPop 0.4s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 3. 🔥 DYNAMIC COLOR INTELLIGENCE (Low Opacity Premium Look) */
+/* Jab order "Accepted" (KOT) mode me ho */
+.order-card:has(.status-accepted) {
+    background: rgba(67, 97, 238, 0.04);
+    border: 1px solid rgba(67, 97, 238, 0.2);
+}
+.order-card:has(.status-accepted):hover { border-color: rgba(67, 97, 238, 0.5); box-shadow: 0 8px 25px rgba(67, 97, 238, 0.1); }
+
+/* Jab order "Preparing/Cooking" mode me ho */
+.order-card:has(.status-prep) {
+    background: rgba(255, 107, 0, 0.04);
+    border: 1px solid rgba(255, 107, 0, 0.2);
+}
+.order-card:has(.status-prep):hover { border-color: rgba(255, 107, 0, 0.5); box-shadow: 0 8px 25px rgba(255, 107, 0, 0.1); }
+
+/* Jab order "Ready" mode me ho */
+.order-card:has(.status-ready) {
+    background: rgba(16, 185, 129, 0.04);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.order-card:has(.status-ready):hover { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.1); }
+
+
+/* 4. Action Buttons Upgrade */
+.order-actions-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.order-actions-row button {
+    transition: all 0.2s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 8px !important;
+    font-size: 11px !important;
+    padding: 8px 12px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Button Hover & Click Animation */
+.order-actions-row button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15) !important;
+}
+.order-actions-row button:active { transform: translateY(1px); filter: brightness(0.95); }
+
+/* Clean Scrollbar for Left Column */
+#admin-new-orders::-webkit-scrollbar { width: 4px; }
+#admin-new-orders::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
