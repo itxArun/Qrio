@@ -934,7 +934,7 @@
                     if (textDiv) {
                         let timeSpan = document.createElement('span');
                         timeSpan.className = 'waiter-time';
-                        timeSpan.innerHTML = `⏱️ ${timeString}`;
+                        timeSpan.innerHTML = timeString;
                         
                         // Remark tag (last child) ke theek pehle Time lagayega
                         textDiv.insertBefore(timeSpan, textDiv.lastElementChild);
