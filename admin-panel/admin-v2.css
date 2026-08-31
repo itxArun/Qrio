@@ -883,3 +883,16 @@ body {
     background: #FEF2F2 !important; color: #EF4444 !important; border-color: #EF4444 !important;
     transform: scale(1.05) !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2) !important;
 }
+/* ==================================
+   🔥 WAITER CALL: SMART TIME BADGE
+================================== */
+.waiter-time {
+    font-size: 9px !important;
+    color: #FCA311 !important; /* Premium Gold */
+    font-weight: 800 !important;
+    margin: 0 6px !important;
+    background: #14213D !important; /* Dark Blue background */
+    padding: 3px 6px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+}
