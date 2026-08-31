@@ -813,41 +813,59 @@
                 }
             }
         }, 1500); // Har 1.5 second me update hoga
-    </script>
-    <!-- 🔥 SMART ENGINE: Auto-Color Tracker (Time & Payment) -->
+    <!-- 🔥 ULTRA-SMART ENGINE: Toggles, Timers & New Order Alerts -->
     <script>
+        let previousOrderCount = 0;
+        let isFirstLoad = true;
+
+        // 1. Create the hidden "NEW" badge in header
+        const newHeader = document.querySelector('.live-left-col > .dashboard-card:nth-child(2) h3');
+        if (newHeader && !document.getElementById('smart-new-alert')) {
+            newHeader.innerHTML += '<span id="smart-new-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>';
+        }
+
         setInterval(() => {
-            // 1. Time Tracker (30 mins = Red)
+            // 2. ISOLATED iOS Toggle Tracker (Ab ek sath sab click nahi honge)
+            document.querySelectorAll('.order-card').forEach(card => {
+                const paymentBtn = card.querySelector('.card-badge-row button');
+                if (paymentBtn) {
+                    let btnText = paymentBtn.innerText.toUpperCase();
+                    // Sirf usi specific card ke button ko update karega
+                    if (btnText.includes('PAID') && !btnText.includes('UNPAID')) {
+                        paymentBtn.classList.add('paid-active');
+                    } else {
+                        paymentBtn.classList.remove('paid-active');
+                    }
+                }
+            });
+
+            // 3. Timer Color Logic (Red if > 30m)
             document.querySelectorAll('.time-ago-tracker').forEach(timeText => {
                 let text = timeText.innerText.toLowerCase();
-                let isOverdue = false;
-                
-                // Check if it has hours, days, or > 30 mins
-                if (text.includes('hour') || text.includes('day')) {
-                    isOverdue = true;
-                } else if (text.includes('min')) {
-                    let mins = parseInt(text.match(/\d+/)?.[0] || 0);
-                    if (mins >= 30) isOverdue = true;
-                }
-
-                // Apply Color
-                if (isOverdue) {
-                    timeText.style.setProperty('color', '#EF4444', 'important'); // Danger Red
-                } else {
-                    timeText.style.setProperty('color', '#14213D', 'important'); // Safe Dark Blue
-                }
+                let isOverdue = text.includes('hour') || text.includes('day') || (text.includes('min') && parseInt(text.match(/\d+/)?.[0] || 0) >= 30);
+                timeText.style.setProperty('color', isOverdue ? '#EF4444' : '#14213D', 'important');
             });
 
-            // 2. PAID/UNPAID iOS Switch Tracker
-            document.querySelectorAll('.card-badge-row button').forEach(btn => {
-                let btnText = btn.innerText.toUpperCase();
-                if (btnText.includes('UNPAID')) {
-                    btn.classList.remove('paid-active'); // Red (OFF state)
-                } else if (btnText.includes('PAID')) {
-                    btn.classList.add('paid-active'); // Green (ON state)
+            // 4. INTELLIGENT NEW ORDER DETECTOR
+            const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
+            const alertBadge = document.getElementById('smart-new-alert');
+            
+            if (alertBadge) {
+                // Agar orders badh gaye aur ye page ka pehla load nahi hai
+                if (currentOrders > previousOrderCount && !isFirstLoad) {
+                    alertBadge.style.display = 'inline-flex'; // Badge on!
                 }
-            });
-        }, 2000); // Har 2 second me check karega bina page refresh kiye
+                previousOrderCount = currentOrders;
+                isFirstLoad = false;
+            }
+        }, 1000);
+
+        // 5. CLEAR NOTIFICATION ON CLICK
+        // Agar admin New Orders column me kahin bhi click karega, badge gayab ho jayega
+        document.getElementById('admin-new-orders')?.addEventListener('click', () => {
+            const alertBadge = document.getElementById('smart-new-alert');
+            if (alertBadge) alertBadge.style.display = 'none';
+        });
     </script>
 </body>
 </html>
