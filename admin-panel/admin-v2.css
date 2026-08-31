@@ -725,111 +725,128 @@ body {
     box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
 }
 /* ==================================
-   🔥 STEP 2: NEW INCOMING (DARK HEADER & DISTINCT BODY)
+   🔥 STEP 2: NEW INCOMING (ULTRA-COMPACT + iOS TOGGLE)
 ================================== */
 
-/* 1. Main Box Container (Dark Border, Distinct Background) */
+/* 1. Main Box Container */
 .live-left-col > .dashboard-card:nth-child(2) {
-    background: #F8FAFC !important; /* Waiter wale (#E5E5E5) se alag, ekdam soft tone */
-    border: 1px solid #14213D !important; /* Dark Blue Border */
+    background: #F8FAFC !important;
+    border: 1px solid #14213D !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.04) !important;
-    padding: 0 !important; /* Header ko chipkane ke liye padding 0 ki */
+    padding: 0 !important;
     overflow: hidden !important;
 }
-
-/* 2. Header (Dark Blue - Matching the Waiter Box) */
 .live-left-col > .dashboard-card:nth-child(2) > div:first-child {
-    background: #14213D !important; 
-    border-bottom: none !important;
-    padding: 12px 16px !important;
+    background: #14213D !important;
+    padding: 10px 16px !important; /* Header thoda patla kiya */
     margin: 0 !important;
 }
-.live-left-col > .dashboard-card:nth-child(2) h3 {
-    color: #FFFFFF !important; /* Safed text dark background par */
-}
-.live-left-col > .dashboard-card:nth-child(2) .badge {
-    background: #FCA311 !important; /* Gold Badge for high contrast */
-    color: #000000 !important;
-}
+.live-left-col > .dashboard-card:nth-child(2) h3 { color: #FFFFFF !important; font-size: 13px !important; }
 
-/* 3. Scroll Area Fix (Kyunki parent ki padding 0 kar di thi) */
+/* 2. Scroll Area Fix (Lamba kiya aur padding kam ki taaki 3+ cards aayein) */
 #admin-new-orders {
-    padding: 12px 10px 20px 12px !important; /* Top, Right, Bottom, Left */
-    max-height: 65vh !important;
+    padding: 10px 8px 15px 10px !important;
+    max-height: 68vh !important; /* Height thodi badhai */
     overflow-y: auto !important;
 }
 #admin-new-orders::-webkit-scrollbar { width: 4px !important; }
-#admin-new-orders::-webkit-scrollbar-track { background: transparent !important; }
 #admin-new-orders::-webkit-scrollbar-thumb { background: #14213D !important; border-radius: 10px !important; }
 
-/* 4. Ultra-Compact Order Card (Premium Look with Gold Accent) */
+/* 3. Ultra-Compact Order Card with Premium 3D Hover Effect */
 .order-card {
-    background: #FFFFFF !important;
+    background: #F0F4F8 !important; /* 🔥 Premium Silvery Blue tone */
     border: 1px solid #E2E8F0 !important;
-    border-left: 3px solid #FCA311 !important; /* 🔥 Left side me ek mast Gold patti */
-    border-radius: 10px !important;
-    padding: 10px 12px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
-    margin-bottom: 10px !important;
+    border-left: 4px solid #FCA311 !important; /* Gold side border */
+    border-radius: 12px !important;
+    padding: 8px 10px !important; /* 🔥 Ultra compact padding */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+    margin-bottom: 8px !important; /* Cards ke beech gap kam kiya */
     display: flex !important;
     flex-direction: column !important;
-    gap: 6px !important; 
+    gap: 4px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+}
+.order-card:hover {
+    transform: translateY(-3px) !important; /* 🔥 Hover par card upar uthega */
+    box-shadow: 0 8px 20px rgba(20, 33, 61, 0.1) !important;
+    border-color: #CBD5E1 !important;
 }
 
-/* 5. Top Row (T-03 & Time) */
-.card-top-row {
-    display: flex !important; justify-content: space-between !important; 
-    align-items: flex-start !important; margin-bottom: 2px !important; 
-}
+/* 4. Top Row */
+.card-top-row { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 0 !important; }
 .type-dinein .table-id-box { font-size: 0 !important; display: flex !important; align-items: center !important; }
-.type-dinein .number-avatar {
-    background: transparent !important; color: #14213D !important; 
-    font-size: 15px !important; font-weight: 900 !important;
-    padding: 0 !important; width: auto !important; height: auto !important;
-}
+.type-dinein .number-avatar { background: transparent !important; color: #14213D !important; font-size: 14px !important; font-weight: 900 !important; padding: 0 !important; width: auto !important; height: auto !important; }
 .type-dinein .number-avatar::before { content: "T-" !important; }
 
 /* Timer */
 .order-time-display { display: flex !important; flex-direction: column !important; align-items: flex-end !important; }
-.time-ago-tracker { color: #14213D !important; font-size: 10px !important; font-weight: 800 !important; line-height: 1 !important;}
-.main-time { font-size: 9px !important; color: #94A3B8 !important; margin-bottom: 2px !important; line-height: 1 !important;}
+.time-ago-tracker { color: #14213D !important; font-size: 9px !important; font-weight: 800 !important; line-height: 1 !important;}
+.main-time { font-size: 8px !important; color: #94A3B8 !important; margin-bottom: 2px !important; line-height: 1 !important;}
 
-/* 6. Badges (UNPAID & New) */
-.card-badge-row { display: flex !important; gap: 6px !important; margin: 0 !important; }
+/* 5. 👑 THE iOS TOGGLE SWITCH (UNPAID BADGE) */
+.card-badge-row { display: flex !important; gap: 6px !important; margin: 0 !important; align-items: center !important; }
 .card-badge-row button {
-    background: #FEF2F2 !important; color: #EF4444 !important; border: 1px solid #FECACA !important;
-    padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important;
+    background: #ef4444 !important; /* iOS Red */
+    color: #ffffff !important;
+    border: none !important;
+    padding: 3px 8px 3px 18px !important; /* Left padding for the dot */
+    border-radius: 15px !important; /* Fully rounded pill */
+    font-size: 8px !important;
+    font-weight: 800 !important;
+    position: relative !important;
+    cursor: pointer !important;
+    transition: 0.3s ease !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important;
 }
-.status-badge {
-    background: #F1F5F9 !important; color: #14213D !important;
-    padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important;
+/* iOS Toggle White Dot */
+.card-badge-row button::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 2px !important;
+    top: 2px !important;
+    bottom: 2px !important;
+    width: 12px !important;
+    background: #ffffff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
+/* Simple JS interaction simulation (click effect) */
+.card-badge-row button:active::before { width: 16px !important; } /* iOS ki tarah dot stretch hoga dabaane par */
 
-/* 7. Customer & Item Details */
+.status-badge { background: #E2E8F0 !important; color: #14213D !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important; }
+
+/* 6. Customer & Item Details */
 .order-card > div:nth-child(3) {
-    background: #F8FAFC !important; color: #14213D !important;
-    padding: 4px 8px !important; border-radius: 4px !important; font-size: 10px !important; font-weight: 600 !important;
+    background: #FFFFFF !important; color: #14213D !important;
+    padding: 4px 8px !important; border-radius: 6px !important; font-size: 9px !important; font-weight: 600 !important;
+    border: 1px solid #E2E8F0 !important;
 }
-.order-card > div:nth-child(4) { font-size: 11px !important; font-weight: 600 !important; color: #000000 !important; margin-top: 2px !important; }
+.order-card > div:nth-child(4) { font-size: 10px !important; font-weight: 700 !important; color: #14213D !important; margin-top: 0 !important; }
 
-/* 8. Footer (Price & Buttons) */
+/* 7. Footer (Price & ROUND Buttons) */
 .order-card > div:last-child {
     display: flex !important; justify-content: space-between !important; align-items: center !important;
-    border-top: 1px dashed #E2E8F0 !important; padding-top: 8px !important; margin-top: 2px !important;
+    border-top: 1px dashed #CBD5E1 !important; padding-top: 6px !important; margin-top: 2px !important;
 }
 .order-card > div:last-child > span { font-size: 14px !important; font-weight: 900 !important; color: #14213D !important; }
 .order-actions-row { display: flex !important; gap: 6px !important; }
 
-/* 9. Premium Action Buttons */
+/* 8. Fully Rounded Action Buttons (Pill shape) */
 .btn-action-new[onclick*="Accepted"] {
     background: #14213D !important; color: #FFFFFF !important; border: none !important; 
-    padding: 5px 12px !important; border-radius: 6px !important;
-    font-size: 10px !important; font-weight: 700 !important; cursor: pointer !important; transition: 0.3s !important;
+    padding: 4px 14px !important; 
+    border-radius: 20px !important; /* 🔥 Round Shape */
+    font-size: 9px !important; font-weight: 800 !important; cursor: pointer !important; transition: 0.3s !important;
 }
-.btn-action-new[onclick*="Accepted"]:hover { background: #FCA311 !important; color: #000000 !important; }
+.btn-action-new[onclick*="Accepted"]:hover { background: #FCA311 !important; color: #000000 !important; transform: scale(1.05) !important; }
+
 .btn-action-new[onclick*="Cancelled"] {
     background: #FFFFFF !important; color: #EF4444 !important; border: 1px solid #FECACA !important; 
-    padding: 5px 10px !important; border-radius: 6px !important;
-    font-size: 10px !important; font-weight: 700 !important; cursor: pointer !important; transition: 0.3s !important;
+    padding: 4px 10px !important; 
+    border-radius: 20px !important; /* 🔥 Round Shape */
+    font-size: 9px !important; font-weight: 800 !important; cursor: pointer !important; transition: 0.3s !important;
 }
+.btn-action-new[onclick*="Cancelled"]:hover { background: #FEF2F2 !important; transform: scale(1.05) !important; }
