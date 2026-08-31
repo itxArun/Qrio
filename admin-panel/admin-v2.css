@@ -611,97 +611,105 @@ body {
 .dropdown-item { font-size: 12px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 5px; }
 .dropdown-item:hover { color: var(--primary); }
 /* ==================================
-   🔥 STEP 1: WAITER CALL BOX (ELEGANCE PALETTE)
+   🔥 STEP 1: ULTRA-COMPACT WAITER CALLS BOX
 ================================== */
 
-/* 1. Base Layout (Left box chhota rakhega) */
+/* 1. Base Layout (Left box ki width set rahegi) */
 .live-orders-smart-grid { 
     display: grid !important; 
     grid-template-columns: 320px 1fr !important; 
     gap: 20px !important; 
     align-items: start !important; 
 }
-.live-left-col { 
-    display: flex !important; 
-    flex-direction: column !important; 
-    gap: 20px !important; 
-}
+.live-left-col { display: flex !important; flex-direction: column !important; gap: 20px !important; }
 
-/* 2. Main Box Container (White Background #FFFFFF) */
+/* 2. Main Container Box (Background: #E5E5E5 Light Grey) */
 #action-center-container .dashboard-card {
-    background: #FFFFFF !important; 
-    border: 1px solid #E5E5E5 !important; 
-    border-radius: 12px !important;
+    background: #E5E5E5 !important; 
+    border: none !important; 
+    border-radius: 10px !important;
     padding: 0 !important; 
     overflow: hidden !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
 }
+
+/* 3. Header (Background: Dark Blue for Contrast) */
 #action-center-container .card-header {
-    background: #FFFFFF !important; 
-    border-bottom: 2px solid #E5E5E5 !important; 
-    padding: 12px 18px !important;
+    background: #14213D !important; 
+    padding: 8px 12px !important;
     margin: 0 !important;
+    border: none !important;
 }
 #action-center-container .card-header h3 {
-    color: #14213D !important; /* Palette Dark Blue */
-    font-size: 14px !important;
-    font-weight: 800 !important;
+    color: #FFFFFF !important; 
+    font-size: 12px !important;
+    font-weight: 700 !important;
     margin: 0 !important;
 }
+
+/* Alert List Container (Chhota gap taaki space bache) */
 #action-alerts-list {
-    padding: 12px 18px !important;
+    padding: 8px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 4px !important; 
 }
 
-/* 3. Waiter Alert Card (2nd Color Background #E5E5E5) */
+/* 4. Individual Waiter Call Strip (Ultra Slim) */
 .action-alert {
     display: flex !important;
+    flex-direction: row !important;
     justify-content: space-between !important;
     align-items: center !important;
-    background: #E5E5E5 !important; /* Palette 2nd Color */
-    padding: 12px 14px !important;
-    border-radius: 10px !important;
+    background: #FFFFFF !important; 
+    padding: 4px 8px !important; /* Ekdam choti padding */
+    border-radius: 6px !important;
     border: none !important;
 }
 
-/* Text formatting for High Visibility */
+/* 5. Text ko patla aur ek line me fix karna */
 .action-alert > div {
     display: flex !important;
-    flex-direction: column !important; 
-    align-items: flex-start !important;
-    gap: 4px !important;
-    font-size: 13px !important;
-    font-weight: 800 !important;
-    color: #14213D !important; /* Palette Dark Blue Text */
-}
-.action-alert > div br { 
-    display: none !important; /* Line break hide kiya */
-}
-.action-alert > div span {
+    align-items: center !important; /* Row layout */
     font-size: 11px !important;
-    color: #000000 !important; /* Palette Black */
     font-weight: 600 !important;
-    background: #FFFFFF !important; /* White tag for contrast */
-    padding: 3px 8px !important;
-    border-radius: 6px !important;
+    color: #000000 !important;
+    white-space: nowrap !important;
 }
 
-/* 4. The 'Done ✓' Button (Dark Blue -> Gold Hover) */
+/* 🔥 admin.js ki styling ko override karna */
+.action-alert > div br { display: none !important; } /* Line break hataya */
+.action-alert > div > span:first-child { 
+    font-size: 12px !important; /* Emoji size chhota */
+    margin-right: 4px !important; 
+}
+.action-alert > div > strong { 
+    color: #14213D !important; /* Table Name Dark Blue */
+    font-weight: 800 !important; 
+    margin-right: 6px !important; 
+}
+.action-alert > div > span:last-child {
+    font-size: 9px !important;
+    color: #14213D !important; 
+    margin-left: 0 !important; /* Purana 30px margin hataya */
+    background: rgba(20, 33, 61, 0.1) !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+}
+
+/* 6. Tiny 'Done ✓' Button (Gold Color) */
 .action-alert button {
-    background: #14213D !important; /* Palette Dark Blue */
-    color: #FFFFFF !important; 
+    background: #FCA311 !important; 
+    color: #000000 !important; 
     border: none !important;
-    padding: 8px 14px !important;
-    border-radius: 8px !important;
-    font-size: 11px !important;
+    padding: 4px 8px !important; /* Chhota button */
+    border-radius: 4px !important;
+    font-size: 9px !important;
     font-weight: 800 !important;
     cursor: pointer !important;
-    white-space: nowrap !important; 
-    transition: 0.3s ease !important;
+    transition: 0.2s !important;
 }
 .action-alert button:hover {
-    background: #FCA311 !important; /* Palette Orange/Gold */
-    color: #000000 !important; /* Black text on hover */
+    background: #14213D !important; 
+    color: #FFFFFF !important; 
 }
