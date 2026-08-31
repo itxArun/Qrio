@@ -216,9 +216,7 @@ setInterval(() => {
         const orderTime = parseInt(el.getAttribute('data-time'));
         const diffMins = Math.floor((Date.now() - orderTime) / 60000);
         let text = diffMins <= 0 ? 'Just now' : `${diffMins} min ago`;
-        let color = 'var(--success)';
-        if(diffMins >= 15 && diffMins < 30) color = 'var(--warning)';
-        else if(diffMins >= 30) color = 'var(--danger)';
+       let color = diffMins >= 30 ? '#EF4444' : '#14213D'; // Premium Colors natively
         el.innerText = `⏱️ ${text}`;
         el.style.color = color;
     });
@@ -501,10 +499,10 @@ window.initAdminData = function() {
                 // 🔥 NAYA LOGIC: Agar customer ne App se payment mark kiya hai
                 if (!isPaid && data.paymentPending === true) {
                     paidBadgeHTML = `<span style="background:rgba(255, 159, 0, 0.15); color:var(--warning); border:1px solid var(--warning); padding:5px 12px; border-radius:10px; font-size:11px; font-weight:800; display:flex; align-items:center; gap:4px; animation: pulse 1s infinite;"><i class="ph-bold ph-spinner ph-spin"></i> Verify Payment</span>`;
-                } else if (isPaid) {
-                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', true)" style="background:rgba(36,150,63,0.15); color:var(--success); border:1px solid var(--success); padding:5px 12px; border-radius:10px; font-size:11px; font-weight:800; cursor:pointer;"><i class="ph-bold ph-check-circle"></i> PAID</button>`;
+               } else if (isPaid) {
+                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', true)" class="paid-active">PAID</button>`;
                 } else {
-                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', false)" style="background:rgba(229,57,53,0.15); color:var(--danger); border:1px solid var(--danger); padding:5px 12px; border-radius:10px; font-size:11px; font-weight:800; cursor:pointer;"><i class="ph-bold ph-x-circle"></i> UNPAID</button>`;
+                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', false)">UNPAID</button>`;
                 }
 
                 // 🔥 NAYA LOGIC: Verification Alert Box (Jo Manager ko Yes/No option dega)
@@ -541,9 +539,9 @@ window.initAdminData = function() {
                     actionButtons = `<button class="btn-action-new" style="background:var(--primary); ${btnStyle}" onclick="updateOrderStatus('${data.docId}', 'Served')">Served 🎉</button>`;
                 }
 
-                let diffMins = Math.floor((Date.now() - date.getTime()) / 60000);
+               let diffMins = Math.floor((Date.now() - date.getTime()) / 60000);
                 let waitText = diffMins <= 0 ? 'Just now' : `${diffMins} min ago`;
-                let waitColor = diffMins >= 30 ? 'var(--danger)' : (diffMins >= 15 ? 'var(--warning)' : 'var(--success)');
+                let waitColor = diffMins >= 30 ? '#EF4444' : '#14213D';
                 const phoneLink = (data.customerPhone && data.customerPhone !== "N/A") ? `<a href="tel:${data.customerPhone}" style="color:var(--primary); font-size:16px;"><i class="ph-bold ph-phone-call"></i></a>` : '';
 
                 let cardHtml = `
