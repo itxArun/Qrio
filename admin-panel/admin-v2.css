@@ -655,68 +655,72 @@ body {
     gap: 4px !important; 
 }
 
-/* 4. Individual Waiter Call Strip (Ultra Slim) */
+/* 4. Individual Waiter Call Strip (Auto-Wrap Fix) */
 .action-alert {
     display: flex !important;
     flex-direction: row !important;
     justify-content: space-between !important;
-    align-items: center !important;
-    background: #FFFFFF !important; 
-    padding: 4px 8px !important; /* Ekdam choti padding */
+    align-items: flex-start !important; /* Multiline hone par alignment theek rakhega */
+    background: #FFFFFF !important;
+    padding: 6px 8px !important;
     border-radius: 6px !important;
     border: none !important;
+    gap: 10px !important; /* Text aur button ke beech fix gap */
 }
 
-/* 5. Text ko patla aur ek line me fix karna */
+/* 5. Text Container (Wrapping Enabled) */
 .action-alert > div {
     display: flex !important;
-    align-items: center !important; /* Row layout */
+    align-items: center !important;
+    flex-wrap: wrap !important; /* 🔥 Items ko agli line me aane dega */
     font-size: 11px !important;
     font-weight: 600 !important;
     color: #000000 !important;
-    white-space: nowrap !important;
+    white-space: normal !important; /* 🔥 Text ko tootne dega */
+    flex: 1 !important; /* Bachi hui jagah completely cover karega */
 }
 
-/* 🔥 admin.js ki styling ko override karna */
-.action-alert > div br { display: none !important; } /* Line break hataya */
-.action-alert > div > span:first-child { 
-    font-size: 12px !important; /* Emoji size chhota */
-    margin-right: 4px !important; 
-}
-.action-alert > div > strong { 
-    color: #14213D !important; /* Table Name Dark Blue */
-    font-weight: 800 !important; 
-    margin-right: 6px !important; 
-}
+/* Overriding admin.js defaults */
+.action-alert > div br { display: none !important; }
+.action-alert > div > span:first-child { font-size: 12px !important; margin-right: 4px !important; }
+.action-alert > div > strong { color: #14213D !important; font-weight: 800 !important; margin-right: 6px !important; }
+
+/* The Remark Tag */
 .action-alert > div > span:last-child {
     font-size: 9px !important;
-    color: #14213D !important; 
-    margin-left: 0 !important; /* Purana 30px margin hataya */
+    color: #14213D !important;
+    margin-left: 0 !important;
     background: rgba(20, 33, 61, 0.1) !important;
-    padding: 2px 6px !important;
+    padding: 3px 6px !important;
     border-radius: 4px !important;
+    white-space: normal !important; /* Lamba text naturally wrap hoga */
+    word-break: break-word !important; /* Lambe words ko force break karega */
+    line-height: 1.4 !important;
+    margin-top: 2px !important;
 }
 
-/* 6. Ultra-Tiny 'Done ✓' Button Fix */
+/* 6. The 'Done ✓' Button (Unbreakable Solid Pillar) */
 .action-alert button {
-    background: #14213D !important; /* Dark Blue */
-    color: #FFFFFF !important; 
+    background: #14213D !important;
+    color: #FFFFFF !important;
     border: none !important;
-    padding: 3px 8px !important; /* 🔥 Padding ekdam kam kar di */
-    border-radius: 4px !important; /* 🔥 Thoda sharp look de diya */
-    font-size: 9px !important; /* 🔥 Font ekdam chhota kar diya */
+    padding: 4px 10px !important;
+    border-radius: 4px !important;
+    font-size: 9px !important;
     font-weight: 700 !important;
-    white-space: nowrap !important; 
+    white-space: nowrap !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: fit-content !important; /* 🔥 Hawa me extra lamba nahi hoga */
+    height: fit-content !important;
+    flex-shrink: 0 !important; /* 🔥 BUTTON KO KABHI SIKUDNE/GAYAB NAHI HONE DEGA */
     cursor: pointer !important;
     transition: 0.3s ease !important;
+    margin-top: 2px !important;
 }
 
 .action-alert button:hover {
-    background: #FCA311 !important; 
-    color: #000000 !important; 
+    background: #FCA311 !important;
+    color: #000000 !important;
     box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
 }
