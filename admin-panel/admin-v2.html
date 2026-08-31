@@ -867,5 +867,57 @@
             if (alertBadge) alertBadge.style.display = 'none';
         });
     </script>
+    <!-- 🔥 ULTRA-SMART ENGINE: Toggles, Timers & New Order Alerts -->
+    <script>
+        let previousOrderCount = 0;
+        let isFirstLoad = true;
+
+        // 1. Create the hidden "NEW" badge in header
+        const newHeader = document.querySelector('.live-left-col > .dashboard-card:nth-child(2) h3');
+        if (newHeader && !document.getElementById('smart-new-alert')) {
+            newHeader.innerHTML += '<span id="smart-new-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>';
+        }
+
+        setInterval(() => {
+            // 2. ISOLATED iOS Toggle Tracker (Har card apna color khud sambhalega)
+            document.querySelectorAll('.order-card').forEach(card => {
+                const paymentBtn = card.querySelector('.card-badge-row button');
+                if (paymentBtn) {
+                    let btnText = paymentBtn.innerText.toUpperCase();
+                    if (btnText.includes('PAID') && !btnText.includes('UNPAID')) {
+                        paymentBtn.classList.add('paid-active'); // Red se Green me slide hoga
+                    } else {
+                        paymentBtn.classList.remove('paid-active');
+                    }
+                }
+            });
+
+            // 3. Timer Color Logic (30 min ke baad Red ho jayega)
+            document.querySelectorAll('.time-ago-tracker').forEach(timeText => {
+                let text = timeText.innerText.toLowerCase();
+                let isOverdue = text.includes('hour') || text.includes('day') || (text.includes('min') && parseInt(text.match(/\d+/)?.[0] || 0) >= 30);
+                timeText.style.setProperty('color', isOverdue ? '#EF4444' : '#14213D', 'important');
+            });
+
+            // 4. INTELLIGENT NEW ORDER DETECTOR
+            const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
+            const alertBadge = document.getElementById('smart-new-alert');
+            
+            if (alertBadge) {
+                // Agar order count badha hai, toh pulse wala NEW tag dikhao
+                if (currentOrders > previousOrderCount && !isFirstLoad) {
+                    alertBadge.style.display = 'inline-flex';
+                }
+                previousOrderCount = currentOrders;
+                isFirstLoad = false;
+            }
+        }, 1000);
+
+        // 5. SMART DISMISS (Click karte hi NEW tag gayab)
+        document.getElementById('admin-new-orders')?.addEventListener('click', () => {
+            const alertBadge = document.getElementById('smart-new-alert');
+            if (alertBadge) alertBadge.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
