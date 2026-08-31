@@ -725,10 +725,10 @@ body {
     box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
 }
 /* ==================================
-   🔥 STEP 2: NEW INCOMING (ULTRA-COMPACT + iOS TOGGLE)
+   🔥 STEP 2 & 3: NEW INCOMING BOX & SMART UI (COMPLETE FIX)
 ================================== */
 
-/* 1. Main Box Container */
+/* 1. Main Box Container (Dark Header & Distinct Body) */
 .live-left-col > .dashboard-card:nth-child(2) {
     background: #F8FAFC !important;
     border: 1px solid #14213D !important;
@@ -739,68 +739,77 @@ body {
 }
 .live-left-col > .dashboard-card:nth-child(2) > div:first-child {
     background: #14213D !important;
-    padding: 10px 16px !important; /* Header thoda patla kiya */
+    padding: 12px 16px !important;
     margin: 0 !important;
+    border-bottom: none !important;
 }
-.live-left-col > .dashboard-card:nth-child(2) h3 { color: #FFFFFF !important; font-size: 13px !important; }
+.live-left-col > .dashboard-card:nth-child(2) h3 {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+}
 
-/* 2. Scroll Area Fix (Lamba kiya aur padding kam ki taaki 3+ cards aayein) */
+/* 2. Scroll Area (New Order on Top + Slim Scrollbar) */
 #admin-new-orders {
-    padding: 10px 8px 15px 10px !important;
-    max-height: 68vh !important; /* Height thodi badhai */
+    display: flex !important;
+    flex-direction: column-reverse !important; /* 🔥 Sabse naya order top par aayega */
+    padding: 12px 10px 20px 12px !important;
+    max-height: 65vh !important;
     overflow-y: auto !important;
 }
 #admin-new-orders::-webkit-scrollbar { width: 4px !important; }
+#admin-new-orders::-webkit-scrollbar-track { background: transparent !important; }
 #admin-new-orders::-webkit-scrollbar-thumb { background: #14213D !important; border-radius: 10px !important; }
 
-/* 3. Ultra-Compact Order Card with Premium 3D Hover Effect */
+/* 3. Ultra-Compact Pure White Card (3D Pop Effect) */
 .order-card {
-    background: #F0F4F8 !important; /* 🔥 Premium Silvery Blue tone */
-    border: 1px solid #E2E8F0 !important;
-    border-left: 4px solid #FCA311 !important; /* Gold side border */
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    border-left: 5px solid #FCA311 !important; /* Gold side border */
     border-radius: 12px !important;
-    padding: 8px 10px !important; /* 🔥 Ultra compact padding */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
-    margin-bottom: 8px !important; /* Cards ke beech gap kam kiya */
+    padding: 10px 12px !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06) !important;
+    margin-bottom: 12px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 4px !important;
+    gap: 6px !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     cursor: pointer !important;
 }
 .order-card:hover {
-    transform: translateY(-3px) !important; /* 🔥 Hover par card upar uthega */
+    transform: translateY(-3px) !important; /* Hover effect */
     box-shadow: 0 8px 20px rgba(20, 33, 61, 0.1) !important;
     border-color: #CBD5E1 !important;
 }
 
-/* 4. Top Row */
+/* 4. Top Row (T-03 Format) */
 .card-top-row { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 0 !important; }
 .type-dinein .table-id-box { font-size: 0 !important; display: flex !important; align-items: center !important; }
-.type-dinein .number-avatar { background: transparent !important; color: #14213D !important; font-size: 14px !important; font-weight: 900 !important; padding: 0 !important; width: auto !important; height: auto !important; }
+.type-dinein .number-avatar { background: transparent !important; color: #14213D !important; font-size: 15px !important; font-weight: 900 !important; padding: 0 !important; width: auto !important; height: auto !important; }
 .type-dinein .number-avatar::before { content: "T-" !important; }
 
 /* Timer */
 .order-time-display { display: flex !important; flex-direction: column !important; align-items: flex-end !important; }
-.time-ago-tracker { color: #14213D !important; font-size: 9px !important; font-weight: 800 !important; line-height: 1 !important;}
-.main-time { font-size: 8px !important; color: #94A3B8 !important; margin-bottom: 2px !important; line-height: 1 !important;}
+.time-ago-tracker { color: #14213D !important; font-size: 10px !important; font-weight: 800 !important; line-height: 1 !important;}
+.main-time { font-size: 9px !important; color: #94A3B8 !important; margin-bottom: 2px !important; line-height: 1 !important;}
 
-/* 5. 👑 THE iOS TOGGLE SWITCH (UNPAID BADGE) */
+/* 5. 👑 THE iOS TOGGLE SWITCH & BADGES */
 .card-badge-row { display: flex !important; gap: 6px !important; margin: 0 !important; align-items: center !important; }
+.status-badge { background: #E2E8F0 !important; color: #14213D !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important; }
+
 .card-badge-row button {
-    background: #ef4444 !important; /* iOS Red */
+    background: #EF4444 !important; /* iOS Red for UNPAID */
     color: #ffffff !important;
     border: none !important;
-    padding: 3px 8px 3px 18px !important; /* Left padding for the dot */
-    border-radius: 15px !important; /* Fully rounded pill */
+    padding: 3px 8px 3px 20px !important; /* Space for dot */
+    border-radius: 15px !important;
     font-size: 8px !important;
     font-weight: 800 !important;
     position: relative !important;
+    overflow: hidden !important;
     cursor: pointer !important;
-    transition: 0.3s ease !important;
+    transition: background-color 0.4s ease, padding 0.4s ease !important;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important;
 }
-/* iOS Toggle White Dot */
 .card-badge-row button::before {
     content: '' !important;
     position: absolute !important;
@@ -810,88 +819,67 @@ body {
     width: 12px !important;
     background: #ffffff !important;
     border-radius: 50% !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), right 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease !important;
 }
-/* Simple JS interaction simulation (click effect) */
-.card-badge-row button:active::before { width: 16px !important; } /* iOS ki tarah dot stretch hoga dabaane par */
+.card-badge-row button.paid-active {
+    background: #10B981 !important; /* iOS Green for PAID */
+    padding: 3px 20px 3px 8px !important; 
+}
+.card-badge-row button.paid-active::before {
+    left: calc(100% - 14px) !important; /* Sliding the dot */
+}
 
-.status-badge { background: #E2E8F0 !important; color: #14213D !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important; }
+/* 🔥 New Order Alert Dot Animation */
+@keyframes pulseDot {
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1.1); opacity: 0.8; box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.new-alert-dot {
+    display: inline-flex !important; align-items: center !important;
+    background: #EF4444 !important; color: white !important;
+    font-size: 9px !important; padding: 2px 6px !important;
+    border-radius: 10px !important; margin-left: 8px !important;
+    animation: pulseDot 1.5s infinite !important; vertical-align: middle !important;
+}
 
-/* 6. Customer & Item Details */
+/* 6. Food Items & Price Colors */
 .order-card > div:nth-child(3) {
-    background: #FFFFFF !important; color: #14213D !important;
-    padding: 4px 8px !important; border-radius: 6px !important; font-size: 9px !important; font-weight: 600 !important;
-    border: 1px solid #E2E8F0 !important;
+    background: #F8FAFC !important; color: #14213D !important;
+    padding: 4px 8px !important; border-radius: 4px !important; font-size: 10px !important; font-weight: 600 !important;
 }
-.order-card > div:nth-child(4) { font-size: 10px !important; font-weight: 700 !important; color: #14213D !important; margin-top: 0 !important; }
+.order-card > div:nth-child(4) {
+    color: #334155 !important; /* Premium Slate color */
+    font-size: 11px !important; font-weight: 700 !important; line-height: 1.4 !important; margin-top: 2px !important;
+}
 
-/* 7. Footer (Price & ROUND Buttons) */
+/* 7. Footer (Emerald Green Price & Round Buttons) */
 .order-card > div:last-child {
     display: flex !important; justify-content: space-between !important; align-items: center !important;
-    border-top: 1px dashed #CBD5E1 !important; padding-top: 6px !important; margin-top: 2px !important;
+    border-top: 1px dashed #E2E8F0 !important; padding-top: 8px !important; margin-top: 2px !important;
 }
-.order-card > div:last-child > span { font-size: 14px !important; font-weight: 900 !important; color: #14213D !important; }
+.order-card > div:last-child > span { 
+    color: #10B981 !important; /* Emerald Green */
+    font-size: 16px !important; font-weight: 900 !important; 
+    text-shadow: 0 1px 2px rgba(16, 185, 129, 0.1) !important;
+}
 .order-actions-row { display: flex !important; gap: 6px !important; }
 
-/* 8. Fully Rounded Action Buttons (Pill shape) */
+/* Action Buttons (Round Pill Shape) */
 .btn-action-new[onclick*="Accepted"] {
     background: #14213D !important; color: #FFFFFF !important; border: none !important; 
-    padding: 4px 14px !important; 
-    border-radius: 20px !important; /* 🔥 Round Shape */
-    font-size: 9px !important; font-weight: 800 !important; cursor: pointer !important; transition: 0.3s !important;
+    padding: 5px 14px !important; border-radius: 20px !important; 
+    font-size: 10px !important; font-weight: 800 !important; cursor: pointer !important; transition: 0.3s !important;
 }
-.btn-action-new[onclick*="Accepted"]:hover { background: #FCA311 !important; color: #000000 !important; transform: scale(1.05) !important; }
+.btn-action-new[onclick*="Accepted"]:hover { background: #FCA311 !important; color: #000000 !important; transform: scale(1.05) !important;}
 
 .btn-action-new[onclick*="Cancelled"] {
     background: #FFFFFF !important; color: #EF4444 !important; border: 1px solid #FECACA !important; 
-    padding: 4px 10px !important; 
-    border-radius: 20px !important; /* 🔥 Round Shape */
-    font-size: 9px !important; font-weight: 800 !important; cursor: pointer !important; transition: 0.3s !important;
+    padding: 5px 12px !important; border-radius: 20px !important; 
+    font-size: 10px !important; font-weight: 800 !important; cursor: pointer !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-.btn-action-new[onclick*="Cancelled"]:hover { background: #FEF2F2 !important; transform: scale(1.05) !important; }
-/* ==================================
-   🔥 STEP 3: SMART COLORS, SORTING & HOVER
-================================== */
-
-/* 1. Naya Order Upar (Reverse Column Trick) */
-#admin-new-orders {
-    display: flex !important;
-    flex-direction: column-reverse !important; /* 🔥 Sabse naya order ab top par aayega */
-}
-
-/* 2. Cancel Button Premium Hover Effect */
-.btn-action-new[onclick*="Cancelled"] { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
 .btn-action-new[onclick*="Cancelled"]:hover {
-    background: #FEF2F2 !important; /* Light Red */
-    color: #EF4444 !important; /* Solid Red Text */
-    border: 1px solid #EF4444 !important;
-    transform: scale(1.05) !important; /* Hover pe button bada hoga */
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2) !important;
-}
-
-/* 3. Food Item List Premium Color (Slate Blue instead of basic black) */
-.order-card > div:nth-child(4) {
-    color: #334155 !important; /* Premium Dark Slate */
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    line-height: 1.4 !important;
-}
-
-/* 4. Price Color Premium (Emerald Green for Money) */
-.order-card > div:last-child > span {
-    color: #10B981 !important; /* Premium Emerald Green */
-    font-size: 16px !important;
-    font-weight: 900 !important;
-    text-shadow: 0 1px 2px rgba(16, 185, 129, 0.1) !important;
-}
-
-/* 5. iOS Toggle PAID state (Jab JS ise "PAID" mark karegi) */
-.card-badge-row button.paid-active {
-    background: #10B981 !important; /* iOS Green */
-    padding: 3px 18px 3px 8px !important; /* Dot ab right side chala jayega */
-}
-.card-badge-row button.paid-active::before {
-    left: auto !important;
-    right: 2px !important; /* Switch "ON" position */
+    background: #FEF2F2 !important; color: #EF4444 !important; border-color: #EF4444 !important;
+    transform: scale(1.05) !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2) !important;
 }
