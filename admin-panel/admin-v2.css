@@ -884,15 +884,46 @@ body {
     transform: scale(1.05) !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2) !important;
 }
 /* ==================================
-   🔥 WAITER CALL: SMART TIME BADGE
+   🔥 WAITER CALL: WHATSAPP STYLE TIME & ROUND BUTTON
 ================================== */
+
+/* 1. WhatsApp Style Subtle Time (No Background, Low Opacity) */
 .waiter-time {
-    font-size: 9px !important;
-    color: #FCA311 !important; /* Premium Gold */
-    font-weight: 800 !important;
-    margin: 0 6px !important;
-    background: #14213D !important; /* Dark Blue background */
-    padding: 3px 6px !important;
-    border-radius: 4px !important;
+    background: transparent !important; /* ❌ Background hata diya */
+    color: rgba(0, 0, 0, 0.4) !important; /* 🔥 Muted Black / Grey color */
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    padding: 0 !important;
+    margin-left: 6px !important;
+    margin-right: 8px !important;
     white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+/* 2. Tiny Round 'Done ✓' Button */
+.action-alert button {
+    background: #14213D !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    padding: 4px 12px !important; /* 🔥 Padding kam kar di */
+    border-radius: 20px !important; /* 🔥 Ekdam round (pill) shape */
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: fit-content !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    transition: 0.3s ease !important;
+    margin-top: 2px !important;
+}
+
+/* Hover effect on Done button */
+.action-alert button:hover {
+    background: #FCA311 !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
+    transform: scale(1.05) !important; /* 🔥 Thoda sa bada hoga hover pe */
 }
