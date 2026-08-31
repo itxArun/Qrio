@@ -697,24 +697,26 @@ body {
     border-radius: 4px !important;
 }
 
-/* 6. Tiny & Sleek 'Done ✓' Button Fix */
+/* 6. Ultra-Tiny 'Done ✓' Button Fix */
 .action-alert button {
-    background: #14213D !important; /* Header jaisa Dark Blue */
+    background: #14213D !important; /* Dark Blue */
     color: #FFFFFF !important; 
     border: none !important;
-    padding: 5px 12px !important; /* Chipta aur lamba banayega */
-    border-radius: 6px !important;
-    font-size: 10px !important;
+    padding: 3px 8px !important; /* 🔥 Padding ekdam kam kar di */
+    border-radius: 4px !important; /* 🔥 Thoda sharp look de diya */
+    font-size: 9px !important; /* 🔥 Font ekdam chhota kar diya */
     font-weight: 700 !important;
-    white-space: nowrap !important; /* 🔥 "Done" aur "✓" ko ek line me lock karega */
+    white-space: nowrap !important; 
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
+    height: fit-content !important; /* 🔥 Hawa me extra lamba nahi hoga */
     cursor: pointer !important;
     transition: 0.3s ease !important;
 }
 
 .action-alert button:hover {
-    background: #FCA311 !important; /* Hover par Premium Gold chamkega */
+    background: #FCA311 !important; 
     color: #000000 !important; 
-    box-shadow: 0 4px 10px rgba(252, 163, 17, 0.3) !important;
+    box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
 }
