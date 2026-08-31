@@ -850,3 +850,48 @@ body {
     font-size: 9px !important; font-weight: 800 !important; cursor: pointer !important; transition: 0.3s !important;
 }
 .btn-action-new[onclick*="Cancelled"]:hover { background: #FEF2F2 !important; transform: scale(1.05) !important; }
+/* ==================================
+   🔥 STEP 3: SMART COLORS, SORTING & HOVER
+================================== */
+
+/* 1. Naya Order Upar (Reverse Column Trick) */
+#admin-new-orders {
+    display: flex !important;
+    flex-direction: column-reverse !important; /* 🔥 Sabse naya order ab top par aayega */
+}
+
+/* 2. Cancel Button Premium Hover Effect */
+.btn-action-new[onclick*="Cancelled"] { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+.btn-action-new[onclick*="Cancelled"]:hover {
+    background: #FEF2F2 !important; /* Light Red */
+    color: #EF4444 !important; /* Solid Red Text */
+    border: 1px solid #EF4444 !important;
+    transform: scale(1.05) !important; /* Hover pe button bada hoga */
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* 3. Food Item List Premium Color (Slate Blue instead of basic black) */
+.order-card > div:nth-child(4) {
+    color: #334155 !important; /* Premium Dark Slate */
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+}
+
+/* 4. Price Color Premium (Emerald Green for Money) */
+.order-card > div:last-child > span {
+    color: #10B981 !important; /* Premium Emerald Green */
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    text-shadow: 0 1px 2px rgba(16, 185, 129, 0.1) !important;
+}
+
+/* 5. iOS Toggle PAID state (Jab JS ise "PAID" mark karegi) */
+.card-badge-row button.paid-active {
+    background: #10B981 !important; /* iOS Green */
+    padding: 3px 18px 3px 8px !important; /* Dot ab right side chala jayega */
+}
+.card-badge-row button.paid-active::before {
+    left: auto !important;
+    right: 2px !important; /* Switch "ON" position */
+}
