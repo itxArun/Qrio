@@ -697,19 +697,24 @@ body {
     border-radius: 4px !important;
 }
 
-/* 6. Tiny 'Done ✓' Button (Gold Color) */
+/* 6. Tiny & Sleek 'Done ✓' Button Fix */
 .action-alert button {
-    background: #FCA311 !important; 
-    color: #000000 !important; 
-    border: none !important;
-    padding: 4px 8px !important; /* Chhota button */
-    border-radius: 4px !important;
-    font-size: 9px !important;
-    font-weight: 800 !important;
-    cursor: pointer !important;
-    transition: 0.2s !important;
-}
-.action-alert button:hover {
-    background: #14213D !important; 
+    background: #14213D !important; /* Header jaisa Dark Blue */
     color: #FFFFFF !important; 
+    border: none !important;
+    padding: 5px 12px !important; /* Chipta aur lamba banayega */
+    border-radius: 6px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important; /* 🔥 "Done" aur "✓" ko ek line me lock karega */
+    display: inline-flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: 0.3s ease !important;
+}
+
+.action-alert button:hover {
+    background: #FCA311 !important; /* Hover par Premium Gold chamkega */
+    color: #000000 !important; 
+    box-shadow: 0 4px 10px rgba(252, 163, 17, 0.3) !important;
 }
