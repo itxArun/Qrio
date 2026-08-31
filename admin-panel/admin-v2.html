@@ -867,7 +867,7 @@
             if (alertBadge) alertBadge.style.display = 'none';
         });
     </script>
-   <!-- 🔥 ULTRA-SMART ENGINE V2: Toggles, Timers, Waiter Time & New Alerts -->
+  <!-- 🔥 ULTRA-SMART ENGINE V3: No-Flicker & Isolate Fix -->
     <script>
         let previousOrderCount = 0;
         let previousWaiterCount = 0;
@@ -876,20 +876,17 @@
         // 1. Create the hidden "NEW" badges for BOTH headers
         const newOrderHeader = document.querySelector('.live-left-col > .dashboard-card:nth-child(2) h3');
         if (newOrderHeader && !document.getElementById('smart-new-order-alert')) {
-            newOrderHeader.innerHTML += '<span id="smart-new-order-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>';
+            newOrderHeader.insertAdjacentHTML('beforeend', '<span id="smart-new-order-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
         }
 
         const waiterHeader = document.querySelector('#action-center-container .card-header h3');
         if (waiterHeader && !document.getElementById('smart-waiter-alert')) {
-            waiterHeader.innerHTML += '<span id="smart-new-waiter-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>';
+            waiterHeader.insertAdjacentHTML('beforeend', '<span id="smart-new-waiter-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
         }
 
-        setInterval(() => {
-            /* ==============================================================
-               🍔 NEW INCOMING ORDERS LOGIC
-            ============================================================== */
-            
-            // 2A. ISOLATED iOS Toggle Tracker
+        // 2. THE CORE UI FIXER FUNCTION
+        function applySmartUI() {
+            // A. Fix Payment Toggles (No Animation Bug)
             document.querySelectorAll('.order-card').forEach(card => {
                 const paymentBtn = card.querySelector('.card-badge-row button');
                 if (paymentBtn) {
@@ -902,64 +899,63 @@
                 }
             });
 
-            // 2B. Timer Color Logic (Red if > 30m)
+            // B. Timer Color Logic
             document.querySelectorAll('.time-ago-tracker').forEach(timeText => {
                 let text = timeText.innerText.toLowerCase();
                 let isOverdue = text.includes('hour') || text.includes('day') || (text.includes('min') && parseInt(text.match(/\d+/)?.[0] || 0) >= 30);
                 timeText.style.setProperty('color', isOverdue ? '#EF4444' : '#14213D', 'important');
             });
 
-            // 2C. NEW ORDER DETECTOR
-            const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
-            const orderBadge = document.getElementById('smart-new-order-alert');
-            
-            if (orderBadge) {
-                if (currentOrders > previousOrderCount && !isFirstLoad) {
-                    orderBadge.style.display = 'inline-flex';
-                }
-                previousOrderCount = currentOrders;
-            }
-
-            /* ==============================================================
-               🛎️ URGENT WAITER CALLS LOGIC
-            ============================================================== */
-            
-            // 3A. AUTO-TIME INJECTOR (Agar time nahi hai toh attach karega)
+            // C. Waiter Auto-Time
             document.querySelectorAll('.action-alert').forEach(alert => {
                 if (!alert.dataset.timeAdded) {
                     let now = new Date();
-                    let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); // Format: 10:15 PM
-                    
+                    let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     let textDiv = alert.querySelector('div');
                     if (textDiv) {
                         let timeSpan = document.createElement('span');
                         timeSpan.className = 'waiter-time';
                         timeSpan.innerHTML = timeString;
-                        
-                        // Remark tag (last child) ke theek pehle Time lagayega
                         textDiv.insertBefore(timeSpan, textDiv.lastElementChild);
                     }
-                    alert.dataset.timeAdded = "true"; // Mark karega taaki repeat na ho
+                    alert.dataset.timeAdded = "true";
                 }
             });
+            
+            // D. Check New Orders for Dot Alert
+            const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
+            const orderBadge = document.getElementById('smart-new-order-alert');
+            if (orderBadge && currentOrders > previousOrderCount && !isFirstLoad) {
+                orderBadge.style.display = 'inline-flex';
+            }
+            previousOrderCount = currentOrders;
 
-            // 3B. NEW WAITER CALL DETECTOR
             const currentWaiters = document.querySelectorAll('.action-alert').length;
             const waiterBadge = document.getElementById('smart-new-waiter-alert');
-            
-            if (waiterBadge) {
-                if (currentWaiters > previousWaiterCount && !isFirstLoad) {
-                    waiterBadge.style.display = 'inline-flex';
-                }
-                previousWaiterCount = currentWaiters;
+            if (waiterBadge && currentWaiters > previousWaiterCount && !isFirstLoad) {
+                waiterBadge.style.display = 'inline-flex';
             }
-
+            previousWaiterCount = currentWaiters;
+            
             isFirstLoad = false;
-        }, 1000);
+        }
 
-        /* ==============================================================
-           🔘 SMART DISMISS (Click karte hi NEW tags gayab)
-        ============================================================== */
+        // 3. 🔥 MUTATION OBSERVER (The Magic Bullet for Flicker!)
+        // Ye DOM me kuch bhi change hote hi INSTANT run karega, delay ke bina!
+        const observer = new MutationObserver(() => {
+            applySmartUI();
+        });
+        
+        const ordersContainer = document.getElementById('admin-new-orders');
+        const waitersContainer = document.getElementById('action-alerts-list');
+        
+        if (ordersContainer) observer.observe(ordersContainer, { childList: true, subtree: true });
+        if (waitersContainer) observer.observe(waitersContainer, { childList: true, subtree: true });
+
+        // Run once on load
+        applySmartUI();
+
+        // 4. SMART DISMISS
         document.getElementById('admin-new-orders')?.addEventListener('click', () => {
             const orderBadge = document.getElementById('smart-new-order-alert');
             if (orderBadge) orderBadge.style.display = 'none';
