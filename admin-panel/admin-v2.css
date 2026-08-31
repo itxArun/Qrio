@@ -793,20 +793,20 @@ body {
 .main-time { font-size: 9px !important; color: #94A3B8 !important; margin-bottom: 2px !important; line-height: 1 !important;}
 
 /* ==================================
-   5. 👑 AUTHENTIC APPLE iOS TOGGLE & BADGES
+   5. 👑 SMALL APPLE iOS TOGGLE & BADGES
 ================================== */
 .card-badge-row { display: flex !important; gap: 6px !important; margin: 0 !important; align-items: center !important; }
 .status-badge { background: #E2E8F0 !important; color: #14213D !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important; }
 
-/* The Base Switch (Apple Red) */
+/* The Base Switch (Smaller Apple Red) */
 .card-badge-row button {
-    background: #FF3B30 !important; /* 🔥 Original Apple Red */
+    background: #FF3B30 !important; /* Original Apple Red */
     color: #ffffff !important;
     border: none !important;
-    height: 24px !important;
-    padding: 0 10px 0 28px !important; /* Left space for dot */
-    border-radius: 20px !important;
-    font-size: 9px !important;
+    height: 18px !important; /* 🔥 Toggle chhota kiya (24px se 18px) */
+    padding: 0 8px 0 22px !important; /* 🔥 Padding adjust ki */
+    border-radius: 12px !important;
+    font-size: 8px !important;
     font-weight: 800 !important;
     letter-spacing: 0.5px !important;
     position: relative !important;
@@ -814,30 +814,30 @@ body {
     align-items: center !important;
     cursor: pointer !important;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
-    transition: all 0.4s cubic-bezier(0.3, 1.5, 0.6, 1) !important;
+    transition: all 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) !important;
 }
 
-/* The Apple White Dot */
+/* The Apple White Dot (Smaller) */
 .card-badge-row button::before {
     content: '' !important;
     position: absolute !important;
     left: 2px !important;
     top: 2px !important;
-    width: 20px !important;
-    height: 20px !important;
+    width: 14px !important; /* 🔥 Dot chhota kiya (20px se 14px) */
+    height: 14px !important;
     background: #ffffff !important;
     border-radius: 50% !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3), 0 1px 1px rgba(0,0,0,0.1) !important;
-    transition: all 0.4s cubic-bezier(0.3, 1.5, 0.6, 1) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) !important;
 }
 
-/* Paid Active State (Apple Green) */
+/* Paid Active State (Small Apple Green) */
 .card-badge-row button.paid-active {
-    background: #34C759 !important; /* 🔥 Original Apple Green */
-    padding: 0 28px 0 10px !important;
+    background: #34C759 !important; /* Original Apple Green */
+    padding: 0 22px 0 8px !important;
 }
 .card-badge-row button.paid-active::before {
-    left: calc(100% - 22px) !important;
+    left: calc(100% - 16px) !important; /* 🔥 Dot sliding perfect ki */
 }
 
 /* 🔥 New Order Alert Dot Animation */
