@@ -814,5 +814,40 @@
             }
         }, 1500); // Har 1.5 second me update hoga
     </script>
+    <!-- 🔥 SMART ENGINE: Auto-Color Tracker (Time & Payment) -->
+    <script>
+        setInterval(() => {
+            // 1. Time Tracker (30 mins = Red)
+            document.querySelectorAll('.time-ago-tracker').forEach(timeText => {
+                let text = timeText.innerText.toLowerCase();
+                let isOverdue = false;
+                
+                // Check if it has hours, days, or > 30 mins
+                if (text.includes('hour') || text.includes('day')) {
+                    isOverdue = true;
+                } else if (text.includes('min')) {
+                    let mins = parseInt(text.match(/\d+/)?.[0] || 0);
+                    if (mins >= 30) isOverdue = true;
+                }
+
+                // Apply Color
+                if (isOverdue) {
+                    timeText.style.setProperty('color', '#EF4444', 'important'); // Danger Red
+                } else {
+                    timeText.style.setProperty('color', '#14213D', 'important'); // Safe Dark Blue
+                }
+            });
+
+            // 2. PAID/UNPAID iOS Switch Tracker
+            document.querySelectorAll('.card-badge-row button').forEach(btn => {
+                let btnText = btn.innerText.toUpperCase();
+                if (btnText.includes('UNPAID')) {
+                    btn.classList.remove('paid-active'); // Red (OFF state)
+                } else if (btnText.includes('PAID')) {
+                    btn.classList.add('paid-active'); // Green (ON state)
+                }
+            });
+        }, 2000); // Har 2 second me check karega bina page refresh kiye
+    </script>
 </body>
 </html>
