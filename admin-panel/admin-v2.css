@@ -725,63 +725,79 @@ body {
     box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
 }
 /* ==================================
-   🔥 STEP 2: NEW INCOMING BOX & ORDER CARDS
+   🔥 STEP 2: NEW INCOMING (GOLD ELEGANCE THEME)
 ================================== */
 
-/* 1. New Incoming Box Container (Premium White with Subtle Border) */
+/* 1. Main Box Container (Background: Gold #FCA311) */
 .live-left-col > .dashboard-card:nth-child(2) {
-    background: #FFFFFF !important;
-    border: 1px solid #E5E5E5 !important; /* Palette Light Grey */
+    background: #FCA311 !important; /* Palette Gold */
+    border: none !important; 
     border-radius: 12px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+    box-shadow: 0 8px 25px rgba(252, 163, 17, 0.3) !important;
+    padding-right: 8px !important; /* Scrollbar ke liye safe space */
 }
 .live-left-col > .dashboard-card:nth-child(2) > div:first-child {
-    border-bottom: 1px dashed #E5E5E5 !important;
+    border-bottom: 2px dashed #14213D !important; /* Dark Blue Dashed Line */
     padding-bottom: 12px !important;
+    margin-right: 12px !important;
 }
 .live-left-col > .dashboard-card:nth-child(2) h3 {
-    color: #14213D !important; /* Palette Dark Blue */
+    color: #14213D !important; /* Dark Blue Header Text */
 }
 
-/* 2. Base Order Card Styling (No messy layout) */
+/* 2. Custom Scrollbar Fix (Slim & Dark Blue) */
+#admin-new-orders {
+    padding-bottom: 20px !important;
+    max-height: 65vh !important;
+    overflow-y: auto !important;
+    padding-right: 12px !important; /* Card aur Scrollbar ke beech gap */
+}
+#admin-new-orders::-webkit-scrollbar { width: 5px !important; }
+#admin-new-orders::-webkit-scrollbar-track { background: transparent !important; }
+#admin-new-orders::-webkit-scrollbar-thumb { 
+    background: #14213D !important; /* Scrollbar in Dark Blue */
+    border-radius: 10px !important; 
+}
+
+/* 3. Base Order Card (White for High Contrast) */
 .order-card {
     background: #FFFFFF !important;
-    border: 1px solid #E5E5E5 !important;
+    border: none !important;
     border-radius: 12px !important;
     padding: 14px !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     margin-bottom: 12px !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 8px !important; /* Har row ke beech fix spacing */
+    gap: 8px !important;
 }
 
-/* 3. Top Row & Safe 'T-03' Magic */
+/* 4. Top Row (T-03 & Time Fix) */
 .card-top-row {
     display: flex !important;
     justify-content: space-between !important;
-    align-items: center !important;
+    align-items: flex-start !important; /* Fix for long dates */
     margin-bottom: 0 !important;
 }
 .type-dinein .table-id-box { font-size: 0 !important; display: flex !important; align-items: center !important; }
 .type-dinein .number-avatar {
     background: transparent !important; 
-    color: #14213D !important;
-    font-size: 16px !important; 
+    color: #14213D !important; /* Dark Blue text */
+    font-size: 18px !important; 
     font-weight: 900 !important;
     padding: 0 !important; width: auto !important; height: auto !important;
 }
 .type-dinein .number-avatar::before { content: "T-" !important; }
 
-/* Timer (Gold color for elegance) */
-.order-time-display { text-align: right !important; }
-.time-ago-tracker { color: #FCA311 !important; font-size: 11px !important; font-weight: 800 !important; }
-.main-time { font-size: 10px !important; color: #888888 !important; }
+/* Timer - Making it Dark Blue instead of Orange so it pops on white card */
+.order-time-display { display: flex !important; flex-direction: column !important; align-items: flex-end !important; }
+.time-ago-tracker { color: #14213D !important; font-size: 12px !important; font-weight: 800 !important; }
+.main-time { font-size: 10px !important; color: #888888 !important; margin-bottom: 2px !important; }
 
-/* 4. Badges (UNPAID & New) - Natural Placement */
+/* 5. Badges (UNPAID & New) */
 .card-badge-row { display: flex !important; gap: 8px !important; margin: 0 !important; }
 .card-badge-row button {
-    background: #fef2f2 !important; color: #ef4444 !important; /* Soft Red */
+    background: #fef2f2 !important; color: #ef4444 !important; 
     border: 1px solid #fecaca !important;
     padding: 4px 8px !important; border-radius: 6px !important;
     font-size: 9px !important; font-weight: 800 !important;
@@ -792,15 +808,15 @@ body {
     font-size: 9px !important; font-weight: 800 !important;
 }
 
-/* 5. Customer & Item Details */
+/* 6. Customer & Item Details */
 .order-card > div:nth-child(3) {
-    background: #f8fafc !important; color: #14213D !important;
+    background: #F8FAFC !important; color: #14213D !important;
     padding: 8px 10px !important; border-radius: 6px !important;
     font-size: 11px !important; font-weight: 600 !important;
 }
-.order-card > div:nth-child(4) { font-size: 12px !important; font-weight: 500 !important; color: #000000 !important; }
+.order-card > div:nth-child(4) { font-size: 12px !important; font-weight: 600 !important; color: #000000 !important; }
 
-/* 6. Footer (Price & Actions Alignment) */
+/* 7. Footer */
 .order-card > div:last-child {
     display: flex !important; justify-content: space-between !important; align-items: center !important;
     border-top: 1px dashed #E5E5E5 !important; padding-top: 12px !important; margin-top: 4px !important;
@@ -808,19 +824,17 @@ body {
 .order-card > div:last-child > span { font-size: 16px !important; font-weight: 900 !important; color: #14213D !important; }
 .order-actions-row { display: flex !important; gap: 8px !important; }
 
-/* 7. Premium Action Buttons */
+/* 8. Premium Action Buttons (Dark Blue & Gold theme) */
 .btn-action-new[onclick*="Accepted"] {
-    background: #14213D !important; color: #FFFFFF !important; /* Dark Blue */
+    background: #14213D !important; color: #FFFFFF !important; 
     border: none !important; padding: 6px 14px !important; border-radius: 6px !important;
     font-size: 11px !important; font-weight: 700 !important; cursor: pointer !important; transition: 0.3s !important;
 }
 .btn-action-new[onclick*="Accepted"]:hover { 
-    background: #FCA311 !important; color: #000000 !important; /* Gold on hover */
+    background: #000000 !important; color: #FCA311 !important; /* Black box, Gold text on hover */
 }
-
 .btn-action-new[onclick*="Cancelled"] {
     background: #FFFFFF !important; color: #ef4444 !important;
     border: 1px solid #fecaca !important; padding: 6px 12px !important; border-radius: 6px !important;
     font-size: 11px !important; font-weight: 700 !important; cursor: pointer !important; transition: 0.3s !important;
 }
-.btn-action-new[onclick*="Cancelled"]:hover { background: #ef4444 !important; color: #FFFFFF !important; }
