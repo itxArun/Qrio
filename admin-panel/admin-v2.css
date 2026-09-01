@@ -980,3 +980,60 @@ body {
     background: #FFFFFF !important;
     border: 1px solid #BBF7D0 !important;
 }
+/* ==================================
+   🔥 STEP 6: ACTIVE IN KITCHEN (PREMIUM UI)
+================================== */
+
+/* 1. Main Box Container (Dark Header & Distinct Body) */
+.live-left-col > .dashboard-card:nth-child(3) {
+    background: #F8FAFC !important;
+    border: 1px solid #14213D !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04) !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* 2. Kitchen Header (Dark Blue) */
+.live-left-col > .dashboard-card:nth-child(3) > div:first-child {
+    background: #14213D !important;
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    border-bottom: none !important;
+}
+.live-left-col > .dashboard-card:nth-child(3) h3 {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+}
+
+/* 3. Kitchen Scroll Area (Reverse order + Slim Scrollbar) */
+#admin-active-orders {
+    display: flex !important;
+    flex-direction: column-reverse !important; /* 🔥 Sabse latest order top par */
+    padding: 12px 10px 20px 12px !important;
+    max-height: 65vh !important;
+    overflow-y: auto !important;
+}
+#admin-active-orders::-webkit-scrollbar { width: 4px !important; }
+#admin-active-orders::-webkit-scrollbar-track { background: transparent !important; }
+#admin-active-orders::-webkit-scrollbar-thumb { background: #14213D !important; border-radius: 10px !important; }
+
+/* 4. Kitchen Card Accent (Differentiating from New Incoming) */
+/* Naye orders Gold color ke border me the, Kitchen wale "Fire Orange" me honge */
+#admin-active-orders .order-card {
+    border-left: 5px solid #F97316 !important; /* 🔥 Premium Cooking Orange */
+}
+
+/* 5. Kitchen Action Buttons Styling */
+/* Cooking aur Ready buttons ko thoda aur premium look dena */
+#admin-active-orders .btn-action-new[onclick*="Ready"] {
+    background: #3B82F6 !important; /* Tech Blue for Ready */
+    color: white !important;
+}
+#admin-active-orders .btn-action-new[onclick*="Ready"]:hover {
+    background: #2563EB !important;
+}
+#admin-active-orders .btn-action-new[onclick*="Served"] {
+    background: #8B5CF6 !important; /* Royal Purple for Served */
+    color: white !important;
+}
