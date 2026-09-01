@@ -793,51 +793,74 @@ body {
 .main-time { font-size: 9px !important; color: #94A3B8 !important; margin-bottom: 2px !important; line-height: 1 !important;}
 
 /* ==================================
-   5. 👑 SMALL APPLE iOS TOGGLE & BADGES
+   5. 👑 ZERO-SHIFT AUTHENTIC APPLE TOGGLE
 ================================== */
-.card-badge-row { display: flex !important; gap: 6px !important; margin: 0 !important; align-items: center !important; }
-.status-badge { background: #E2E8F0 !important; color: #14213D !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 8px !important; font-weight: 800 !important; }
+.card-badge-row { 
+    display: flex !important; 
+    gap: 6px !important; 
+    margin: 0 !important; 
+    align-items: center !important; 
+}
+.status-badge { 
+    background: #E2E8F0 !important; 
+    color: #14213D !important; 
+    padding: 2px 6px !important; 
+    border-radius: 4px !important; 
+    font-size: 8px !important; 
+    font-weight: 800 !important; 
+}
 
-/* The Base Switch (Smaller Apple Red) */
+/* Base Switch - Rigid Locked Dimensions (No Shaking) */
 .card-badge-row button {
-    background: #FF3B30 !important; /* Original Apple Red */
+    background: #FF3B30 !important; /* Apple Red */
     color: #ffffff !important;
     border: none !important;
-    height: 18px !important; /* 🔥 Toggle chhota kiya (24px se 18px) */
-    padding: 0 8px 0 22px !important; /* 🔥 Padding adjust ki */
-    border-radius: 12px !important;
+    width: 58px !important;        /* 🔥 Fixed Width: Card kabhi nahi chilega */
+    min-width: 58px !important;
+    max-width: 58px !important;
+    height: 20px !important;       /* 🔥 Fixed Height */
+    padding: 0 6px 0 0 !important; /* UNPAID text right aligned */
+    border-radius: 20px !important;
     font-size: 8px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.3px !important;
     position: relative !important;
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: flex-end !important;
     cursor: pointer !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
-    transition: all 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2) !important;
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
 }
 
-/* The Apple White Dot (Smaller) */
+/* Apple Floating White Dot */
 .card-badge-row button::before {
     content: '' !important;
     position: absolute !important;
     left: 2px !important;
     top: 2px !important;
-    width: 14px !important; /* 🔥 Dot chhota kiya (20px se 14px) */
-    height: 14px !important;
+    width: 16px !important;
+    height: 16px !important;
     background: #ffffff !important;
     border-radius: 50% !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
-    transition: all 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+    /* 🔥 60FPS Ultra-Smooth Apple Spring Transition */
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    transform: translateX(0) !important;
 }
 
-/* Paid Active State (Small Apple Green) */
+/* Apple Green Active State */
 .card-badge-row button.paid-active {
-    background: #34C759 !important; /* Original Apple Green */
-    padding: 0 22px 0 8px !important;
+    background: #34C759 !important; /* Apple Green */
+    justify-content: flex-start !important;
+    padding: 0 0 0 8px !important; /* PAID text left aligned */
 }
+
+/* Slide Dot to the Right smoothly without moving button */
 .card-badge-row button.paid-active::before {
-    left: calc(100% - 16px) !important; /* 🔥 Dot sliding perfect ki */
+    transform: translateX(38px) !important; /* 🔥 Smooth hardware slide */
 }
 
 /* 🔥 New Order Alert Dot Animation */
