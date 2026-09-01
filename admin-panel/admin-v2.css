@@ -1158,41 +1158,54 @@ body {
     box-shadow: 0 6px 15px rgba(0,0,0,0.2) !important;
 }
 /* ==================================
-   🔥 STEP 9: PERFECT RESIZE, GRID FIX & VISIBILITY
+   🔥 STEP 9: PERFECT RESIZE & NO EMPTY GAPS
 ================================== */
 
-/* 1. Fix Food Item Price Visibility (Ab price kabhi gayab nahi hoga!) */
+/* 1. 📐 Kitchen Grid Gap Fix (Cards ab barabar lambe honge) */
+#admin-active-orders {
+    align-items: stretch !important; /* Cards ko ek dusre ke barabar kheenchna */
+}
+#admin-active-orders .order-card {
+    height: 100% !important; /* 🔥 Card ab grid ki poori jagah lega, koi gap nahi bachega */
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 0 !important;
+}
+
+/* Footer (Total & Buttons) hamesha bottom me chipka rahega */
+.order-card > div:last-child {
+    margin-top: auto !important; 
+}
+
+/* 2. 🖱️ Dashboard Cards Resize (Width & Height BOTH) */
+.dashboard-card {
+    resize: both !important; 
+    overflow: auto !important; /* 🔥 'auto' allows proper drag resizing in both directions */
+    min-height: 150px !important; 
+    min-width: 250px !important;
+    /* Yahan se height: ... !important hata diya gaya hai taaki tum free resize kar sako */
+}
+
+/* 3. Waiter Box & Kitchen Box initial setup (Resizing ke liye unlock kiya) */
+.live-left-col > .dashboard-card:nth-child(1) {
+    min-height: 180px !important; 
+}
+.dashboard-card:has(#admin-active-orders) {
+    min-height: 50vh !important; 
+}
+
+/* 4. Fix Food Item Price Visibility (Price ab kabhi cut ya gayab nahi hoga) */
 .order-card > div:nth-child(4) > div {
     display: flex !important;
     justify-content: space-between !important;
-    flex-wrap: nowrap !important; /* Text ko dabne nahi dega */
+    flex-wrap: nowrap !important; 
 }
 .order-card > div:nth-child(4) > div > span:last-child {
     font-weight: 900 !important;
-    color: #14213D !important; /* Premium Dark color hamesha visible */
+    color: #14213D !important; 
     white-space: nowrap !important; 
-    flex-shrink: 0 !important; /* 🔥 Ye price ko kabhi dhakel kar gayab nahi hone dega */
+    flex-shrink: 0 !important; /* 🔥 Ye price ko compress hone se rokega */
     margin-left: 10px !important;
-}
-
-/* 2. Drag & Resize (Width + Height dono kaam karega) */
-.dashboard-card {
-    resize: both !important; /* 🔥 Ab box Lamba aur Chauda dono hoga */
-    overflow: hidden !important; /* Resize icon on karne ke liye */
-    min-height: 100px !important; /* Purani galti (300px) hata di, ab ekdam chhota ho sakega */
-    height: auto !important;
-}
-
-/* 3. Waiter Box Perfect Fit (Faltu empty space removed) */
-.live-left-col > .dashboard-card:nth-child(1) {
-    flex-grow: 0 !important;
-    height: fit-content !important;
-}
-
-/* 4. Kitchen Box Match Height */
-.dashboard-card:has(#admin-active-orders) {
-    min-height: 80vh !important; 
-    height: 100% !important;
 }
 
 /* 5. 🪄 Smooth Card Spawn Animation */
@@ -1202,16 +1215,4 @@ body {
 }
 .order-card, .action-alert {
     animation: popInCard 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ease-out forwards !important;
-}
-
-/* 6. 📐 Kitchen Grid Gap Fix */
-#admin-active-orders {
-    align-items: stretch !important; /* Cards ab ek barabar lambe honge */
-}
-.order-card {
-    display: flex !important;
-    flex-direction: column !important;
-}
-.order-card > div:last-child {
-    margin-top: auto !important; /* Footer hamesha bottom me fix rahega */
 }
