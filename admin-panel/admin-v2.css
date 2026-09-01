@@ -1130,3 +1130,30 @@ body {
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3) !important;
 }
+/* ==================================
+   🔥 STEP 8: KITCHEN BOX HEIGHT & KOT BUTTON
+================================== */
+
+/* 1. Fix Box Height (Left box ke barabar lamba karne ke liye) */
+.dashboard-card:has(#admin-active-orders) {
+    min-height: 85vh !important; /* 👈 PROBLEM 1 FIX: Box screen ke bottom tak lamba hoga */
+    display: flex !important;
+    flex-direction: column !important;
+}
+#admin-active-orders {
+    flex-grow: 1 !important; /* Andar ka space poora cover karega */
+    max-height: none !important;
+}
+
+/* 2. Premium KOT (Print) Button Fix */
+#admin-active-orders .btn-action-new[onclick*="printKOT"] {
+    background: #475569 !important; /* Premium Slate/Grey color */
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
+}
+#admin-active-orders .btn-action-new[onclick*="printKOT"]:hover {
+    background: #1E293B !important; /* Hover pe dark ho jayega */
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2) !important;
+}
