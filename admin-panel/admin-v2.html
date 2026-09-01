@@ -867,7 +867,7 @@
             if (alertBadge) alertBadge.style.display = 'none';
         });
     </script>
-  <!-- 🔥 ULTRA-SMART ENGINE V3: No-Flicker & Isolate Fix -->
+ <!-- 🔥 SMART ENGINE V4 (Super Fast & Lite) -->
     <script>
         let previousOrderCount = 0;
         let previousWaiterCount = 0;
@@ -884,29 +884,8 @@
             waiterHeader.insertAdjacentHTML('beforeend', '<span id="smart-new-waiter-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
         }
 
-        // 2. THE CORE UI FIXER FUNCTION
-        function applySmartUI() {
-            // A. Fix Payment Toggles (No Animation Bug)
-            document.querySelectorAll('.order-card').forEach(card => {
-                const paymentBtn = card.querySelector('.card-badge-row button');
-                if (paymentBtn) {
-                    let btnText = paymentBtn.innerText.toUpperCase();
-                    if (btnText.includes('PAID') && !btnText.includes('UNPAID')) {
-                        paymentBtn.classList.add('paid-active');
-                    } else {
-                        paymentBtn.classList.remove('paid-active');
-                    }
-                }
-            });
-
-            // B. Timer Color Logic
-            document.querySelectorAll('.time-ago-tracker').forEach(timeText => {
-                let text = timeText.innerText.toLowerCase();
-                let isOverdue = text.includes('hour') || text.includes('day') || (text.includes('min') && parseInt(text.match(/\d+/)?.[0] || 0) >= 30);
-                timeText.style.setProperty('color', isOverdue ? '#EF4444' : '#14213D', 'important');
-            });
-
-            // C. Waiter Auto-Time
+        setInterval(() => {
+            // Waiter Auto-Time logic
             document.querySelectorAll('.action-alert').forEach(alert => {
                 if (!alert.dataset.timeAdded) {
                     let now = new Date();
@@ -922,7 +901,7 @@
                 }
             });
             
-            // D. Check New Orders for Dot Alert
+            // Check New Orders for Dot Alert
             const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
             const orderBadge = document.getElementById('smart-new-order-alert');
             if (orderBadge && currentOrders > previousOrderCount && !isFirstLoad) {
@@ -938,24 +917,9 @@
             previousWaiterCount = currentWaiters;
             
             isFirstLoad = false;
-        }
+        }, 1000);
 
-        // 3. 🔥 MUTATION OBSERVER (The Magic Bullet for Flicker!)
-        // Ye DOM me kuch bhi change hote hi INSTANT run karega, delay ke bina!
-        const observer = new MutationObserver(() => {
-            applySmartUI();
-        });
-        
-        const ordersContainer = document.getElementById('admin-new-orders');
-        const waitersContainer = document.getElementById('action-alerts-list');
-        
-        if (ordersContainer) observer.observe(ordersContainer, { childList: true, subtree: true });
-        if (waitersContainer) observer.observe(waitersContainer, { childList: true, subtree: true });
-
-        // Run once on load
-        applySmartUI();
-
-        // 4. SMART DISMISS
+        // SMART DISMISS
         document.getElementById('admin-new-orders')?.addEventListener('click', () => {
             const orderBadge = document.getElementById('smart-new-order-alert');
             if (orderBadge) orderBadge.style.display = 'none';
