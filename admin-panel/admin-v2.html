@@ -867,11 +867,9 @@
             if (alertBadge) alertBadge.style.display = 'none';
         });
     </script>
- <!-- 🔥 SMART ENGINE V5 (Kitchen Alert Added) -->
+ <!-- 🔥 SMART ENGINE V6 (Flawless Dot Logic & Click Hide) -->
     <script>
-        let previousOrderCount = 0;
-        let previousWaiterCount = 0;
-        let previousKitchenCount = 0; // 🔥 Kitchen Track
+        let prevOrder = 0, prevWaiter = 0, prevKitchen = 0;
         let isFirstLoad = true;
 
         // 1. Create the hidden "NEW" badges for ALL 3 headers
@@ -885,18 +883,17 @@
             waiterHeader.insertAdjacentHTML('beforeend', '<span id="smart-new-waiter-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
         }
 
-        // 🔥 Kitchen Header NEW tag
         const kitchenHeader = document.querySelector('.dashboard-card:has(#admin-active-orders) h3');
         if (kitchenHeader && !document.getElementById('smart-kitchen-alert')) {
             kitchenHeader.insertAdjacentHTML('beforeend', '<span id="smart-kitchen-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
         }
 
+        // 2. THE BRAIN (Checks every second)
         setInterval(() => {
-            // Waiter Auto-Time logic
+            // Waiter Auto-Time
             document.querySelectorAll('.action-alert').forEach(alert => {
                 if (!alert.dataset.timeAdded) {
-                    let now = new Date();
-                    let timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    let timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     let textDiv = alert.querySelector('div');
                     if (textDiv) {
                         let timeSpan = document.createElement('span');
@@ -908,36 +905,53 @@
                 }
             });
             
-            // Check New Orders
-            const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
-            const orderBadge = document.getElementById('smart-new-order-alert');
-            if (orderBadge && currentOrders > previousOrderCount && !isFirstLoad) orderBadge.style.display = 'inline-flex';
-            previousOrderCount = currentOrders;
+            // 🔥 NEW INCOMING LOGIC
+            const curOrder = document.querySelectorAll('#admin-new-orders .order-card').length;
+            const bOrder = document.getElementById('smart-new-order-alert');
+            if (bOrder) {
+                if (curOrder === 0) bOrder.style.display = 'none'; // Box khali toh dot gayab
+                else if (curOrder > prevOrder && !isFirstLoad) bOrder.style.display = 'inline-flex';
+            }
+            prevOrder = curOrder;
 
-            // Check Waiter Calls
-            const currentWaiters = document.querySelectorAll('.action-alert').length;
-            const waiterBadge = document.getElementById('smart-new-waiter-alert');
-            if (waiterBadge && currentWaiters > previousWaiterCount && !isFirstLoad) waiterBadge.style.display = 'inline-flex';
-            previousWaiterCount = currentWaiters;
+            // 🔥 WAITER CALL LOGIC
+            const curWaiter = document.querySelectorAll('.action-alert').length;
+            const bWaiter = document.getElementById('smart-new-waiter-alert');
+            if (bWaiter) {
+                if (curWaiter === 0) bWaiter.style.display = 'none';
+                else if (curWaiter > prevWaiter && !isFirstLoad) bWaiter.style.display = 'inline-flex';
+            }
+            prevWaiter = curWaiter;
 
-            // 🔥 Check Kitchen Orders
-            const currentKitchen = document.querySelectorAll('#admin-active-orders .order-card').length;
-            const kitchenBadge = document.getElementById('smart-kitchen-alert');
-            if (kitchenBadge && currentKitchen > previousKitchenCount && !isFirstLoad) kitchenBadge.style.display = 'inline-flex';
-            previousKitchenCount = currentKitchen;
+            // 🔥 KITCHEN LOGIC
+            const curKitchen = document.querySelectorAll('#admin-active-orders .order-card').length;
+            const bKitchen = document.getElementById('smart-kitchen-alert');
+            if (bKitchen) {
+                if (curKitchen === 0) bKitchen.style.display = 'none';
+                else if (curKitchen > prevKitchen && !isFirstLoad) bKitchen.style.display = 'inline-flex';
+            }
+            prevKitchen = curKitchen;
             
             isFirstLoad = false;
         }, 1000);
 
-        // SMART DISMISS LOGIC (Click karne par tag chup jayega)
-        document.getElementById('admin-new-orders')?.addEventListener('click', () => {
-            const b = document.getElementById('smart-new-order-alert'); if(b) b.style.display = 'none';
-        });
-        document.getElementById('action-alerts-list')?.addEventListener('click', () => {
-            const b = document.getElementById('smart-new-waiter-alert'); if(b) b.style.display = 'none';
-        });
-        document.getElementById('admin-active-orders')?.addEventListener('click', () => {
-            const b = document.getElementById('smart-kitchen-alert'); if(b) b.style.display = 'none';
+        // 3. SMART CLICK HIDE (Kahin bhi click karo, apna dot gayab)
+        document.addEventListener('click', (e) => {
+            // Agar Incoming box ke kisi card par click hua
+            if (e.target.closest('#admin-new-orders')) {
+                const b = document.getElementById('smart-new-order-alert');
+                if (b) b.style.display = 'none';
+            }
+            // Agar Waiter box me click hua
+            if (e.target.closest('#action-alerts-list')) {
+                const b = document.getElementById('smart-new-waiter-alert');
+                if (b) b.style.display = 'none';
+            }
+            // Agar Kitchen box me click hua
+            if (e.target.closest('#admin-active-orders')) {
+                const b = document.getElementById('smart-kitchen-alert');
+                if (b) b.style.display = 'none';
+            }
         });
     </script>
 </body>
