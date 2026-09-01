@@ -499,12 +499,11 @@ window.initAdminData = function() {
                 // 🔥 NAYA LOGIC: Agar customer ne App se payment mark kiya hai
                 if (!isPaid && data.paymentPending === true) {
                     paidBadgeHTML = `<span style="background:rgba(255, 159, 0, 0.15); color:var(--warning); border:1px solid var(--warning); padding:5px 12px; border-radius:10px; font-size:11px; font-weight:800; display:flex; align-items:center; gap:4px; animation: pulse 1s infinite;"><i class="ph-bold ph-spinner ph-spin"></i> Verify Payment</span>`;
-               } else if (isPaid) {
-                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', true)" class="paid-active">PAID</button>`;
+             } else if (isPaid) {
+                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', true, event)" class="paid-active">PAID</button>`;
                 } else {
-                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', false)">UNPAID</button>`;
+                    paidBadgeHTML = `<button onclick="toggleOrderPayment('${data.docId}', false, event)">UNPAID</button>`;
                 }
-
                 // 🔥 NAYA LOGIC: Verification Alert Box (Jo Manager ko Yes/No option dega)
                 let paymentVerificationHtml = '';
                 if (!isPaid && data.paymentPending === true) {
@@ -545,7 +544,7 @@ window.initAdminData = function() {
                 const phoneLink = (data.customerPhone && data.customerPhone !== "N/A") ? `<a href="tel:${data.customerPhone}" style="color:var(--primary); font-size:16px;"><i class="ph-bold ph-phone-call"></i></a>` : '';
 
                 let cardHtml = `
-                    <div class="order-card premium-hover ${cardTypeClass}">
+                    <div class="order-card premium-hover ${cardTypeClass} ${isPaid ? 'card-paid-done' : ''}">
                         <div class="card-top-row">
                             ${tableDisplayBadge}
                             <div class="order-time-display">
@@ -686,14 +685,33 @@ window.initAdminData = function() {
     });
 };
 
-window.toggleOrderPayment = async (orderId, isCurrentlyPaid) => {
-    try {
-        await updateDoc(doc(db, "orders", orderId), {
-            isPaid: !isCurrentlyPaid
-        });
-    } catch(e) {
-        alert("Payment status update failed: " + e.message);
+window.toggleOrderPayment = (orderId, isCurrentlyPaid, event) => {
+    // 1. INSTANT SMOOTH UI ANIMATION (Bina Database wait kiye)
+    if (event && event.currentTarget) {
+        const btn = event.currentTarget;
+        const card = btn.closest('.order-card');
+        
+        if (!isCurrentlyPaid) {
+            btn.classList.add('paid-active');
+            btn.innerHTML = 'PAID';
+            if(card) card.classList.add('card-paid-done');
+        } else {
+            btn.classList.remove('paid-active');
+            btn.innerHTML = 'UNPAID';
+            if(card) card.classList.remove('card-paid-done');
+        }
     }
+
+    // 2. DELAY FIREBASE UPDATE (Taaki 400ms tak makkhan jaisi animation chal sake)
+    setTimeout(async () => {
+        try {
+            await updateDoc(doc(db, "orders", orderId), {
+                isPaid: !isCurrentlyPaid
+            });
+        } catch(e) {
+            alert("Payment status update failed: " + e.message);
+        }
+    }, 400); // 400ms matches exact CSS animation timing!
 };
 
 window.filterAdminCat = (cat, element) => {
