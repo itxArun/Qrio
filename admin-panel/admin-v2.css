@@ -1216,3 +1216,29 @@ body {
 .order-card, .action-alert {
     animation: popInCard 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ease-out forwards !important;
 }
+/* ==================================
+   🔥 STEP 10: AUTO-EXPAND & RESIZE FIX
+================================== */
+
+/* 1. Left Column (Isse chhota ya bada karne ka option) */
+.live-left-col {
+    resize: horizontal !important; /* 👈 Sirf chaudai (width) resize hogi */
+    overflow: hidden !important;
+    min-width: 280px !important;
+    max-width: 50% !important; /* Aadhi screen se zyada bada nahi hone dega */
+}
+
+/* 2. Kitchen Box (Auto-Expand Magic) */
+.dashboard-card:has(#admin-active-orders) {
+    resize: both !important; /* 👈 Height aur Width dono resize honge */
+    overflow: auto !important; 
+    flex-grow: 1 !important; /* 🔥 Ye box ko bachi hui khali jagah me faila (expand) dega! */
+    width: 100% !important;
+    min-height: 60vh !important;
+}
+
+/* Waiter Box & New Order Box (Inko resize allow karne ke liye) */
+.live-left-col > .dashboard-card {
+    resize: vertical !important;
+    overflow: auto !important;
+}
