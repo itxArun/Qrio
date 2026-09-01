@@ -1158,10 +1158,44 @@ body {
     box-shadow: 0 6px 15px rgba(0,0,0,0.2) !important;
 }
 /* ==================================
-   🔥 STEP 9: PRO-ANIMATIONS, GRID FIX & RESIZE 
+   🔥 STEP 9: PERFECT RESIZE, GRID FIX & VISIBILITY
 ================================== */
 
-/* 1. 🪄 Smooth Card Spawn Animation (Teeno Boxes ke liye) */
+/* 1. Fix Food Item Price Visibility (Ab price kabhi gayab nahi hoga!) */
+.order-card > div:nth-child(4) > div {
+    display: flex !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important; /* Text ko dabne nahi dega */
+}
+.order-card > div:nth-child(4) > div > span:last-child {
+    font-weight: 900 !important;
+    color: #14213D !important; /* Premium Dark color hamesha visible */
+    white-space: nowrap !important; 
+    flex-shrink: 0 !important; /* 🔥 Ye price ko kabhi dhakel kar gayab nahi hone dega */
+    margin-left: 10px !important;
+}
+
+/* 2. Drag & Resize (Width + Height dono kaam karega) */
+.dashboard-card {
+    resize: both !important; /* 🔥 Ab box Lamba aur Chauda dono hoga */
+    overflow: hidden !important; /* Resize icon on karne ke liye */
+    min-height: 100px !important; /* Purani galti (300px) hata di, ab ekdam chhota ho sakega */
+    height: auto !important;
+}
+
+/* 3. Waiter Box Perfect Fit (Faltu empty space removed) */
+.live-left-col > .dashboard-card:nth-child(1) {
+    flex-grow: 0 !important;
+    height: fit-content !important;
+}
+
+/* 4. Kitchen Box Match Height */
+.dashboard-card:has(#admin-active-orders) {
+    min-height: 80vh !important; 
+    height: 100% !important;
+}
+
+/* 5. 🪄 Smooth Card Spawn Animation */
 @keyframes popInCard {
     0% { opacity: 0; transform: translateY(15px) scale(0.98); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -1170,43 +1204,14 @@ body {
     animation: popInCard 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ease-out forwards !important;
 }
 
-/* 2. 📐 Kitchen Grid Gap Fix (Uniform Heights) */
+/* 6. 📐 Kitchen Grid Gap Fix */
 #admin-active-orders {
-    align-items: stretch !important; /* 👈 Cards ab ek barabar lambe honge, gap nahi bachega */
+    align-items: stretch !important; /* Cards ab ek barabar lambe honge */
 }
-#admin-active-orders .order-card {
-    height: auto !important;
+.order-card {
     display: flex !important;
     flex-direction: column !important;
 }
-/* Items list ki height limit taaki card limit se zyada bada na ho */
-.order-card > div:nth-child(4) {
-    max-height: 160px !important; 
-    overflow-y: auto !important;
-}
-/* Items list ka scrollbar */
-.order-card > div:nth-child(4)::-webkit-scrollbar { width: 3px !important; }
-.order-card > div:nth-child(4)::-webkit-scrollbar-thumb { background: #CBD5E1 !important; border-radius: 10px !important; }
-
-/* Buttons ko hamesha bottom me fix rakhne ke liye */
 .order-card > div:last-child {
-    margin-top: auto !important; /* 👈 Card lamba ho ya chhota, Footer hamesha bottom me chipka rahega */
-}
-
-/* 3. 🖱️ Drag & Resize feature for ALL Boxes */
-.dashboard-card {
-    resize: vertical !important; /* 👈 Box ke bottom me drag handle aa jayega */
-    overflow: hidden !important; 
-    min-height: 300px !important; /* Minimum itna lamba rahega */
-    display: flex !important;
-    flex-direction: column !important;
-}
-/* Scroll area ko stretch karne ke liye taaki resize hone par andar ka content bhi bada ho */
-#admin-new-orders, #admin-active-orders, #action-center-container {
-    flex-grow: 1 !important;
-    max-height: none !important;
-}
-#action-alerts-list {
-    max-height: 100% !important;
-    height: 100% !important;
+    margin-top: auto !important; /* Footer hamesha bottom me fix rahega */
 }
