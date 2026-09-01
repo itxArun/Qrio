@@ -1217,28 +1217,30 @@ body {
     animation: popInCard 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ease-out forwards !important;
 }
 /* ==================================
-   🔥 STEP 10: AUTO-EXPAND & RESIZE FIX
+   🔥 STEP 10: TRUE RESIZE & PERFECT CARDS (FIXED)
 ================================== */
 
-/* 1. Left Column (Isse chhota ya bada karne ka option) */
-.live-left-col {
-    resize: horizontal !important; /* 👈 Sirf chaudai (width) resize hogi */
-    overflow: hidden !important;
-    min-width: 280px !important;
-    max-width: 50% !important; /* Aadhi screen se zyada bada nahi hone dega */
-}
-
-/* 2. Kitchen Box (Auto-Expand Magic) */
-.dashboard-card:has(#admin-active-orders) {
-    resize: both !important; /* 👈 Height aur Width dono resize honge */
+/* 1. 🖱️ ALL Boxes Resize Unlock (Koi restriction nahi) */
+.dashboard-card {
+    resize: both !important; /* Ab lamba-chauda dono hoga */
     overflow: auto !important; 
-    flex-grow: 1 !important; /* 🔥 Ye box ko bachi hui khali jagah me faila (expand) dega! */
-    width: 100% !important;
-    min-height: 60vh !important;
+    /* Yahan se width aur height ki saari pabandiyan hata di hain */
 }
 
-/* Waiter Box & New Order Box (Inko resize allow karne ke liye) */
-.live-left-col > .dashboard-card {
-    resize: vertical !important;
-    overflow: auto !important;
+/* 2. 📐 Kitchen Box Cards Alignment (Gaps hatane ke liye) */
+#admin-active-orders {
+    align-items: stretch !important; /* Cards ko barabar lambai dega */
+    align-content: flex-start !important; /* Upar se shuru karega taaki beech me gap na aaye */
+}
+#admin-active-orders .order-card {
+    height: auto !important; 
+    min-height: 100% !important; /* Box fill karega bina khali jagah chhode */
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 0 !important;
+}
+
+/* Footer (Total & Buttons) hamesha bottom me */
+.order-card > div:last-child {
+    margin-top: auto !important; 
 }
