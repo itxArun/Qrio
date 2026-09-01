@@ -960,3 +960,23 @@ body {
     box-shadow: 0 4px 8px rgba(252, 163, 17, 0.2) !important;
     transform: scale(1.05) !important; /* 🔥 Thoda sa bada hoga hover pe */
 }
+/* ==================================
+   🔥 SMART PAID CARD GREEN HIGHLIGHT
+================================== */
+/* 1. Add background transition to cards */
+.order-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease, border-color 0.4s ease !important;
+}
+
+/* 2. When card is marked as PAID */
+.order-card.card-paid-done {
+    background: #F0FDF4 !important; /* Soft Premium Mint Green */
+    border-color: #86EFAC !important; 
+    border-left: 5px solid #22C55E !important; /* Green Side Ribbon */
+}
+
+/* 3. Keep customer info box clean inside the green card */
+.order-card.card-paid-done > div:nth-child(3) {
+    background: #FFFFFF !important;
+    border: 1px solid #BBF7D0 !important;
+}
