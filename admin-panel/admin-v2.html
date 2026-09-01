@@ -867,13 +867,14 @@
             if (alertBadge) alertBadge.style.display = 'none';
         });
     </script>
- <!-- 🔥 SMART ENGINE V4 (Super Fast & Lite) -->
+ <!-- 🔥 SMART ENGINE V5 (Kitchen Alert Added) -->
     <script>
         let previousOrderCount = 0;
         let previousWaiterCount = 0;
+        let previousKitchenCount = 0; // 🔥 Kitchen Track
         let isFirstLoad = true;
 
-        // 1. Create the hidden "NEW" badges for BOTH headers
+        // 1. Create the hidden "NEW" badges for ALL 3 headers
         const newOrderHeader = document.querySelector('.live-left-col > .dashboard-card:nth-child(2) h3');
         if (newOrderHeader && !document.getElementById('smart-new-order-alert')) {
             newOrderHeader.insertAdjacentHTML('beforeend', '<span id="smart-new-order-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
@@ -882,6 +883,12 @@
         const waiterHeader = document.querySelector('#action-center-container .card-header h3');
         if (waiterHeader && !document.getElementById('smart-waiter-alert')) {
             waiterHeader.insertAdjacentHTML('beforeend', '<span id="smart-new-waiter-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
+        }
+
+        // 🔥 Kitchen Header NEW tag
+        const kitchenHeader = document.querySelector('.dashboard-card:has(#admin-active-orders) h3');
+        if (kitchenHeader && !document.getElementById('smart-kitchen-alert')) {
+            kitchenHeader.insertAdjacentHTML('beforeend', '<span id="smart-kitchen-alert" class="new-alert-dot" style="display: none;">NEW 🔴</span>');
         }
 
         setInterval(() => {
@@ -901,33 +908,36 @@
                 }
             });
             
-            // Check New Orders for Dot Alert
+            // Check New Orders
             const currentOrders = document.querySelectorAll('#admin-new-orders .order-card').length;
             const orderBadge = document.getElementById('smart-new-order-alert');
-            if (orderBadge && currentOrders > previousOrderCount && !isFirstLoad) {
-                orderBadge.style.display = 'inline-flex';
-            }
+            if (orderBadge && currentOrders > previousOrderCount && !isFirstLoad) orderBadge.style.display = 'inline-flex';
             previousOrderCount = currentOrders;
 
+            // Check Waiter Calls
             const currentWaiters = document.querySelectorAll('.action-alert').length;
             const waiterBadge = document.getElementById('smart-new-waiter-alert');
-            if (waiterBadge && currentWaiters > previousWaiterCount && !isFirstLoad) {
-                waiterBadge.style.display = 'inline-flex';
-            }
+            if (waiterBadge && currentWaiters > previousWaiterCount && !isFirstLoad) waiterBadge.style.display = 'inline-flex';
             previousWaiterCount = currentWaiters;
+
+            // 🔥 Check Kitchen Orders
+            const currentKitchen = document.querySelectorAll('#admin-active-orders .order-card').length;
+            const kitchenBadge = document.getElementById('smart-kitchen-alert');
+            if (kitchenBadge && currentKitchen > previousKitchenCount && !isFirstLoad) kitchenBadge.style.display = 'inline-flex';
+            previousKitchenCount = currentKitchen;
             
             isFirstLoad = false;
         }, 1000);
 
-        // SMART DISMISS
+        // SMART DISMISS LOGIC (Click karne par tag chup jayega)
         document.getElementById('admin-new-orders')?.addEventListener('click', () => {
-            const orderBadge = document.getElementById('smart-new-order-alert');
-            if (orderBadge) orderBadge.style.display = 'none';
+            const b = document.getElementById('smart-new-order-alert'); if(b) b.style.display = 'none';
         });
-
         document.getElementById('action-alerts-list')?.addEventListener('click', () => {
-            const waiterBadge = document.getElementById('smart-new-waiter-alert');
-            if (waiterBadge) waiterBadge.style.display = 'none';
+            const b = document.getElementById('smart-new-waiter-alert'); if(b) b.style.display = 'none';
+        });
+        document.getElementById('admin-active-orders')?.addEventListener('click', () => {
+            const b = document.getElementById('smart-kitchen-alert'); if(b) b.style.display = 'none';
         });
     </script>
 </body>
