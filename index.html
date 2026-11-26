@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qrio — Smart QR Menu & Restaurant POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Okra:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        // Agar URL mein ?rest= ya ?table= hai toh seedha Customer Menu par bhejo
+        if (window.location.search.includes('rest=') || window.location.search.includes('table=')) {
+            window.location.replace('./menu/index.html' + window.location.search);
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F8F9FA;
+            color: #1C1C1E;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .hub-card {
+            background: #FFFFFF;
+            max-width: 440px;
+            width: 100%;
+            border-radius: 28px;
+            padding: 36px 26px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.07);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .logo-badge {
+            width: 68px;
+            height: 68px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #E53935 0%, #FF5252 100%);
+            color: #FFFFFF;
+            font-size: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            box-shadow: 0 10px 25px rgba(229, 57, 53, 0.3);
+        }
+        h1 { font-family: 'Okra', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+        .tagline { font-size: 13px; color: #757575; margin-top: 4px; margin-bottom: 28px; }
+        .portal-list { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+        .portal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: #1C1C1E;
+            background: #F8F9FA;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .portal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            background: #FFFFFF;
+        }
+        .portal-left { display: flex; align-items: center; gap: 14px; }
+        .portal-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .portal-title { font-size: 14px; font-weight: 700; display: block; }
+        .portal-sub { font-size: 11px; color: #757575; display: block; }
+        .footer-note { margin-top: 24px; font-size: 11px; color: #A0A0A0; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="hub-card">
+        <div class="logo-badge"><i class="ph-fill ph-qr-code"></i></div>
+        <h1>Qrio</h1>
+        <p class="tagline">Smart QR Digital Menu & Enterprise Restaurant POS</p>
 
+        <div class="portal-list">
+            <a href="./menu/index.html" class="portal-btn">
+                <div class="portal-left">
+                    <div class="portal-icon" style="background: rgba(229,57,53,0.1); color: #E53935;">
+                        <i class="ph-fill ph-fork-knife"></i>
+                    </div>
+                    <div>
+                        <span class="portal-title">Customer Smart Menu</span>
+                        <span class="portal-sub">Browse dishes, 3D view & order</span>
+                    </div>
+                </div>
+                <i class="ph-bold ph-caret-right" style="color: #A0A0A0;"></i>
+            </a>
+
+            <a href="./admin-panel/admin.html" class="portal-btn">
+                <div class="portal-left">
+                    <div class="portal-icon" style="background: rgba(36,150,63,0.1); color: #24963F;">
+                        <i class="ph-fill ph-storefront"></i>
+                    </div>
+                    <div>
+                        <span class="portal-title">Restaurant Partner POS</span>
+                        <span class="portal-sub">Live orders, kitchen KOT & tables</span>
+                    </div>
+                </div>
+                <i class="ph-bold ph-caret-right" style="color: #A0A0A0;"></i>
+            </a>
+
+            <a href="./super-admin/dashboard.html" class="portal-btn">
+                <div class="portal-left">
+                    <div class="portal-icon" style="background: rgba(0,122,255,0.1); color: #007AFF;">
+                        <i class="ph-fill ph-shield-check"></i>
+                    </div>
+                    <div>
+                        <span class="portal-title">Master Super Admin</span>
+                        <span class="portal-sub">Client onboarding & SaaS control</span>
+                    </div>
+                </div>
+                <i class="ph-bold ph-caret-right" style="color: #A0A0A0;"></i>
+            </a>
+        </div>
+
+        <div class="footer-note">Powered by Qrio • Instant Cloud Sync</div>
+    </div>
+</body>
+</html>
