@@ -1,22 +1,25 @@
-
 {
-  ""name": "Qrio - Smart Menu",
+  "name": "Qrio - Smart Menu",
   "short_name": "Qrio",
+  "description": "Smart QR Digital Menu & Contactless Table Ordering",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#F8F9FA",
-  "theme_color": "#E23744",
+  "theme_color": "#E53935",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3170/3170733.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3170/3170733.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
-
