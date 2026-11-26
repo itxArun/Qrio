@@ -954,15 +954,14 @@ window.saveChefNote = () => {
 async function loadDynamicMenu() {
     try {
         console.log("⏳ Fetching data from Database...");
-        
-        if(typeof window.updateSmartGreeting === 'function') window.updateSmartGreeting();
+
+        if (typeof window.updateSmartGreeting === 'function') window.updateSmartGreeting();
 
         // 💀 VIP MAGIC: INSTANT SKELETON LOADER
-        // Data aane se pehle hi turant fake white boxes dikha do!
         const sidebar = document.getElementById('sidebar-menu');
         if (sidebar) {
             sidebar.innerHTML = '';
-            for(let i=0; i<8; i++) {
+            for (let i = 0; i < 8; i++) {
                 sidebar.innerHTML += `
                 <div class="side-item" style="pointer-events:none; border:none; box-shadow:none; padding:15px 10px;">
                     <div class="skeleton-box" style="width:60px; height:60px; border-radius:15px; margin: 0 auto 10px auto;"></div>
@@ -971,34 +970,31 @@ async function loadDynamicMenu() {
                 </div>`;
             }
         }
-        
-        // Main Screen Skeleton
+
         const slider = document.getElementById('photo-slider');
-        if(slider) {
+        if (slider) {
             slider.classList.remove('hide');
             slider.innerHTML = `<div class="skeleton-box" style="width:100%; height:250px; border-radius:20px;"></div>`;
         }
         const displayName = document.getElementById('display-name');
-        if(displayName) displayName.innerHTML = `<div class="skeleton-box" style="width:70%; height:28px; margin-bottom:10px;"></div>`;
+        if (displayName) displayName.innerHTML = `<div class="skeleton-box" style="width:70%; height:28px; margin-bottom:10px;"></div>`;
         const displayPrice = document.getElementById('display-price');
-        if(displayPrice) displayPrice.innerHTML = `<div class="skeleton-box" style="width:40%; height:20px;"></div>`;
+        if (displayPrice) displayPrice.innerHTML = `<div class="skeleton-box" style="width:40%; height:20px;"></div>`;
 
-        // 🚀 VIP FIX: Ab ye sahi ID ('premium-loader') ko pakad kar turant hide kar dega!
         const fullScreenLoader = document.getElementById('premium-loader') || document.getElementById('loader') || document.getElementById('preloader');
-        if(fullScreenLoader) {
+        if (fullScreenLoader) {
             fullScreenLoader.style.opacity = '0';
             setTimeout(() => fullScreenLoader.style.display = 'none', 200);
         }
 
-       // 🌉 THE UNIVERSAL SMART BRIDGE FOR CUSTOMER APP
+        // 🌉 THE UNIVERSAL SMART BRIDGE FOR CUSTOMER APP
         let restaurant = null;
         try {
-            // Master panel se multiple ID names try karega
             let q1 = query(collection(db, "clients"), where("clientId", "==", window.currentRestaurantId));
             let snap1 = await getDocs(q1);
-            if(snap1.empty) snap1 = await getDocs(query(collection(db, "clients"), where("hotelId", "==", window.currentRestaurantId)));
-            if(snap1.empty) snap1 = await getDocs(query(collection(db, "clients"), where("restaurantId", "==", window.currentRestaurantId)));
-            
+            if (snap1.empty) snap1 = await getDocs(query(collection(db, "clients"), where("hotelId", "==", window.currentRestaurantId)));
+            if (snap1.empty) snap1 = await getDocs(query(collection(db, "clients"), where("restaurantId", "==", window.currentRestaurantId)));
+
             if (!snap1.empty) {
                 restaurant = snap1.docs[0].data();
                 restaurant.name = restaurant.clientName || restaurant.hotelName || restaurant.restaurantName || restaurant.name || "Qrio Partner";
@@ -1010,12 +1006,15 @@ async function loadDynamicMenu() {
                     restaurant.name = restaurant.restaurantName || restaurant.hotelName || restaurant.name || "Qrio Partner";
                 }
             }
-        } catch(e) { console.log("Bridge Error:", e); }
-        if (!restaurant) { 
-            console.warn("Restaurant data missing, using default."); 
-            restaurant = { name: "Qrio Smart Menu" }; 
+        } catch (e) {
+            console.log("Bridge Error:", e);
         }
-         
+
+        if (!restaurant) {
+            console.warn("Restaurant data missing, using default.");
+            restaurant = { name: "Qrio Smart Menu" };
+        }
+
         // 🚫 DEACTIVATED RESTAURANT MENU BLOCKER
         if (restaurant.status && restaurant.status.toLowerCase() === 'deactivated') {
             document.title = `${restaurant.name || 'Qrio'} - Service Unavailable`;
@@ -1078,7 +1077,6 @@ async function loadDynamicMenu() {
             } else {
                 if (typeof window.applyFilters === 'function') window.applyFilters();
 
-                // Agar current dish open hai toh uska latest price/stock sync karo
                 const isDishAvailable = (d) => d.inStock !== false && d.status !== 'out_of_stock' && d.isAvailable !== false;
                 const updatedCurrent = window.currentDish
                     ? window.allDishes.find(d => d.id === window.currentDish.id && isDishAvailable(d))
@@ -1095,6 +1093,9 @@ async function loadDynamicMenu() {
         }, (err) => {
             console.error("❌ Live dish fetch error:", err);
         });
+    } catch (e) {
+        console.error("❌ Data load error:", e);
+    }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
