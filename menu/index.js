@@ -997,6 +997,28 @@ async function loadDynamicMenu() {
             console.warn("Restaurant data missing, using default."); 
             restaurant = { name: "Qrio Smart Menu" }; 
         }
+         
+        // 🚫 DEACTIVATED RESTAURANT MENU BLOCKER
+        if (restaurant.status && restaurant.status.toLowerCase() === 'deactivated') {
+            document.title = `${restaurant.name || 'Qrio'} - Service Unavailable`;
+            document.body.innerHTML = `
+                <div style="min-height: 100dvh; width: 100%; display: flex; align-items: center; justify-content: center; background: #F8F9FA; padding: 24px; box-sizing: border-box; font-family: 'Poppins', sans-serif;">
+                    <div style="background: #FFFFFF; max-width: 380px; width: 100%; padding: 36px 26px; border-radius: 28px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.06);">
+                        <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(229, 57, 53, 0.1); color: #E53935; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 18px auto;">
+                            <i class="ph-fill ph-storefront"></i>
+                        </div>
+                        <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: 800; color: #1C1C1E;">Menu Temporarily Unavailable</h2>
+                        <p style="margin: 0 0 18px 0; font-size: 13px; color: #757575; line-height: 1.6;">
+                            Digital ordering for <strong>${restaurant.name || 'this restaurant'}</strong> is currently paused. Please contact the restaurant staff to place your order.
+                        </p>
+                        <div style="font-size: 11px; font-weight: 700; color: #A0A0A0; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 14px;">
+                            Powered by Qrio Smart Menu
+                        </div>
+                    </div>
+                </div>
+            `;
+            return;
+        }
 
         // 🍔 DIRECT MENU FETCH (Bypass APIService to prevent crash)
         let dishes = [];
