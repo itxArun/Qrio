@@ -301,9 +301,19 @@ window.renderMultiTracker = function() {
 
         let actionHtml = '';
         
-       // 💸 VIP FIX: CUSTOMER UPI PAYMENT BUTTON LOGIC
+       // 💸 VIP FIX: CUSTOMER UPI PAYMENT & VERIFICATION STATUS LOGIC
         let upiButtonHtml = '';
-        if (data.isPaid !== true && !isCanc && data.orderType !== 'Takeaway') {
+        if (data.isPaid === true) {
+            upiButtonHtml = `
+            <div style="margin-top: 15px; background: rgba(36, 150, 63, 0.12); color: var(--green); border: 1px solid var(--green); padding: 10px; border-radius: 12px; font-weight: 800; font-size: 13px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 6px;">
+                <i class="ph-bold ph-check-circle" style="font-size: 16px;"></i> Payment Verified & Paid
+            </div>`;
+        } else if (data.paymentPending === true && !isCanc) {
+            upiButtonHtml = `
+            <div style="margin-top: 15px; background: rgba(255, 159, 0, 0.12); color: var(--warning); border: 1px dashed var(--warning); padding: 10px; border-radius: 12px; font-weight: 700; font-size: 12px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 6px;">
+                <i class="ph-bold ph-hourglass-high" style="font-size: 16px;"></i> Verification Pending... Waiting for Restaurant
+            </div>`;
+        } else if (!isCanc) {
             upiButtonHtml = `
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-light);">
                 <button onclick="payBillViaUPI('${id}', ${data.totalAmount})" style="width: 100%; background: #24963F; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(36, 150, 63, 0.3); display: flex; justify-content: center; align-items: center; gap: 8px;">
@@ -1129,61 +1139,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 // =======================================================
-// 💸 VIP DIGITAL BILL & UNIVERSAL UPI TRIGGER
+// 💸 VIP DIGITAL BILL & UNIVERSAL UPI TRIGGER (FIXED)
 // =======================================================
 window.payBillViaUPI = async (orderId, amount) => {
-    let merchantUpi = ""; 
+    let merchantUpi = "";
+    let merchantName = "Restaurant_Order";
+
     try {
         const q = query(collection(db, "merchants"), where("restaurantId", "==", window.currentRestaurantId));
         const snap = await getDocs(q);
-        if(!snap.empty && snap.docs[0].data().upiId) {
-            merchantUpi = snap.docs[0].data().upiId;
+        if (!snap.empty) {
+            const mData = snap.docs[0].data();
+            merchantUpi = (mData.upiId || "").trim();
+            if (mData.restaurantName) merchantName = mData.restaurantName.trim();
         }
-    } catch(e) { console.error(e); }
-    
-    if(!merchantUpi) { 
-        alert("Online payment is not setup yet. Please pay Cash at the counter."); 
-        return; 
+    } catch (e) {
+        console.error("UPI fetch error:", e);
     }
-    
-    // 🚀 Universal UPI Link (Phone khud chooser dikhayega)
-    const anyUpiLink = `upi://pay?pa=${merchantUpi}&pn=Restaurant_Order&am=${amount}&cu=INR`;
+
+    // Check karo ki valid UPI ID set hai ya nahi ("Not Provided" ko bhi block karega)
+    if (!merchantUpi || merchantUpi.toLowerCase() === "not provided" || !merchantUpi.includes("@")) {
+        window.showToast("Online UPI setup nahi hai — please counter par Cash pay karein.");
+        return;
+    }
+
+    // 🚀 Universal UPI Link (Phone khud UPI app chooser dikhayega)
+    const anyUpiLink = `upi://pay?pa=${encodeURIComponent(merchantUpi)}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR`;
     const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(anyUpiLink)}&margin=10`;
 
     const existingModal = document.getElementById('digitalBillModal');
-    if(existingModal) existingModal.remove();
+    if (existingModal) existingModal.remove();
 
     const modal = document.createElement('div');
-    modal.className = 'custom-alert show'; 
+    modal.className = 'custom-alert show';
     modal.id = 'digitalBillModal';
     modal.style.zIndex = '999999';
     modal.innerHTML = `
-        <div class="alert-box" style="padding: 25px; text-align: center; max-width: 350px; background: var(--bg-card); border: 1px solid var(--border-light);">
+        <div class="alert-box" style="padding: 25px; text-align: center; max-width: 350px; background: var(--white); border: 1px solid var(--border-light);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; border-bottom: 1px dashed var(--border-light); padding-bottom: 10px;">
                 <h3 style="margin:0; font-size: 18px; color: var(--text-main); font-family: 'Okra', sans-serif;">Digital Bill</h3>
                 <button onclick="document.getElementById('digitalBillModal').remove()" style="background:transparent; border:none; font-size:20px; color:var(--text-sub); cursor:pointer;"><i class="ph-bold ph-x"></i></button>
             </div>
             
-            <div style="font-size: 38px; font-weight: 900; color: #1C1C1E; margin-bottom: 15px; opacity: 1 !important; text-shadow: 0 2px 5px rgba(0,0,0,0.05);">₹${amount}</div>
+            <div style="font-size: 38px; font-weight: 900; color: var(--text-main); margin-bottom: 15px;">₹${amount}</div>
             
-            <div style="background: var(--bg-light); padding: 15px; border-radius: 16px; display: inline-block; margin-bottom: 20px; border: 1px solid var(--border-light);">
-                <img src="${qrApiUrl}" style="width: 150px; height: 150px; border-radius: 10px;" alt="UPI QR Code">
+            <div style="background: #FFFFFF; padding: 15px; border-radius: 16px; display: inline-block; margin-bottom: 20px; border: 1px solid var(--border-light);">
+                <img src="${qrApiUrl}" style="width: 150px; height: 150px; border-radius: 10px; display: block;" alt="UPI QR Code">
             </div>
 
             <div style="display: flex; gap: 10px; flex-direction: column;">
-                <!-- 🚀 UNIVERSAL APP OPENER BUTTON -->
-                <a href="${anyUpiLink}" style="text-decoration: none; width: 100%; background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%); color: white; padding: 16px; border-radius: 16px; font-weight: 800; font-size: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3); transition: 0.2s;">
+                <a href="${anyUpiLink}" style="text-decoration: none; width: 100%; background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%); color: white; padding: 16px; border-radius: 16px; font-weight: 800; font-size: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0, 122, 255, 0.3); box-sizing: border-box;">
                     <i class="ph-bold ph-device-mobile" style="font-size: 20px;"></i> Open UPI App on Phone
                 </a>
 
-                <!-- Small Confirmation Button -->
-                <button onclick="markOrderAsPaid('${orderId}')" style="width: 100%; background: transparent; color: var(--text-main); border: 1px solid var(--border-light); padding: 12px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; margin-top: 4px;">
+                <button id="btnConfirmPaid" onclick="markOrderAsPaid('${orderId}')" style="width: 100%; background: var(--bg-light); color: var(--text-main); border: 1px solid var(--border-light); padding: 12px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 4px;">
                     ✓ I Have Paid Successfully
                 </button>
             </div>
         </div>
     `;
     document.body.appendChild(modal);
-    if(typeof window.triggerHapticPop === 'function') window.triggerHapticPop();
+    if (typeof window.triggerHapticPop === 'function') window.triggerHapticPop();
 };
 
+// =======================================================
+// ✅ MARK ORDER AS PAYMENT PENDING (TRIGGERS ADMIN VERIFY)
+// =======================================================
+window.markOrderAsPaid = async (orderId) => {
+    const btn = document.getElementById('btnConfirmPaid');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Sending confirmation...";
+    }
+
+    try {
+        await updateDoc(doc(db, "orders", orderId), {
+            paymentPending: true,
+            paymentMethod: "UPI"
+        });
+
+        const modal = document.getElementById('digitalBillModal');
+        if (modal) modal.remove();
+
+        window.showToast("Payment sent for verification! ⏳");
+        if (typeof window.triggerHapticPop === 'function') window.triggerHapticPop();
+    } catch (e) {
+        console.error("Mark paid error:", e);
+        window.showToast("Confirmation failed! Please try again.");
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "✓ I Have Paid Successfully";
+        }
+    }
+};
