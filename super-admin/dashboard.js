@@ -1,4 +1,17 @@
 // ==========================================
+// 🛡️ SUPER ADMIN WHITELIST
+// ==========================================
+const SUPER_ADMIN_EMAILS = [
+    "admin@arun.com"
+];
+
+const isSuperAdmin = (email) => {
+    return !!email && SUPER_ADMIN_EMAILS.includes(email.toLowerCase());
+};
+
+let clientsUnsubscribe = null;
+
+// ==========================================
 // 🎨 UI & UTILITY FUNCTIONS
 // ==========================================
 window.showToast = (message, type = "success") => {
@@ -53,25 +66,30 @@ window.togglePassword = () => {
 // 🔐 HACKER-PROOF FIREBASE LOGIN SYSTEM
 // ==========================================
 window.superAdminLogin = (event) => {
-    // 🛑 ANTI-CRASH LOCK: Ye page ko refresh hone se rokega
-    if(event) event.preventDefault(); 
+    if (event) event.preventDefault();
 
-    const email = document.getElementById('saEmail').value.trim();
+    const email = document.getElementById('saEmail').value.trim().toLowerCase();
     const pass = document.getElementById('saPass').value.trim();
-    
-    if(!email || !pass) {
+
+    if (!email || !pass) {
         showToast("Email aur Password dono daalo!", "error");
+        return;
+    }
+
+    // Login try karne se pehle hi non-admin email block kar do
+    if (!isSuperAdmin(email)) {
+        showToast("Access Denied! Ye Super Admin account nahi hai.", "error");
         return;
     }
 
     showToast("Verifying Security... ⏳", "success");
 
     auth.signInWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
-            showToast("Welcome CEO Arun! 🚀", "success");
+        .then(() => {
+            showToast("Welcome Super Admin! 🚀", "success");
         })
         .catch((error) => {
-            if(error.code === 'auth/invalid-credential') {
+            if (error.code === 'auth/invalid-credential') {
                 showToast("Galat Password ya Email! Aankh (Eye) daba kar check karo.", "error");
             } else {
                 showToast("Error: " + error.message, "error");
@@ -82,11 +100,15 @@ window.superAdminLogin = (event) => {
 
 window.logoutDashboard = () => {
     const confirmLogout = confirm("⚠️ Are you sure you want to log out of the Master Panel?");
-    
+
     if (confirmLogout) {
+        if (clientsUnsubscribe) {
+            clientsUnsubscribe();
+            clientsUnsubscribe = null;
+        }
         auth.signOut().then(() => {
             showToast("Logged out successfully! 🔒", "success");
-            document.getElementById('saPass').value = ""; 
+            document.getElementById('saPass').value = "";
         }).catch((error) => {
             console.error(error);
         });
@@ -96,17 +118,28 @@ window.logoutDashboard = () => {
 // 🛡️ THE ULTIMATE SECURITY GUARD
 window.onload = () => {
     updateGreetingAndDate();
-    
+
     auth.onAuthStateChanged((user) => {
         const loginSec = document.getElementById('loginSection');
         const dashSec = document.getElementById('dashboardSection');
-        
-        if (user) {
-            if(loginSec) loginSec.style.display = 'none';
-            if(dashSec) dashSec.style.display = 'flex';
+
+        if (user && isSuperAdmin(user.email)) {
+            if (loginSec) loginSec.style.display = 'none';
+            if (dashSec) dashSec.style.display = 'flex';
+            startClientsListener();
         } else {
-            if(dashSec) dashSec.style.display = 'none';
-            if(loginSec) loginSec.style.display = 'flex';
+            // Agar koi client owner pehle se browser mein logged in hai toh usko turant signOut karo
+            if (user && !isSuperAdmin(user.email)) {
+                auth.signOut();
+                showToast("Unauthorized Account! Sirf Super Admin allowed hai.", "error");
+            }
+            if (clientsUnsubscribe) {
+                clientsUnsubscribe();
+                clientsUnsubscribe = null;
+            }
+            clientsData = [];
+            if (dashSec) dashSec.style.display = 'none';
+            if (loginSec) loginSec.style.display = 'flex';
         }
     });
 };
@@ -265,42 +298,45 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 let clientsData = [];
 
-db.collection("merchants").onSnapshot((snapshot) => {
-    clientsData = [];
-    let totalClientsCount = 0;
-    let activeClientsCount = 0;
-    
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-        clientsData.push({ 
-            dbId: doc.id, 
-            // 🚀 UPDATE: Naya Stealth ID Pattern
-            id: data.restaurantId || data.id || 'QRIO-???', 
-            name: data.restaurantName || data.name || 'Unknown',
-            city: data.city || 'N/A', 
-            plan: data.plan || 'Free Tier', 
-            status: data.status || 'Active',
-            statusClass: data.statusClass || 'active-badge'
+const startClientsListener = () => {
+    if (clientsUnsubscribe) return; // Duplicate listener rokne ke liye
+
+    clientsUnsubscribe = db.collection("merchants").onSnapshot((snapshot) => {
+        clientsData = [];
+        let totalClientsCount = 0;
+        let activeClientsCount = 0;
+
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            clientsData.push({
+                dbId: doc.id,
+                id: data.restaurantId || data.id || 'QRIO-???',
+                name: data.restaurantName || data.name || 'Unknown',
+                city: data.city || 'N/A',
+                plan: data.plan || 'Free Tier',
+                status: data.status || 'Active',
+                statusClass: data.statusClass || 'active-badge'
+            });
+
+            totalClientsCount++;
+            if (data.status === 'Active' || !data.status) {
+                activeClientsCount++;
+            }
         });
 
-        totalClientsCount++;
-        if(data.status === 'Active' || !data.status) {
-            activeClientsCount++;
-        }
+        renderTable();
+
+        const dashTotal = document.getElementById('dashTotalClients');
+        const dashActive = document.getElementById('dashActiveClients');
+        const dashRev = document.getElementById('dashRevenue');
+
+        if (dashTotal) dashTotal.innerText = totalClientsCount;
+        if (dashActive) dashActive.innerText = activeClientsCount;
+
+        const estimatedRevenue = activeClientsCount * 1500;
+        if (dashRev) dashRev.innerText = "₹" + estimatedRevenue.toLocaleString("en-IN");
     });
-    
-    renderTable(); 
-    
-    const dashTotal = document.getElementById('dashTotalClients');
-    const dashActive = document.getElementById('dashActiveClients');
-    const dashRev = document.getElementById('dashRevenue');
-    
-    if(dashTotal) dashTotal.innerText = totalClientsCount;
-    if(dashActive) dashActive.innerText = activeClientsCount;
-    
-    const estimatedRevenue = activeClientsCount * 1500;
-    if(dashRev) dashRev.innerText = "₹" + estimatedRevenue.toLocaleString("en-IN");
-});
+};
 
 const renderTable = () => {
     const tbody = document.getElementById("clientTableBody");
