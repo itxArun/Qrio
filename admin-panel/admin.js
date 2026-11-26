@@ -123,6 +123,22 @@ onAuthStateChanged(auth, async (user) => {
             }
             
           if (merchantData) {
+
+            // 🚫 BLOCKED / DEACTIVATED CLIENT CHECK
+            if (merchantData.status && merchantData.status.toLowerCase() === 'deactivated') {
+                localStorage.removeItem('pos_is_logged_in');
+                localStorage.removeItem('crave_hotel_name_cache');
+                localStorage.removeItem('crave_restaurant_id_cache');
+                if (shield) shield.remove();
+                await signOut(auth);
+                window.showLoginError("Your account has been deactivated. Please contact Qrio support to reactivate.");
+                if (loginScreen) loginScreen.style.setProperty('display', 'flex', 'important');
+                if (btn) {
+                    btn.innerHTML = 'Login to Dashboard <i class="ph-bold ph-arrow-right"></i>';
+                    btn.disabled = false;
+                }
+                return;
+            }
                 // 🌉 UNIVERSAL CATCHER: Har database field ko support karega
                 window.currentRestaurantId = merchantData.clientId || merchantData.hotelId || merchantData.restaurantId || merchantData.id; 
                 const realName = merchantData.clientName || merchantData.hotelName || merchantData.restaurantName || merchantData.name || "Qrio Partner";
