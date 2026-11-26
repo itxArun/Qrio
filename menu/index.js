@@ -22,8 +22,18 @@ const urlParams = new URLSearchParams(window.location.search);
 const scannedRestaurantId = urlParams.get('rest');
 window.currentRestaurantId = scannedRestaurantId ? scannedRestaurantId : 'rest_001';
 console.log("Customer is viewing Menu for Hotel ID: ", window.currentRestaurantId);
+// 🔐 RESTAURANT-SCOPED STORAGE KEYS (Har hotel ka data alag rahega)
+const REST_KEY = `qrio_${window.currentRestaurantId}`;
+const STORAGE_KEYS = {
+    hotelName: `${REST_KEY}_hotel_name`,
+    favs: `${REST_KEY}_favs`,
+    cart: `${REST_KEY}_cart`,
+    orders: `${REST_KEY}_active_orders`,
+    menuCache: `${REST_KEY}_menu_cache`,
+    sessionStart: `${REST_KEY}_session_start`
+};
 // 🚀 INSTANT CACHE LOADER (0ms Hotel Name Display)
-const cachedHotelName = localStorage.getItem('crave_hotel_name_cache');
+const cachedHotelName = localStorage.getItem(STORAGE_KEYS.hotelName);
 if (cachedHotelName) {
     const loaderBrand = document.getElementById('loader-brand-name');
     if (loaderBrand) loaderBrand.innerText = cachedHotelName;
@@ -63,19 +73,27 @@ window.currentVariant = 'full';
 window.activeCategory = 'All'; 
 window.trendingIds = []; 
 window.currentOrderType = 'Dine-in';
-window.favorites = JSON.parse(localStorage.getItem('nextplate_favs')) || [];
-window.cart = JSON.parse(localStorage.getItem('nextplate_cart')) || {};
+window.favorites = JSON.parse(localStorage.getItem(STORAGE_KEYS.favs)) || [];
+window.cart = JSON.parse(localStorage.getItem(STORAGE_KEYS.cart)) || {};
 
-window.saveCart = () => { localStorage.setItem('nextplate_cart', JSON.stringify(window.cart)); };
+window.saveCart = () => { localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(window.cart)); };
 
 setTimeout(() => { window.updateGlobalCartUI(); }, 500);
 
 window.closeCoinModal = () => document.getElementById('coinModal').classList.remove('show');
 window.toggleTracker = () => document.getElementById('tracker-modal').classList.toggle('show');
+window.activeOrderTab = 'live';
 window.switchOrderTab = (tab) => {
-    document.getElementById('tab-live-orders').classList.remove('active'); document.getElementById('tab-past-orders').classList.remove('active');
-    document.getElementById('live-orders-container').style.display = 'none'; document.getElementById('past-orders-container').style.display = 'none';
-    document.getElementById(`tab-${tab}-orders`).classList.add('active'); document.getElementById(`${tab}-orders-container`).style.display = 'block';
+    window.activeOrderTab = tab;
+    const tabLive = document.getElementById('tab-live-orders');
+    const tabPast = document.getElementById('tab-past-orders');
+    const liveBox = document.getElementById('live-orders-container');
+    const pastBox = document.getElementById('past-orders-container');
+
+    if (tabLive) tabLive.classList.toggle('active', tab === 'live');
+    if (tabPast) tabPast.classList.toggle('active', tab === 'past');
+    if (liveBox) liveBox.style.display = tab === 'live' ? 'grid' : 'none';
+    if (pastBox) pastBox.style.display = tab === 'past' ? 'grid' : 'none';
 };
 window.toggleFavList = () => { const modal = document.getElementById('fav-modal'); if(!modal.classList.contains('show')) window.renderFavList(); modal.classList.toggle('show'); };
 window.closeAlert = () => document.getElementById('customAlert').classList.remove('show');
@@ -114,7 +132,7 @@ window.toggleFavIcon = (e) => {
         window.favorites.push(dishId);
         btn.style.color = 'var(--danger)'; window.showToast("Added to Favorites!");
     }
-    localStorage.setItem('nextplate_favs', JSON.stringify(window.favorites));
+    localStorage.setItem(STORAGE_KEYS.favs, JSON.stringify(window.favorites));
     if(document.getElementById('fav-modal').classList.contains('show')) window.renderFavList();
 };
 
@@ -230,16 +248,16 @@ window.renderMultiTracker = function() {
     const liveContainer = document.getElementById('live-orders-container'); 
     const pastContainer = document.getElementById('past-orders-container');
     
-    // 🔥 VIP FIX: Laptop ke liye CSS Grid (Side-by-Side Cards)
-    if(liveContainer) {
-        liveContainer.style.display = 'grid';
-        liveContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(340px, 1fr))';
+    // 🔥 VIP FIX: Active tab ko hi grid dikhao + chhote phone par overflow fix
+    if (liveContainer) {
+        liveContainer.style.display = window.activeOrderTab === 'live' ? 'grid' : 'none';
+        liveContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
         liveContainer.style.gap = '15px';
         liveContainer.style.alignItems = 'start';
     }
-    if(pastContainer) {
-        pastContainer.style.display = 'grid';
-        pastContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(340px, 1fr))';
+    if (pastContainer) {
+        pastContainer.style.display = window.activeOrderTab === 'past' ? 'grid' : 'none';
+        pastContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
         pastContainer.style.gap = '15px';
         pastContainer.style.alignItems = 'start';
     }
@@ -255,7 +273,7 @@ window.renderMultiTracker = function() {
     let showTrackBtn = false; 
     let showPulse = false;
     let activeOrdersList = []; 
-    try { activeOrdersList = JSON.parse(localStorage.getItem('craveActiveOrders') || '[]'); } catch(e) { activeOrdersList = []; }
+    try { activeOrdersList = JSON.parse(localStorage.getItem(STORAGE_KEYS.orders) || '[]'); } catch(e) { activeOrdersList = []; }
     let newActiveList = [];
     let highestStatusLevel = -1; 
 
@@ -378,7 +396,7 @@ window.renderMultiTracker = function() {
         }
     });
 
-    localStorage.setItem('craveActiveOrders', JSON.stringify(newActiveList));
+    localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(newActiveList));
     
     if(trackBtn && pulse) {
         if (showTrackBtn && activeOrdersList.length > 0) { 
@@ -632,12 +650,12 @@ window.initDiningSession = () => {
     
     // 🔥 VIP FIX: Ab 'table=' aane par bhi session lock khul jayega
     if (urlParams.get('scan') === 'true' || urlParams.get('rest') || urlParams.get('table')) {
-        localStorage.setItem('dining_session_start', nowTime);
+        localStorage.setItem(STORAGE_KEYS.sessionStart, nowTime);
         if(urlParams.get('scan') === 'true') {
             urlParams.delete('scan'); let newUrl = window.location.pathname; if(urlParams.toString().length > 0) newUrl += '?' + urlParams.toString();
             window.history.replaceState({}, document.title, newUrl);
         }
-    } else if (!localStorage.getItem('dining_session_start')) { localStorage.setItem('dining_session_start', nowTime); }
+    } else if (!localStorage.getItem(STORAGE_KEYS.sessionStart)) { localStorage.setItem(STORAGE_KEYS.sessionStart, nowTime); }
 };
 
 window.openInAppScanner = () => {
@@ -652,7 +670,7 @@ window.openInAppScanner = () => {
         
         // 🔥 VIP FIX: Scanner ab 'table=' keyword ko pehchanega
         if(decodedText.includes('rest=') || decodedText.includes('scan=') || decodedText.includes('table=')) {
-            localStorage.setItem('dining_session_start', new Date().getTime());
+            localStorage.setItem(STORAGE_KEYS.sessionStart, new Date().getTime());
             
             if(html5QrCode) { html5QrCode.stop().then(() => { setTimeout(() => { html5QrCode.clear(); window.closeScanner(); }, 100); }).catch(e => { window.closeScanner(); }); } 
             else { window.closeScanner(); }
@@ -708,7 +726,7 @@ window.closeScanner = () => {
 };
 
 window.checkSessionValid = () => {
-    const startTime = localStorage.getItem('dining_session_start');
+    const startTime = localStorage.getItem(STORAGE_KEYS.sessionStart);
     if (!startTime) return true; 
     const diffHours = (new Date().getTime() - parseInt(startTime)) / (1000 * 60 * 60);
     
@@ -744,9 +762,9 @@ window.placeOrder = async () => {
 
     try {
         const docRef = await addDoc(collection(db, "orders"), { restaurantId: window.currentRestaurantId, orderType: window.currentOrderType || "Dine-in", tableNumber: String(tableNo || "N/A"), customerName: String(custName || "N/A"), customerPhone: String(custPhone || "N/A"), chefNotes: String(notes || "None"), items: orderItems, totalAmount: Number(grandTotal), status: 'New', paymentMethod: 'Cash', timestamp: new Date() });
-        let activeOrdersList = []; try { activeOrdersList = JSON.parse(localStorage.getItem('craveActiveOrders') || '[]'); } catch(e) {}
-        activeOrdersList.push(docRef.id); localStorage.setItem('craveActiveOrders', JSON.stringify(activeOrdersList)); window.listenToLiveOrder(docRef.id); 
-        window.cart = {}; localStorage.removeItem('nextplate_cart'); document.getElementById('cookingNotes').value = ''; 
+        let activeOrdersList = []; try { activeOrdersList = JSON.parse(localStorage.getItem(STORAGE_KEYS.orders) || '[]'); } catch(e) {}
+        activeOrdersList.push(docRef.id); localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(activeOrdersList)); window.listenToLiveOrder(docRef.id); 
+        window.cart = {}; localStorage.removeItem(STORAGE_KEYS.cart); document.getElementById('cookingNotes').value = ''; 
         window.updateGlobalCartUI(); window.checkCartForCurrentDish(); window.toggleCart(); modalContent.style.opacity = "1"; window.launchConfetti(); 
         setTimeout(() => { let earnedCoins = Math.floor(grandTotal / 10); document.getElementById('earnedCoins').innerText = earnedCoins; document.getElementById('coinModal').classList.add('show'); window.triggerHapticPop(); }, 1000);
         setTimeout(() => { window.switchOrderTab('live'); window.toggleTracker(); }, 3500); 
@@ -771,12 +789,12 @@ async function fetchTrendingDishes() {
     } catch(e) { console.error("Trending Error:", e); }
 }
 
-let savedOrdersList = []; try { savedOrdersList = JSON.parse(localStorage.getItem('craveActiveOrders') || '[]'); } catch(e) {}
+let savedOrdersList = []; try { savedOrdersList = JSON.parse(localStorage.getItem(STORAGE_KEYS.orders) || '[]'); } catch(e) {}
 savedOrdersList.forEach(id => window.listenToLiveOrder(id)); fetchTrendingDishes();
 
 // 🔥 SUPER FAST MENU LOADING (CACHE LOGIC) 🔥
 try {
-    const cachedMenu = localStorage.getItem('nextplate_menu_cache');
+    const cachedMenu = localStorage.getItem(STORAGE_KEYS.menuCache);
     if (cachedMenu) {
         window.allDishes = JSON.parse(cachedMenu);
         if (window.allDishes.length > 0) { window.applyFilters(); if (!window.currentDish) window.loadDish(window.allDishes[0]); }
@@ -1020,13 +1038,6 @@ async function loadDynamicMenu() {
             return;
         }
 
-        // 🍔 DIRECT MENU FETCH (Bypass APIService to prevent crash)
-        let dishes = [];
-        try {
-            const qDishes = query(collection(db, "menu_items"), where("restaurantId", "==", window.currentRestaurantId));
-            const snapDishes = await getDocs(qDishes);
-            snapDishes.forEach(doc => { let d = doc.data(); d.id = doc.id; dishes.push(d); });
-        } catch(e) { console.error("Dish fetch error:", e); }
         document.title = `${restaurant.name} - Smart Menu`;
 
         const loaderBrand = document.getElementById('loader-brand-name');
@@ -1034,42 +1045,56 @@ async function loadDynamicMenu() {
         if (loaderBrand && restaurant.name) {
             loaderBrand.innerText = restaurant.name;
             if (loaderTagline) loaderTagline.innerText = "Setting up your digital table...";
-            localStorage.setItem('crave_hotel_name_cache', restaurant.name);
+            localStorage.setItem(STORAGE_KEYS.hotelName, restaurant.name);
         }
 
-        if (restaurant.name !== "Smart Menu") {
-            const replaceText = (node) => {
-                if (node.nodeType === 3 && node.nodeValue) { if (node.nodeValue.includes("NextPlate")) { node.nodeValue = node.nodeValue.replace("NextPlate", restaurant.name); } } 
-                else if (node.nodeType === 1 && node.nodeName !== 'SCRIPT' && node.nodeName !== 'STYLE') { node.childNodes.forEach(child => replaceText(child)); }
-            };
-            replaceText(document.body);
-        }
+        // 🍔 REAL-TIME MENU LISTENER (Admin se Out-of-Stock / Price change turant live hoga)
+        const qDishes = query(collection(db, "menu_items"), where("restaurantId", "==", window.currentRestaurantId));
+        onSnapshot(qDishes, (snapDishes) => {
+            const dishes = [];
+            snapDishes.forEach(docSnap => {
+                let d = docSnap.data();
+                d.id = docSnap.id;
+                dishes.push(d);
+            });
 
-        // Skeleton hatake Asli Data lagao
-        window.allDishes = dishes;
-        
-        // Agar malik ne ek bhi dish nahi daali hai
-        if (window.allDishes.length === 0) {
-            const sidebar = document.getElementById('sidebar-menu');
-            if(sidebar) sidebar.innerHTML = '<div style="padding: 50px 20px; text-align: center; color: var(--text-sub);"><i class="ph-fill ph-empty" style="font-size: 40px; opacity: 0.3;"></i><br><b>Menu is Empty!</b><br><span style="font-size: 12px;">Admin Panel se dishes add karein.</span></div>';
-            
-            const photoSlider = document.getElementById('photo-slider');
-            if(photoSlider) photoSlider.innerHTML = '<div style="padding: 100px 20px; text-align: center; color: var(--text-sub);">No dishes to show</div>';
-            
-            const dispName = document.getElementById('display-name');
-            if(dispName) dispName.innerHTML = 'No Item Selected';
-            
-            const dispPrice = document.getElementById('display-price');
-            if(dispPrice) dispPrice.innerHTML = '₹0';
-        } else {
-            if (typeof window.applyFilters === 'function') { window.applyFilters(); }
-            window.loadDish(window.allDishes[0]); 
-        }
-        
-        console.log("✅ Data Load & Render Successful!");
-    } catch(e) { 
-        console.error("❌ Data load error:", e); 
-    }
+            window.allDishes = dishes;
+            try {
+                localStorage.setItem(STORAGE_KEYS.menuCache, JSON.stringify(dishes));
+            } catch (err) {}
+
+            if (window.allDishes.length === 0) {
+                const sidebar = document.getElementById('sidebar-menu');
+                if (sidebar) sidebar.innerHTML = '<div style="padding: 50px 20px; text-align: center; color: var(--text-sub);"><i class="ph-fill ph-empty" style="font-size: 40px; opacity: 0.3;"></i><br><b>Menu is Empty!</b><br><span style="font-size: 12px;">Admin Panel se dishes add karein.</span></div>';
+
+                const photoSlider = document.getElementById('photo-slider');
+                if (photoSlider) photoSlider.innerHTML = '<div style="padding: 100px 20px; text-align: center; color: var(--text-sub);">No dishes to show</div>';
+
+                const dispName = document.getElementById('display-name');
+                if (dispName) dispName.innerHTML = 'No Item Selected';
+
+                const dispPrice = document.getElementById('display-price');
+                if (dispPrice) dispPrice.innerHTML = '₹0';
+            } else {
+                if (typeof window.applyFilters === 'function') window.applyFilters();
+
+                // Agar current dish open hai toh uska latest price/stock sync karo
+                const isDishAvailable = (d) => d.inStock !== false && d.status !== 'out_of_stock' && d.isAvailable !== false;
+                const updatedCurrent = window.currentDish
+                    ? window.allDishes.find(d => d.id === window.currentDish.id && isDishAvailable(d))
+                    : null;
+
+                if (updatedCurrent) {
+                    window.loadDish(updatedCurrent);
+                } else {
+                    const firstAvailable = window.allDishes.find(isDishAvailable) || window.allDishes[0];
+                    if (firstAvailable) window.loadDish(firstAvailable);
+                }
+            }
+            console.log("✅ Live Menu Synced!");
+        }, (err) => {
+            console.error("❌ Live dish fetch error:", err);
+        });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
